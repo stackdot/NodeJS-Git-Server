@@ -55,24 +55,6 @@
         </td>
       </tr>
       <tr>
-        <td class="docs">
-<div class="pilwrap">
-  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
-</div>
-<p>Create a simple user:</p>
-        </td>
-        <td class="code highlight"><div class="highlight"><pre>
-<span class="nv">userOne = </span>
-  <span class="nv">username  : </span><span class="s">&#39;demo&#39;</span>
-  <span class="nv">password  : </span><span class="s">&#39;demo&#39;</span>
-
-
-
-
-</pre></div>
-        </td>
-      </tr>
-      <tr>
         <td class="docs"><div class="dox">
   <div class="summary">
 <div class="pilwrap" id="create%20example%20repo%201">
@@ -91,7 +73,12 @@
 <span class="nv">repoOne = </span>
   <span class="nv">name    : </span><span class="s">&#39;stackdot&#39;</span>
   <span class="nv">anonRead  : </span><span class="kc">false</span>
-  <span class="nv">users   : </span><span class="p">[</span> <span class="p">{</span> <span class="nx">user</span><span class="o">:</span><span class="nx">userOne</span><span class="p">,</span> <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="s">&#39;W&#39;</span><span class="p">]</span> <span class="p">}</span> <span class="p">]</span>
+  <span class="nv">users   : </span><span class="p">[</span>
+    <span class="nv">user:</span>
+      <span class="nv">username: </span><span class="s">&#39;demo&#39;</span>
+      <span class="nv">password: </span><span class="s">&#39;demo&#39;</span>
+    <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="s">&#39;W&#39;</span><span class="p">]</span>
+  <span class="p">]</span>
 
 
 
@@ -118,7 +105,12 @@
 <span class="nv">repoTwo =</span>
   <span class="nv">name    : </span><span class="s">&#39;anon&#39;</span>
   <span class="nv">anonRead  : </span><span class="kc">true</span>
-  <span class="nv">users   : </span><span class="p">[</span> <span class="p">{</span> <span class="nx">user</span><span class="o">:</span><span class="nx">userOne</span><span class="p">,</span> <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">]</span> <span class="p">}</span> <span class="p">]</span>
+  <span class="nv">users   : </span><span class="p">[</span>
+    <span class="nv">user:</span>
+      <span class="nv">username: </span><span class="s">&#39;demo2&#39;</span>
+      <span class="nv">password: </span><span class="s">&#39;demo2&#39;</span>
+    <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">]</span>
+  <span class="p">]</span>
 
 
 
@@ -129,7 +121,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <p>Put these into arrays</p>
         </td>
@@ -155,7 +147,6 @@
 
   </div>
   <div class="body"><p>We are passing in <code>repos</code> array for the list of Repos we want to run  return
-We are passing in <code>users</code> for all of the users we want to use  return
 We are passing in <code>true</code> to enable verbose logging  return
 We are passing in <code>/tmp/repos</code> to specify where the .git repos should live  return
 We are passing in <code>7000</code> for the port to run on ( port 80 requires sudo )</p>
@@ -163,7 +154,7 @@ We are passing in <code>7000</code> for the port to run on ( port 80 requires su
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nv">_git = </span><span class="k">new</span> <span class="nx">GitServer</span> <span class="nx">repos</span><span class="p">,</span> <span class="nx">users</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="s">&#39;/tmp/repos&#39;</span><span class="p">,</span> <span class="mi">7000</span>
+<span class="nv">_git = </span><span class="k">new</span> <span class="nx">GitServer</span> <span class="nx">repos</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="s">&#39;/tmp/repos&#39;</span><span class="p">,</span> <span class="mi">7000</span>
 </pre></div>
         </td>
       </tr>

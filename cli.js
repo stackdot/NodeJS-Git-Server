@@ -10,7 +10,7 @@ var CLI, EventEmitter, GITCLI, GitServer, Table, async, fs, mkdirp, path, repoDB
 
 EventEmitter = require('events').EventEmitter;
 
-CLI = require('../Node-CLI/cli.js');
+CLI = require('cli-listener');
 
 GitServer = require('./host.js');
 

@@ -8,7 +8,7 @@
 
 # Get required packages:
 {EventEmitter}	= require 'events'
-CLI 			= require '../Node-CLI/cli.js'
+CLI 			= require 'cli-listener'
 GitServer 		= require './host.js'
 mkdirp			= require 'mkdirp'
 fs				= require 'fs'

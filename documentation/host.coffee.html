@@ -87,11 +87,6 @@
       <span>List of repositories</span>
     </div>
     <div class="dox_tag_detail">
-      <span class="dox_tag_name">users</span>
-      <span class="dox_type">Array</span>
-      <span>List of users with user/pass creds</span>
-    </div>
-    <div class="dox_tag_detail">
       <span class="dox_tag_name">repoLocation</span>
       <span class="dox_type">String</span>
       <span>Location where the repo's are/will be stored</span>
@@ -105,7 +100,7 @@
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nv">constructor: </span><span class="nf">( @repos = [], @users = [], @logging = false, @repoLocation = &#39;/tmp/repos&#39;, @port = 7000 )-&gt;</span>
+  <span class="nv">constructor: </span><span class="nf">( @repos = [], @logging = false, @repoLocation = &#39;/tmp/repos&#39;, @port = 7000 )-&gt;</span>
 
 </pre></div>
         </td>
@@ -184,8 +179,7 @@
 <p>Just let the console know we have started.</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;Server listening on &#39;</span><span class="p">,</span> <span class="nx">@port</span>
-  
+        <span class="nx">@log</span> <span class="s">&#39;Server listening on &#39;</span><span class="p">,</span> <span class="nx">@port</span><span class="p">,</span> <span class="s">&#39;\r&#39;</span>
   
   
 
@@ -196,6 +190,56 @@
         <td class="docs">
 <div class="pilwrap">
   <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Create a repo on the fly</p>
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">repoName</span>
+      <span class="dox_type">Object</span>
+      <span>Name of the repo we are creating.</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">createRepo: </span><span class="nf">( repo, callback )=&gt;</span>
+    <span class="k">if</span> <span class="o">!</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="o">?</span> <span class="o">or</span> <span class="o">!</span><span class="nx">repo</span><span class="p">.</span><span class="nx">anonRead</span><span class="o">?</span>
+      <span class="nx">@log</span> <span class="s">&#39;Not enough details, need atleast .name and .anonRead&#39;</span>
+      <span class="kc">false</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>make sure it doesnt already exist:</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">if</span> <span class="o">!</span><span class="nx">@getRepo</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
+      <span class="nx">@log</span> <span class="s">&#39;Creating repo&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
+      <span class="nx">@repos</span><span class="p">.</span><span class="nx">push</span> <span class="nx">repo</span>
+      <span class="nx">@git</span><span class="p">.</span><span class="nx">create</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">callback</span>
+    <span class="k">else</span>
+      <span class="nx">@log</span> <span class="s">&#39;This repo already exists&#39;</span>
+  
+  
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
 </div>
 <p>Log all arguments passed into this function IF @logging = true</p>
         </td>
@@ -215,7 +259,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Process the request and check for basic authentication.</p>
@@ -251,7 +295,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
 </div>
 <p>Try to get the auth header</p>
         </td>
@@ -267,7 +311,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <p>if they didnt send a auth header, tell them we need one:</p>
         </td>
@@ -282,7 +326,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
 </div>
 <p>now they should have responded with the auth headers:</p>
         </td>
@@ -295,7 +339,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
 </div>
 <p>Decode the auth string</p>
         </td>
@@ -308,7 +352,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
 </div>
 <p>split the string to get username:password</p>
         </td>
@@ -321,7 +365,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
 </div>
 <p>Send off this user info and authorize it:</p>
         </td>
@@ -338,7 +382,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Check to see if:  return
@@ -381,7 +425,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <p>Just let the console know someone is trying to do something that requires a password:</p>
         </td>
@@ -394,7 +438,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <p>Find the user object:</p>
         </td>
@@ -407,7 +451,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <p>check if the user exists:</p>
         </td>
@@ -420,20 +464,20 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <p>This user isnt in this repo's .users array:</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;was rejected as this user doesnt exist&#39;</span>
-      <span class="nx">gitObject</span><span class="p">.</span><span class="nx">reject</span> <span class="s">&#39;Couldnt find this user&#39;</span>
+      <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;was rejected as this user doesnt exist, or password is wrong&#39;</span>
+      <span class="nx">gitObject</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s">&#39;Wrong username or password&#39;</span><span class="p">)</span>
     <span class="k">else</span>
       <span class="k">if</span> <span class="nx">@permMap</span><span class="p">[</span> <span class="nx">method</span> <span class="p">]</span> <span class="k">in</span> <span class="nx">user</span><span class="p">.</span><span class="nx">permissions</span>
         <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;Successfully did a&#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
         <span class="nx">gitObject</span><span class="p">.</span><span class="nx">accept</span><span class="p">()</span>
       <span class="k">else</span>
         <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;was rejected, no permission to&#39;</span><span class="p">,</span><span class="nx">method</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
-        <span class="nx">gitObject</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s">&#39;Dont know of method: &#39;</span><span class="o">+</span><span class="nx">method</span><span class="p">)</span>
+        <span class="nx">gitObject</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s">&quot;You dont have these permissions&quot;</span><span class="p">)</span>
   
   
   
@@ -445,7 +489,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <p>Setup the listeners for git events:</p>
         </td>
@@ -458,7 +502,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
 <p>On each git push request</p>
         </td>
@@ -471,7 +515,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
 </div>
 <p>On each git fetch request</p>
         </td>
@@ -484,7 +528,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
 <p>On each git info request</p>
         </td>
@@ -501,7 +545,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Checks all the passed in repo's to make sure they all have a real .git directory.</p>
@@ -522,7 +566,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
+  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
 </div>
 <p>Get all the repo names in an Array</p>
         </td>
@@ -536,7 +580,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
 </div>
 <p>Make sure this repo has the require fields, if so, add to array:</p>
         </td>
@@ -550,7 +594,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
+  <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
 </div>
 <p>This repo was missing some field we require</p>
         </td>
@@ -564,7 +608,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-31" id="section-31">&#182;</a>
+  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
 </div>
 <p>Call .exists on each repo name</p>
         </td>
@@ -577,7 +621,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-32" id="section-32">&#182;</a>
+  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
 </div>
 <p>If we have repo's that need to be created:</p>
         </td>
@@ -590,7 +634,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-33" id="section-33">&#182;</a>
+  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
 </div>
 <p>Create each repo that doesn not exist:</p>
         </td>
@@ -603,7 +647,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-34" id="section-34">&#182;</a>
+  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
 </div>
 <p>call .create on each repo:</p>
         </td>
@@ -621,7 +665,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-35" id="section-35">&#182;</a>
+  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>When the git fetch command is triggered, this is fired.</p>
@@ -650,7 +694,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-36" id="section-36">&#182;</a>
+  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
 </div>
 <p>This repo allows anyone to fetch it, so accept the request:</p>
         </td>
@@ -664,7 +708,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-37" id="section-37">&#182;</a>
+  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
 </div>
 <p>this repo has no anon access, so we need to check the user/pass</p>
         </td>
@@ -673,7 +717,7 @@ This user has permission to do this method on this repo</p>
         <span class="nx">@processSecurity</span> <span class="nx">fetch</span><span class="p">,</span> <span class="s">&#39;fetch&#39;</span><span class="p">,</span> <span class="nx">repo</span>
     <span class="k">else</span> <span class="c1"># otherwise we need to reject this</span>
       <span class="nx">@log</span> <span class="s">&#39;Rejected - Repo&#39;</span><span class="p">,</span><span class="nx">fetch</span><span class="p">.</span><span class="nx">repo</span><span class="p">,</span><span class="s">&#39;doesnt exist&#39;</span>
-      <span class="nx">fetch</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s">&#39;This repo doesnt exist&#39;</span><span class="p">)</span>
+      <span class="nx">fetch</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s">&#39;This repo doesnt exist&#39;</span><span class="p">)</span>
   
   
   
@@ -685,7 +729,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-38" id="section-38">&#182;</a>
+  <a class="pilcrow" href="#section-40" id="section-40">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>When the git push command is triggered, this is fired.</p>
@@ -710,7 +754,7 @@ This user has permission to do this method on this repo</p>
       <span class="nx">@processSecurity</span> <span class="nx">push</span><span class="p">,</span> <span class="s">&#39;push&#39;</span><span class="p">,</span> <span class="nx">repo</span>
     <span class="k">else</span>
       <span class="nx">@log</span> <span class="s">&#39;Rejected - Repo&#39;</span><span class="p">,</span><span class="nx">push</span><span class="p">.</span><span class="nx">repo</span><span class="p">,</span><span class="s">&#39;doesnt exist&#39;</span>
-      <span class="nx">push</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s">&#39;This repo doesnt exist&#39;</span><span class="p">)</span>
+      <span class="nx">push</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s">&#39;This repo doesnt exist&#39;</span><span class="p">)</span>
   
   
   
@@ -722,7 +766,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-39" id="section-39">&#182;</a>
+  <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the user object, check user/pass is correct and it exists in this repo.</p>
@@ -759,7 +803,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-40" id="section-40">&#182;</a>
+  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
 </div>
 <p>If we found this user, return it</p>
         </td>
@@ -777,7 +821,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
+  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the repo from the array of repos</p>
@@ -804,7 +848,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
+  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
 </div>
 <p>If the repo exists, return it. </p>
         </td>
@@ -821,7 +865,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
+  <a class="pilcrow" href="#section-45" id="section-45">&#182;</a>
 </div>
 <p>Export this as a module:</p>
         </td>
