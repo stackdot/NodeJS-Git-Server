@@ -19,21 +19,109 @@
     <div id="tree"></div>
     <div id="headings">
       <div class="heading h1">
-        <a href="#nodejs-git-server">NodeJS-Git-Server</a>
+        <a href="#%23nodejs%20git%20server">#NodeJS Git Server</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23%23%20install%20git%20server">## Install Git Server</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23%23%20example%20usage">## Example Usage</a>
+      </div>
+      <div class="heading h3">
+        <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">This is a work in progress - please feel free to contribute!</a>
       </div>
     </div>
   </div>
   <div id="sidebar-toggle"></div>
   <div id="container"><div class="docs markdown">
-<div class="pilwrap" id="nodejs-git-server">
+<div class="pilwrap" id="%23nodejs%20git%20server">
   <h1>
-    <a href="#nodejs-git-server" name="nodejs-git-server" class="pilcrow">&#182;</a>
-    NodeJS-Git-Server
+    <a href="#%23nodejs%20git%20server" name="%23nodejs%20git%20server" class="pilcrow">&#182;</a>
+    #NodeJS Git Server
   </h1>
 </div>
 
 
-<p>A multi-tenant git server using NodeJS</p></div>
+<p>A multi-tenant git server using NodeJS.</p>
+
+<p>Read the Documented Code: <a href="http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html">Here</a></p>
+
+<p>Made to be able to support many git repo's and users with Read/Write customizable permissions.</p>
+
+
+<div class="pilwrap" id="%23%23%20install%20git%20server">
+  <h1>
+    <a href="#%23%23%20install%20git%20server" name="%23%23%20install%20git%20server" class="pilcrow">&#182;</a>
+    ## Install Git Server
+  </h1>
+</div>
+
+
+<p>To install the git server run:</p>
+
+
+<div class="highlight"><pre><code><span class="n">npm</span> <span class="n">install</span> <span class="n">git</span><span class="o">-</span><span class="n">server</span>
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="%23%23%20example%20usage">
+  <h1>
+    <a href="#%23%23%20example%20usage" name="%23%23%20example%20usage" class="pilcrow">&#182;</a>
+    ## Example Usage
+  </h1>
+</div>
+
+
+<p>The GitServer is a very easy to get up and running git server. It uses the Pushover module for listening to git events, and its own layer to do the security for each repo &amp; user.</p>
+
+
+<div class="highlight"><pre><code><span class="nt">var</span> <span class="nt">GitServer</span> <span class="o">=</span> <span class="nt">require</span><span class="o">(</span><span class="s1">&#39;git-server&#39;</span><span class="o">);</span>
+<span class="nt">var</span> <span class="nt">newUser</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">username</span><span class="o">:</span><span class="s1">&#39;demo&#39;</span><span class="o">,</span>
+    <span class="n">password</span><span class="o">:</span><span class="s1">&#39;demo&#39;</span>
+<span class="p">}</span>
+<span class="nt">var</span> <span class="nt">newRepo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">name</span><span class="o">:</span><span class="s1">&#39;myrepo&#39;</span><span class="o">,</span>
+    <span class="n">anonRead</span><span class="o">:</span><span class="n">false</span><span class="o">,</span>
+    <span class="n">users</span><span class="o">:</span> <span class="cp">[</span>
+        <span class="p">{</span> <span class="nb">user</span><span class="p">:</span><span class="nx">newUser</span><span class="p">,</span> <span class="nx">permissions</span><span class="p">:</span><span class="err">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="cp">]</span> <span class="p">}</span>
+    <span class="o">]</span>
+<span class="err">}</span>
+<span class="nt">_g</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">GitServer</span><span class="o">(</span><span class="cp">[</span> <span class="nx">newRepo</span> <span class="cp">]</span><span class="o">,</span> <span class="cp">[</span> <span class="nx">newUser</span> <span class="cp">]</span><span class="o">);</span>
+</code></pre></div>
+
+
+
+<p>When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.</p>
+
+
+<div class="highlight"><pre><code><span class="n">git</span> <span class="n">clone</span> <span class="n">http</span><span class="o">:</span><span class="c1">//localhost:7000/myrepo.git</span>
+</code></pre></div>
+
+
+
+<p>Since this repo does <em>NOT</em> allow anonymous reading, it will prompt us for a user/pass</p>
+
+<p>To make this faster, we can use the basic auth structure:</p>
+
+
+<div class="highlight"><pre><code><span class="n">git</span> <span class="n">clone</span> <span class="n">http</span><span class="o">:</span><span class="c1">//demo:demo@localhost:7000/myrepo.git</span>
+</code></pre></div>
+
+
+
+<p>This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. </p>
+
+
+<div class="pilwrap" id="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">
+  <h3>
+    <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!" name="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!" class="pilcrow">&#182;</a>
+    This is a work in progress - please feel free to contribute!
+  </h3>
+</div>
+</div>
   </div>
 </body>
 </html>
