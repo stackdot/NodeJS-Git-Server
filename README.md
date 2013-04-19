@@ -47,10 +47,10 @@ This should not prompt you for any user/pass. Also in the future when you push c
 
 
 ### This is a work in progress - please feel free to contribute!
-Seriously…
-
-###License
+####Seriously…
 ===
+#License
+=====
 (The MIT License)
 
 Copyright (c) 2010 [Quinton Pike](https://twitter.com/QuintonPike)
