@@ -1,7 +1,7 @@
 
 ###
 	
-	#A simple to setup and run Git Server written in NodeJS.
+	GOAL: A simple to setup and run, multi-tenant Git Server written in NodeJS.
 	
 	This was initially created to be used as a multi-tenant git server with powerful event triggers.
 	
