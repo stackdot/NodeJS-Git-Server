@@ -25,11 +25,10 @@ class GitServer
 	###
 		Constructor function for each instance of GitServer
 		@param {Array} repos List of repositories
-		@param {Array} users List of users with user/pass creds
 		@param {String} repoLocation Location where the repo's are/will be stored
 		@param {Int} port Port on which to run this server.
 	###
-	constructor: ( @repos = [], @users = [], @logging = false, @repoLocation = '/tmp/repos', @port = 7000 )->
+	constructor: ( @repos = [], @logging = false, @repoLocation = '/tmp/repos', @port = 7000 )->
 		# Create the pushover git object:
 		@git		= pushover @repoLocation, autoCreate:false
 		@permMap	= fetch:'R', push:'W'
@@ -42,7 +41,24 @@ class GitServer
 			# Open up the desired port ( 80 requires sudo )
 			@server.listen @port, =>
 				# Just let the console know we have started.
-				console.log 'Server listening on ', @port
+				@log 'Server listening on ', @port, '\r'
+	
+	
+	###
+		Create a repo on the fly
+		@param {Object} repoName Name of the repo we are creating.
+	###
+	createRepo: ( repo, callback )=>
+		if !repo.name? or !repo.anonRead?
+			@log 'Not enough details, need atleast .name and .anonRead'
+			false
+		# make sure it doesnt already exist:
+		if !@getRepo repo.name
+			@log 'Creating repo', repo.name
+			@repos.push repo
+			@git.create repo.name, callback
+		else
+			@log 'This repo already exists'
 	
 	
 	
