@@ -8,8 +8,8 @@ GitServer = require './host.js'
 
 # Create a simple user:
 userOne = 
-	username	: 'qrpike'
-	password	: 'steda989'
+	username	: 'demo'
+	password	: 'demo'
 
 
 
