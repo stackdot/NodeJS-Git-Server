@@ -1,6 +1,5 @@
 #NodeJS Git Server
 ===
-
 A multi-tenant git server using NodeJS.
 
 Read the Documented Code: [Here](http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html)
@@ -47,8 +46,7 @@ This should not prompt you for any user/pass. Also in the future when you push c
 
 
 ### This is a work in progress - please feel free to contribute!
-####Seriously…
-===
+please contribute
 #License
 =====
 (The MIT License)
