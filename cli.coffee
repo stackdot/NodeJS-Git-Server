@@ -19,12 +19,20 @@ Table			= require 'cli-table'
 
 
 repoPort		= 7000
-repoLocation	= path.resolve '../repos/'
-repoDB			= path.resolve '../repos.db'
+
+getUserHomeDir = ()->
+	if process.platform is 'win32'
+		dir = 'USERPROFILE' 
+	else dir = 'HOME'
+	process.env[dir]
+
+repoLocation	= path.join getUserHomeDir(), './git-server/repos/'
+repoDB			= path.join getUserHomeDir(), './git-server/repos.db'
 
 
 
-mkdirp.sync repos
+err = mkdirp.sync repoLocation
+console.log err
 if fs.existsSync repoDB
 	repos = JSON.parse( fs.readFileSync( repoDB ) )
 else repos = { repos:[], users:[] }

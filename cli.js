@@ -5,7 +5,7 @@
 	This is the CLI interface for using git-server.
 */
 
-var CLI, EventEmitter, GITCLI, GitServer, Table, async, fs, mkdirp, path, repoDB, repoLocation, repoPort, repos, _c, _g,
+var CLI, EventEmitter, GITCLI, GitServer, Table, async, err, fs, getUserHomeDir, mkdirp, path, repoDB, repoLocation, repoPort, repos, _c, _g,
   _this = this,
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -28,11 +28,23 @@ Table = require('cli-table');
 
 repoPort = 7000;
 
-repoLocation = path.resolve('../repos/');
+getUserHomeDir = function() {
+  var dir;
+  if (process.platform === 'win32') {
+    dir = 'USERPROFILE';
+  } else {
+    dir = 'HOME';
+  }
+  return process.env[dir];
+};
 
-repoDB = path.resolve('../repos.db');
+repoLocation = path.join(getUserHomeDir(), './git-server/repos/');
 
-mkdirp.sync(repos);
+repoDB = path.join(getUserHomeDir(), './git-server/repos.db');
+
+err = mkdirp.sync(repoLocation);
+
+console.log(err);
 
 if (fs.existsSync(repoDB)) {
   repos = JSON.parse(fs.readFileSync(repoDB));

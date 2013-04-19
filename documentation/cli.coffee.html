@@ -35,6 +35,20 @@
 <div class="pilwrap">
   <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
 </div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="o">`</span><span class="c1">#!/usr/bin/env node`</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
 <div class="dox">
   <div class="summary"><p>This is the CLI interface for using git-server.</p>
   </div>
@@ -42,13 +56,17 @@
   </div>
 </div>
         </td>
-        <td class="code highlight"><div class="highlight"><pre></pre></div>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+
+</pre></div>
         </td>
       </tr>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
 </div>
 <p>Get required packages:</p>
         </td>
@@ -65,12 +83,20 @@
 
 
 <span class="nv">repoPort    = </span><span class="mi">7000</span>
-<span class="nv">repoLocation  = </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span> <span class="s">&#39;../repos/&#39;</span>
-<span class="nv">repoDB      = </span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span> <span class="s">&#39;../repos.db&#39;</span>
+
+<span class="nv">getUserHomeDir = </span><span class="p">()</span><span class="nf">-&gt;</span>
+  <span class="k">if</span> <span class="nx">process</span><span class="p">.</span><span class="nx">platform</span> <span class="o">is</span> <span class="s">&#39;win32&#39;</span>
+    <span class="nv">dir = </span><span class="s">&#39;USERPROFILE&#39;</span> 
+  <span class="k">else</span> <span class="nv">dir = </span><span class="s">&#39;HOME&#39;</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="nx">dir</span><span class="p">]</span>
+
+<span class="nv">repoLocation  = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">getUserHomeDir</span><span class="p">(),</span> <span class="s">&#39;./git-server/repos/&#39;</span>
+<span class="nv">repoDB      = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">getUserHomeDir</span><span class="p">(),</span> <span class="s">&#39;./git-server/repos.db&#39;</span>
 
 
 
-<span class="nx">mkdirp</span><span class="p">.</span><span class="nx">sync</span> <span class="nx">repos</span>
+<span class="nv">err = </span><span class="nx">mkdirp</span><span class="p">.</span><span class="nx">sync</span> <span class="nx">repoLocation</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span>
 <span class="k">if</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">existsSync</span> <span class="nx">repoDB</span>
   <span class="nv">repos = </span><span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span> <span class="nx">repoDB</span> <span class="p">)</span> <span class="p">)</span>
 <span class="k">else</span> <span class="nv">repos = </span><span class="p">{</span> <span class="nx">repos</span><span class="o">:</span><span class="p">[],</span> <span class="nx">users</span><span class="o">:</span><span class="p">[]</span> <span class="p">}</span>
@@ -179,7 +205,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the number of columns needed from a % width</p>
