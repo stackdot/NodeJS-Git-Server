@@ -1,10 +1,16 @@
 { "name" : "git-server"
-, "version" : "0.0.1"
+, "version" : "0.0.2"
 , "description" : "A simple, multi-tenant git server written in NodeJS"
 , "author" : "Quinton Pike <@quinton.pike>"
 , "contributors" :
   [ "Quinton Pike <qrpike@gmail.com>"
   ]
+,"dependencies": {
+    "async": "*",
+    "mkdirp": "*",
+    "cli-table": "*",
+    "pushover": "*"
+  }
 , "repository":
   { "type": "git"
   , "url": "https://github.com/qrpike/NodeJS-Git-Server"

@@ -153,15 +153,15 @@ GitServer = (function() {
     this.log(username, 'is trying to', method, 'on repo:', repo.name, '...');
     user = this.getUser(username, password, repo);
     if (user === false) {
-      this.log(username, 'was rejected as this user doesnt exist');
-      return gitObject.reject('Couldnt find this user');
+      this.log(username, 'was rejected as this user doesnt exist, or password is wrong');
+      return gitObject.reject(500, 'Wrong username or password');
     } else {
       if (_ref = this.permMap[method], __indexOf.call(user.permissions, _ref) >= 0) {
         this.log(username, 'Successfully did a', method, 'on', repo.name);
         return gitObject.accept();
       } else {
         this.log(username, 'was rejected, no permission to', method, 'on', repo.name);
-        return gitObject.reject('Dont know of method: ' + method);
+        return gitObject.reject(500, "You dont have these permissions");
       }
     }
   };
@@ -224,7 +224,7 @@ GitServer = (function() {
       }
     } else {
       this.log('Rejected - Repo', fetch.repo, 'doesnt exist');
-      return fetch.reject('This repo doesnt exist');
+      return fetch.reject(500, 'This repo doesnt exist');
     }
   };
 
@@ -242,7 +242,7 @@ GitServer = (function() {
       return this.processSecurity(push, 'push', repo);
     } else {
       this.log('Rejected - Repo', push.repo, 'doesnt exist');
-      return push.reject('This repo doesnt exist');
+      return push.reject(500, 'This repo doesnt exist');
     }
   };
 

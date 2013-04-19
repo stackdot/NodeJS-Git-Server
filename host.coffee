@@ -117,15 +117,15 @@ class GitServer
 		# check if the user exists:
 		if user is false
 			# This user isnt in this repo's .users array:
-			@log username,'was rejected as this user doesnt exist'
-			gitObject.reject 'Couldnt find this user'
+			@log username,'was rejected as this user doesnt exist, or password is wrong'
+			gitObject.reject(500,'Wrong username or password')
 		else
 			if @permMap[ method ] in user.permissions
 				@log username,'Successfully did a', method,'on',repo.name
 				gitObject.accept()
 			else
 				@log username,'was rejected, no permission to',method,'on',repo.name
-				gitObject.reject('Dont know of method: '+method)
+				gitObject.reject(500,"You dont have these permissions")
 	
 	
 	
@@ -186,7 +186,7 @@ class GitServer
 				@processSecurity fetch, 'fetch', repo
 		else # otherwise we need to reject this
 			@log 'Rejected - Repo',fetch.repo,'doesnt exist'
-			fetch.reject('This repo doesnt exist')
+			fetch.reject(500,'This repo doesnt exist')
 	
 	
 	
@@ -202,7 +202,7 @@ class GitServer
 			@processSecurity push, 'push', repo
 		else
 			@log 'Rejected - Repo',push.repo,'doesnt exist'
-			push.reject('This repo doesnt exist')
+			push.reject(500,'This repo doesnt exist')
 	
 	
 	
