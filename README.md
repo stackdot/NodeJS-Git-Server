@@ -1,5 +1,6 @@
 #NodeJS Git Server
 =========
+![image](header.png)
 A multi-tenant git server using NodeJS.
 
 Read the Documented Code: [Here](http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html)
@@ -30,7 +31,7 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 			{ user:newUser, permissions:['R','W'] }
 		]
 	}
-	_g = new GitServer([ newRepo ], [ newUser ]);
+	_g = new GitServer([ newRepo ]);
 
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
 
@@ -44,6 +45,24 @@ To make this faster, we can use the basic auth structure:
 
 This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
 
+## CLI Usage
+=========
+When you install this package globally using
+
+	sudo npm install -g git-server
+
+You will now have a CLI interface you can run and interact with. 
+
+Get started by typing `git-server` or `gitserver` into your terminal.
+
+You should see something similar to this:
+![image](cli-screenshot.png)
+
+With this interface you can type the following to see the available commands:
+
+	git-server> help
+
+You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.
 
 ### This is a work in progress - please feel free to contribute!
 please contribute
