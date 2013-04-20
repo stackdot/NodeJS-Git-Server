@@ -1,5 +1,3 @@
-`#!/usr/bin/env node`
-
 
 ###
 	This is the CLI interface for using git-server.
@@ -15,41 +13,68 @@ fs				= require 'fs'
 async			= require 'async'
 path			= require 'path'
 Table			= require 'cli-table'
+commander		= require 'commander'
 
 
 
-repoPort		= 7000
+# Ability to pass in certain settings
+commander
+	.version('0.0.1')
+	.option( '-p, --port [value]', 'Port to run Git on',parseInt)
+	.option( '-d, --directory [value]', 'Directory of the repos')
+	.option( '-l, --logging', 'Verbose logging on or off')
+	.parse( process.argv )
 
+
+# Set the port to either -p passed in, or fall back to port 7000
+repoPort		= commander.port || 7000
+logging			= commander.logging || false # set logging too
+
+
+# Get this users home directory if we didnt pass in where the repo location is
 getUserHomeDir = ()->
 	if process.platform is 'win32'
 		dir = 'USERPROFILE' 
 	else dir = 'HOME'
 	process.env[dir]
 
-repoLocation	= path.join getUserHomeDir(), './git-server/repos/'
-repoDB			= path.join getUserHomeDir(), './git-server/repos.db'
+
+
+# Set the repo location and repo.db file
+repoLocation	= commander.directory || path.join( getUserHomeDir(), './git-server/repos' )
+if commander.directory != undefined
+	repoDB		= commander.directory+'.db'
+else
+	repoDB 		= path.join( getUserHomeDir(), './git-server/repos.db' )
 
 
 
-err = mkdirp.sync repoLocation
-console.log err
+# Create the folders if they dont exist
+mkdirp.sync repoLocation
+
+
+# If we have a .db file use the data in it, otherwise use a blank object
 if fs.existsSync repoDB
 	repos = JSON.parse( fs.readFileSync( repoDB ) )
 else repos = { repos:[], users:[] }
 
 
 
-console.log repos
 
-
-
-
+# GITCLI Class
 class GITCLI extends EventEmitter
 
 
 
+
+	###
+		Constructor for the CLI interface
+		@param {Object} gitServer Git-Server object instance
+		@param {Array} users Users we are managing
+	###
 	constructor: ( @gitServer, @users = [] )->
 		
+		# Available calls the user can make in the CLI
 		availableCalls = 
 			'create repo'		: @createRepo
 			'create user'		: @createUser
@@ -57,6 +82,7 @@ class GITCLI extends EventEmitter
 			'list users'		: @listUsers
 			'add user to repo'	: @addUserToRepo
 		
+		# Our fabulous welcome message
 		welcomeMessage = """
 			Welcome to Git Server - Powered by NodeJS
 			 - Repo Location: 	#{repoLocation}
@@ -65,16 +91,16 @@ class GITCLI extends EventEmitter
 			 - User Count: #{@users.length}
 		"""
 		
+		# Create the CLI Object
 		@cli = new CLI 'git-server', welcomeMessage, availableCalls
+		
+		# If we trigger a `changedData` write the data to the .db file
 		@on 'changedData', @saveConfig
 	
 	
 	
-	askQuestions: ( questions = [] )=>
-		
 	
-	
-	
+	# Create a new repo
 	createRepo: ( callback )=>
 		@cli.ask { name:'Repo Name: ', anonRead:'Anonymous Access? [y,N] :: ' }, ( err, results )=>
 			if err then throw err
@@ -89,6 +115,7 @@ class GITCLI extends EventEmitter
 			
 			
 			
+	# Create a new user
 	createUser: ( callback )=>
 		@cli.ask { username:'Users username: ', password:'Users password: ' }, ( err, answers )=>
 			if err then throw err
@@ -107,6 +134,8 @@ class GITCLI extends EventEmitter
 	
 	
 	
+	
+	# Add a user to a repo
 	addUserToRepo: ( callback )=>
 		@cli.ask { repoName:'Repo Name: ', username:'Users username: ', permissions: 'Permissions (comma seperated: R,W ): ' }, ( err, answers )=>
 			repoName = answers.repoName.toLowerCase()
@@ -128,6 +157,10 @@ class GITCLI extends EventEmitter
 	
 	
 	
+	###
+		Loop through and find this user
+		@param {String} username Username of the user we are looking for
+	###
 	getUser: ( username )=>
 		for user in @users
 			return user if user.username is username
@@ -142,6 +175,9 @@ class GITCLI extends EventEmitter
 		Math.floor process.stdout.columns*( percentage/100 )
 	
 	
+	
+	
+	# List out all the current users and their associated repo's & permissions
 	listUsers: ( callback )=>
 		users	= @users
 		for user in @users
@@ -152,38 +188,53 @@ class GITCLI extends EventEmitter
 						user.repos.push
 							name: repo.name
 							permissions: repoUser.permissions
-				
+		
+		# create new console table
 		table 	= new Table
 			head:['Username','Password','Repos']
 			colWidths: [@columnPercentage(40)-1,@columnPercentage(20)-1,@columnPercentage(40)-1]
-			
+		
+		# Fill up the table
 		for user in @users
 			repos = for repo in user.repos
 				"#{repo.name} (#{repo.permissions.join(',')})"
 			table.push [ user.username, user.password, repos.join('\n') ]
+		
+		#log it
 		console.log table.toString()
 		callback()
 	
 	
+	
+	
+	# List out all the repo's and their associated users
 	listRepos: ( callback )=>
 		repos = @gitServer.repos
+		# Create a new table
 		table = new Table
 			head:['Repo Name','Anonymous Reads','Users']
 			colWidths: [@columnPercentage(40)-1,@columnPercentage(20)-1,@columnPercentage(40)-1]
-			
+		
+		# Fill up the table
 		for repo in repos
 			users = for user in repo.users
 				"#{user.user.username} (#{user.permissions.join(',')})"
 			table.push [ repo.name, repo.anonRead, users.join('\n') ]
+		
+		#log it
 		console.log table.toString()
 		callback()
 	
 	
+	
+	
+	# Save the data to the .db file
 	saveConfig: ()=>
 		config = JSON.stringify({ repos:@gitServer.repos, users:@users })
 		fs.writeFileSync repoDB, config
 
 
 
-_g = new GitServer repos.repos, true, repoLocation, repoPort
+# Start me up buttercup
+_g = new GitServer repos.repos, logging, repoLocation, repoPort
 _c = new GITCLI _g, repos.users

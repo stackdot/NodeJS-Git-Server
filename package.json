@@ -11,7 +11,8 @@
     "mkdirp": "*",
     "cli-table": "*",
     "pushover": "*",
-    "cli-listener":"*"
+    "cli-listener":"*",
+    "commander":"*"
   },
   "repository": {
     "type": "git",
