@@ -1,6 +1,6 @@
 {
   "name": "git-server",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "A simple, multi-tenant git server written in NodeJS",
   "author": "Quinton Pike <@quinton.pike>",
   "contributors": [
@@ -21,8 +21,8 @@
   "homepage": "http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html",
   "main": "host.js",
   "bin": {
-    "git-server": "cli.js",
-    "gitserver": "cli.js"
+    "git-server": "cli.sh",
+    "gitserver": "cli.sh"
   },
   "engines": {
     "node": ">=0.3.7"
