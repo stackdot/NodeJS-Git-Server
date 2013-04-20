@@ -27,8 +27,14 @@
       <div class="heading h1">
         <a href="#%23%23%20example%20usage">## Example Usage</a>
       </div>
+      <div class="heading h1">
+        <a href="#%23%23%20cli%20usage">## CLI Usage</a>
+      </div>
       <div class="heading h3">
         <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">This is a work in progress - please feel free to contribute!</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23license">#License</a>
       </div>
     </div>
   </div>
@@ -42,7 +48,8 @@
 </div>
 
 
-<p>A multi-tenant git server using NodeJS.</p>
+<p><img src="header.png" alt="image" title="" />
+A multi-tenant git server using NodeJS.</p>
 
 <p>Read the Documented Code: <a href="http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html">Here</a></p>
 
@@ -74,7 +81,7 @@
 </div>
 
 
-<p>The GitServer is a very easy to get up and running git server. It uses the Pushover module for listening to git events, and its own layer to do the security for each repo &amp; user.</p>
+<p>The GitServer is a very easy to get up and running git server. It uses the <a href="https://github.com/substack/pushover">Pushover</a> module for listening to git events, and its own layer to do the security for each repo &amp; user.</p>
 
 
 <div class="highlight"><pre><code><span class="nt">var</span> <span class="nt">GitServer</span> <span class="o">=</span> <span class="nt">require</span><span class="o">(</span><span class="s1">&#39;git-server&#39;</span><span class="o">);</span>
@@ -89,7 +96,7 @@
         <span class="p">{</span> <span class="nb">user</span><span class="p">:</span><span class="nx">newUser</span><span class="p">,</span> <span class="nx">permissions</span><span class="p">:</span><span class="err">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="cp">]</span> <span class="p">}</span>
     <span class="o">]</span>
 <span class="err">}</span>
-<span class="nt">_g</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">GitServer</span><span class="o">(</span><span class="cp">[</span> <span class="nx">newRepo</span> <span class="cp">]</span><span class="o">,</span> <span class="cp">[</span> <span class="nx">newUser</span> <span class="cp">]</span><span class="o">);</span>
+<span class="nt">_g</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">GitServer</span><span class="o">(</span><span class="cp">[</span> <span class="nx">newRepo</span> <span class="cp">]</span><span class="o">);</span>
 </code></pre></div>
 
 
@@ -115,13 +122,68 @@
 <p>This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. </p>
 
 
+<div class="pilwrap" id="%23%23%20cli%20usage">
+  <h1>
+    <a href="#%23%23%20cli%20usage" name="%23%23%20cli%20usage" class="pilcrow">&#182;</a>
+    ## CLI Usage
+  </h1>
+</div>
+
+
+<p>When you install this package globally using</p>
+
+
+<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">npm</span> <span class="n">install</span> <span class="o">-</span><span class="n">g</span> <span class="n">git</span><span class="o">-</span><span class="n">server</span>
+</code></pre></div>
+
+
+
+<p>You will now have a CLI interface you can run and interact with. </p>
+
+<p>Get started by typing <code>git-server</code> or <code>gitserver</code> into your terminal.</p>
+
+<p>You should see something similar to this:
+<img src="cli-screenshot.png" alt="image" title="" /></p>
+
+<p>With this interface you can type the following to see the available commands:</p>
+
+
+<div class="highlight"><pre><code><span class="n">git</span><span class="o">-</span><span class="n">server</span><span class="o">&gt;</span> <span class="n">help</span>
+</code></pre></div>
+
+
+
+<p>You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.</p>
+
+
 <div class="pilwrap" id="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">
   <h3>
     <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!" name="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!" class="pilcrow">&#182;</a>
     This is a work in progress - please feel free to contribute!
   </h3>
 </div>
+
+
+<p>please contribute</p>
+
+
+<div class="pilwrap" id="%23license">
+  <h1>
+    <a href="#%23license" name="%23license" class="pilcrow">&#182;</a>
+    #License
+  </h1>
 </div>
+
+
+<p>(The MIT License)</p>
+
+<p>Copyright (c) 2010 <a href="https://twitter.com/QuintonPike">Quinton Pike</a></p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p></div>
   </div>
 </body>
 </html>

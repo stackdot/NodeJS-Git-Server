@@ -1,1 +1,1 @@
-var tree={"files":["README.md","example.coffee","example.js","host.coffee","host.js"]};
+var tree={"files":["README.md","cli.coffee","cli.js","cli.sh","example.coffee","example.js","host.coffee","host.js"]};
