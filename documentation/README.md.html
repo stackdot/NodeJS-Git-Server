@@ -27,6 +27,12 @@
       <div class="heading h1">
         <a href="#%23%23%20example%20usage">## Example Usage</a>
       </div>
+      <div class="heading h5">
+        <a href="#event%20triggers%3A">Event Triggers:</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23%23%20https">## HTTPS</a>
+      </div>
       <div class="heading h1">
         <a href="#%23%23%20cli%20usage">## CLI Usage</a>
       </div>
@@ -55,7 +61,7 @@
 
 <p>A multi-tenant git server using NodeJS.</p>
 
-<p>Read the Documented Code: <a href="http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html">Here</a></p>
+<p>Read the <a href="http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html">Documented Source Code Here</a></p>
 
 <p>Made to be able to support many git repo's and users with Read/Write customizable permissions.</p>
 
@@ -105,6 +111,38 @@
 
 
 
+
+<div class="pilwrap" id="event%20triggers%3A">
+  <h5>
+    <a href="#event%20triggers%3A" name="event%20triggers%3A" class="pilcrow">&#182;</a>
+    Event Triggers:
+  </h5>
+</div>
+
+
+<p>If you want onSuccessful triggers, you can add them to each repo like so:</p>
+
+
+<div class="highlight"><pre><code><span class="kd">var</span> <span class="nx">newRepo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">name</span><span class="o">:</span><span class="s1">&#39;myrepo&#39;</span><span class="p">,</span>
+    <span class="nx">anonRead</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="nx">users</span><span class="o">:</span> <span class="cp">[</span>
+        <span class="p">{</span> <span class="nb">user</span><span class="p">:</span><span class="nx">newUser</span><span class="p">,</span> <span class="nx">permissions</span><span class="p">:</span><span class="err">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="cp">]</span> <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="nx">onSuccessful</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="nx">fetch</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">repo</span><span class="p">,</span> <span class="nx">method</span> <span class="p">){</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Successful fetch/pull/clone on repo:&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nx">push</span>  <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">repo</span><span class="p">,</span> <span class="nx">method</span> <span class="p">){</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;PUSHed:&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+            <span class="c1">// Possibly do some deploy scripts etc.</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+
+
 <p>When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.</p>
 
 
@@ -124,6 +162,52 @@
 
 
 <p>This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. </p>
+
+
+<div class="pilwrap" id="%23%23%20https">
+  <h1>
+    <a href="#%23%23%20https" name="%23%23%20https" class="pilcrow">&#182;</a>
+    ## HTTPS
+  </h1>
+</div>
+
+
+<p>The ability to use HTTPS is now implemented for the module (not the cli <em>yet</em>). This is important so that your username &amp; password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.</p>
+
+<p>To enable HTTPS, send the module the 'cert' param:</p>
+
+
+<div class="highlight"><pre><code><span class="n">var</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fs</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">certs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">key</span>     <span class="o">:</span> <span class="n">fs</span><span class="p">.</span><span class="n">readFileSync</span><span class="p">(</span><span class="err">&#39;</span><span class="p">..</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span><span class="err">&#39;</span><span class="p">)</span>
+    <span class="n">cert</span>    <span class="o">:</span> <span class="n">fs</span><span class="p">.</span><span class="n">readFileSync</span><span class="p">(</span><span class="err">&#39;</span><span class="p">..</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">certificate</span><span class="p">.</span><span class="n">pem</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="n">_g</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GitServer</span><span class="p">([</span> <span class="n">newRepo</span> <span class="p">],</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">certs</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+<p>To create these certs you can run:</p>
+
+
+<div class="highlight"><pre><code><span class="n">openssl</span> <span class="n">genrsa</span> <span class="o">-</span><span class="n">out</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="mi">1024</span> 
+<span class="n">openssl</span> <span class="n">req</span> <span class="o">-</span><span class="n">new</span> <span class="o">-</span><span class="n">key</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="o">-</span><span class="n">out</span> <span class="n">certrequest</span><span class="p">.</span><span class="n">csr</span> 
+<span class="n">openssl</span> <span class="n">x509</span> <span class="o">-</span><span class="n">req</span> <span class="o">-</span><span class="n">in</span> <span class="n">certrequest</span><span class="p">.</span><span class="n">csr</span> <span class="o">-</span><span class="n">signkey</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="o">-</span><span class="n">out</span> <span class="n">certificate</span><span class="p">.</span><span class="n">pem</span>
+</code></pre></div>
+
+
+
+<p>Also, be aware that when using HTTPS for the git server, when you try to clone,etc. It will give you an SSL error because git (which uses CURL) cannot verify the SSL Cert. To correct this, install a actual, verified SSL Cert ( Free ones here: <a href="http://www.startssl.com/?app=1">StartCom</a> )</p>
+
+<p>If you want to keep using the self signed cert like we created above ^ just tell git to not verify the cert. ( Other ways to do it <a href="http://www.f15ijp.com/2012/08/git-ssl-certificate-problem-how-to-turn-off-ssl-validation-for-a-repo/">here</a> )</p>
+
+
+<div class="highlight"><pre><code><span class="n">export</span> <span class="n">GIT_SSL_NO_VERIFY</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+
+
+<p>And you are good to go!</p>
 
 
 <div class="pilwrap" id="%23%23%20cli%20usage">
@@ -169,8 +253,9 @@
 
 
 <ul>
-<li>Add HTTPS Support</li>
+<li>Add HTTPS Support ( partially completed )</li>
 <li>Add onPush &amp; onFetch actions for repos</li>
+<li>Make YouTube demo of the app</li>
 </ul>
 
 

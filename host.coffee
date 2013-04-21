@@ -135,6 +135,7 @@ class GitServer
 		else
 			if @permMap[ method ] in user.permissions
 				@log username,'Successfully did a', method,'on',repo.name
+				@checkTriggers method, repo
 				gitObject.accept()
 			else
 				@log username,'was rejected, no permission to',method,'on',repo.name
@@ -193,6 +194,7 @@ class GitServer
 		if repo isnt false # if this repo actually exists:
 			# This repo allows anyone to fetch it, so accept the request:
 			if repo.anonRead is true
+				@checkTriggers 'fetch', repo
 				fetch.accept()
 			# this repo has no anon access, so we need to check the user/pass
 			else
@@ -216,6 +218,23 @@ class GitServer
 		else
 			@log 'Rejected - Repo',push.repo,'doesnt exist'
 			push.reject(500,'This repo doesnt exist')
+	
+	
+	
+	
+	###
+		Check if this repo has onSuccessful triggers
+		@param {String} method fetch|push
+		@param {Object} repo Repo object we are checking
+	###
+	checkTriggers: ( method, repo )=>
+		# If .onSuccessful exists:
+		if repo.onSuccessful?
+			# If this method exists in it:
+			if repo.onSuccessful[method]?
+				# log it, and call it
+				@log 'On successful triggered: ', method, 'on',repo.name
+				repo.onSuccessful[method]?( repo, method )
 	
 	
 	

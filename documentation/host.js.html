@@ -115,6 +115,9 @@
     <span class="k">this</span><span class="p">.</span><span class="nx">getUser</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">repo</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">GitServer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getUser</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
     <span class="p">};</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">checkTriggers</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">repo</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">GitServer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">checkTriggers</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="p">};</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">onPush</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">push</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">GitServer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">onPush</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
     <span class="p">};</span>
@@ -328,6 +331,7 @@ This user has permission to do this method on this repo</p>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">_ref</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">permMap</span><span class="p">[</span><span class="nx">method</span><span class="p">],</span> <span class="nx">__indexOf</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">permissions</span><span class="p">,</span> <span class="nx">_ref</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="s1">&#39;Successfully did a&#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">checkTriggers</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">repo</span><span class="p">);</span>
         <span class="k">return</span> <span class="nx">gitObject</span><span class="p">.</span><span class="nx">accept</span><span class="p">();</span>
       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="s1">&#39;was rejected, no permission to&#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
@@ -424,6 +428,7 @@ This user has permission to do this method on this repo</p>
     <span class="nx">repo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getRepo</span><span class="p">(</span><span class="nx">fetch</span><span class="p">.</span><span class="nx">repo</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">repo</span> <span class="o">!==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">repo</span><span class="p">.</span><span class="nx">anonRead</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">checkTriggers</span><span class="p">(</span><span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">);</span>
         <span class="k">return</span> <span class="nx">fetch</span><span class="p">.</span><span class="nx">accept</span><span class="p">();</span>
       <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">processSecurity</span><span class="p">(</span><span class="nx">fetch</span><span class="p">,</span> <span class="s1">&#39;fetch&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">);</span>
@@ -483,6 +488,48 @@ This user has permission to do this method on this repo</p>
   <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
 </div>
 <div class="dox">
+  <div class="summary"><p>Check if this repo has onSuccessful triggers</p>
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">method</span>
+      <span class="dox_type">String</span>
+      <span>fetch|push</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">repo</span>
+      <span class="dox_type">Object</span>
+      <span>Repo object we are checking</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+  <span class="nx">GitServer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">checkTriggers</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">repo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">_base</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;On successful triggered: &#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">typeof</span> <span class="p">(</span><span class="nx">_base</span> <span class="o">=</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span><span class="p">)[</span><span class="nx">method</span><span class="p">]</span> <span class="o">===</span> <span class="s2">&quot;function&quot;</span> <span class="o">?</span> <span class="nx">_base</span><span class="p">[</span><span class="nx">method</span><span class="p">](</span><span class="nx">repo</span><span class="p">,</span> <span class="nx">method</span><span class="p">)</span> <span class="o">:</span> <span class="k">void</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<div class="dox">
   <div class="summary"><p>Get the user object, check user/pass is correct and it exists in this repo.</p>
   </div>
   <div class="body">
@@ -529,7 +576,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the repo from the array of repos</p>

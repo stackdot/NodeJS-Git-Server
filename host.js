@@ -42,6 +42,9 @@ GitServer = (function() {
     this.getUser = function(username, password, repo) {
       return GitServer.prototype.getUser.apply(_this, arguments);
     };
+    this.checkTriggers = function(method, repo) {
+      return GitServer.prototype.checkTriggers.apply(_this, arguments);
+    };
     this.onPush = function(push) {
       return GitServer.prototype.onPush.apply(_this, arguments);
     };
@@ -173,6 +176,7 @@ GitServer = (function() {
     } else {
       if (_ref = this.permMap[method], __indexOf.call(user.permissions, _ref) >= 0) {
         this.log(username, 'Successfully did a', method, 'on', repo.name);
+        this.checkTriggers(method, repo);
         return gitObject.accept();
       } else {
         this.log(username, 'was rejected, no permission to', method, 'on', repo.name);
@@ -233,6 +237,7 @@ GitServer = (function() {
     repo = this.getRepo(fetch.repo);
     if (repo !== false) {
       if (repo.anonRead === true) {
+        this.checkTriggers('fetch', repo);
         return fetch.accept();
       } else {
         return this.processSecurity(fetch, 'fetch', repo);
@@ -258,6 +263,23 @@ GitServer = (function() {
     } else {
       this.log('Rejected - Repo', push.repo, 'doesnt exist');
       return push.reject(500, 'This repo doesnt exist');
+    }
+  };
+
+  /*
+  		Check if this repo has onSuccessful triggers
+  		@param {String} method fetch|push
+  		@param {Object} repo Repo object we are checking
+  */
+
+
+  GitServer.prototype.checkTriggers = function(method, repo) {
+    var _base;
+    if (repo.onSuccessful != null) {
+      if (repo.onSuccessful[method] != null) {
+        this.log('On successful triggered: ', method, 'on', repo.name);
+        return typeof (_base = repo.onSuccessful)[method] === "function" ? _base[method](repo, method) : void 0;
+      }
     }
   };
 

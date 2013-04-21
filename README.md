@@ -5,7 +5,7 @@
 
 A multi-tenant git server using NodeJS.
 
-Read the Documented Code: [Here](http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html)
+Read the [Documented Source Code Here](http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html)
 
 Made to be able to support many git repo's and users with Read/Write customizable permissions.
 
@@ -34,6 +34,26 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 		]
 	}
 	_g = new GitServer([ newRepo ]);
+
+##### Event Triggers:
+If you want onSuccessful triggers, you can add them to each repo like so:
+
+	var newRepo = {
+		name:'myrepo',
+		anonRead:false,
+		users: [
+			{ user:newUser, permissions:['R','W'] }
+		],
+		onSuccessful : {
+			fetch : function( repo, method ){
+				console.log('Successful fetch/pull/clone on repo:',repo.name);
+			}
+			push  : function( repo, method ){
+				console.log('PUSHed:', repo.name);
+				// Possibly do some deploy scripts etc.
+			}
+		}
+	}
 
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
 

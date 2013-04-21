@@ -491,6 +491,7 @@ This user has permission to do this method on this repo</p>
     <span class="k">else</span>
       <span class="k">if</span> <span class="nx">@permMap</span><span class="p">[</span> <span class="nx">method</span> <span class="p">]</span> <span class="k">in</span> <span class="nx">user</span><span class="p">.</span><span class="nx">permissions</span>
         <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;Successfully did a&#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
+        <span class="nx">@checkTriggers</span> <span class="nx">method</span><span class="p">,</span> <span class="nx">repo</span>
         <span class="nx">gitObject</span><span class="p">.</span><span class="nx">accept</span><span class="p">()</span>
       <span class="k">else</span>
         <span class="nx">@log</span> <span class="nx">username</span><span class="p">,</span><span class="s">&#39;was rejected, no permission to&#39;</span><span class="p">,</span><span class="nx">method</span><span class="p">,</span><span class="s">&#39;on&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
@@ -717,6 +718,7 @@ This user has permission to do this method on this repo</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
       <span class="k">if</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">anonRead</span> <span class="o">is</span> <span class="kc">true</span>
+        <span class="nx">@checkTriggers</span> <span class="s">&#39;fetch&#39;</span><span class="p">,</span> <span class="nx">repo</span>
         <span class="nx">fetch</span><span class="p">.</span><span class="nx">accept</span><span class="p">()</span>
 
 </pre></div>
@@ -786,6 +788,81 @@ This user has permission to do this method on this repo</p>
   <a class="pilcrow" href="#section-41" id="section-41">&#182;</a>
 </div>
 <div class="dox">
+  <div class="summary"><p>Check if this repo has onSuccessful triggers</p>
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">method</span>
+      <span class="dox_type">String</span>
+      <span>fetch|push</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">repo</span>
+      <span class="dox_type">Object</span>
+      <span>Repo object we are checking</span>
+    </div>
+  </div>
+</div>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">checkTriggers: </span><span class="nf">( method, repo )=&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
+</div>
+<p>If .onSuccessful exists:</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">if</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span><span class="o">?</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
+</div>
+<p>If this method exists in it:</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">if</span> <span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span><span class="o">?</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
+</div>
+<p>log it, and call it</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">@log</span> <span class="s">&#39;On successful triggered: &#39;</span><span class="p">,</span> <span class="nx">method</span><span class="p">,</span> <span class="s">&#39;on&#39;</span><span class="p">,</span><span class="nx">repo</span><span class="p">.</span><span class="nx">name</span>
+        <span class="nx">repo</span><span class="p">.</span><span class="nx">onSuccessful</span><span class="p">[</span><span class="nx">method</span><span class="p">]</span><span class="o">?</span><span class="p">(</span> <span class="nx">repo</span><span class="p">,</span> <span class="nx">method</span> <span class="p">)</span>
+  
+  
+  
+  
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-45" id="section-45">&#182;</a>
+</div>
+<div class="dox">
   <div class="summary"><p>Get the user object, check user/pass is correct and it exists in this repo.</p>
   </div>
   <div class="body">
@@ -820,7 +897,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-42" id="section-42">&#182;</a>
+  <a class="pilcrow" href="#section-46" id="section-46">&#182;</a>
 </div>
 <p>If we found this user, return it</p>
         </td>
@@ -838,7 +915,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-43" id="section-43">&#182;</a>
+  <a class="pilcrow" href="#section-47" id="section-47">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the repo from the array of repos</p>
@@ -865,7 +942,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-44" id="section-44">&#182;</a>
+  <a class="pilcrow" href="#section-48" id="section-48">&#182;</a>
 </div>
 <p>If the repo exists, return it. </p>
         </td>
@@ -882,7 +959,7 @@ This user has permission to do this method on this repo</p>
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-45" id="section-45">&#182;</a>
+  <a class="pilcrow" href="#section-49" id="section-49">&#182;</a>
 </div>
 <p>Export this as a module:</p>
         </td>

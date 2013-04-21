@@ -35,14 +35,18 @@ repoTwo =
 		user:
 			username: 'demo2'
 			password: 'demo2'
-		permissions:['R']
+		permissions:['R','W']
 	]
+	onSuccessful :
+		fetch : ->
+			console.log 'Successful fetch on "anon" repo'
+		push : ->
+			console.log 'Success push on "anon" repo'
 
 
 
 # Put these into arrays
-repos 	= [ repoOne, repoTwo ]
-users	= [ userOne ]
+repos 	= [ repoOne, repoTwo ] 
 
 
 

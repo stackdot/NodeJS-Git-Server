@@ -109,8 +109,13 @@
     <span class="nv">user:</span>
       <span class="nv">username: </span><span class="s">&#39;demo2&#39;</span>
       <span class="nv">password: </span><span class="s">&#39;demo2&#39;</span>
-    <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">]</span>
+    <span class="nx">permissions</span><span class="o">:</span><span class="p">[</span><span class="s">&#39;R&#39;</span><span class="p">,</span><span class="s">&#39;W&#39;</span><span class="p">]</span>
   <span class="p">]</span>
+  <span class="nv">onSuccessful :</span>
+    <span class="nv">fetch : </span><span class="nf">-&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;Successful fetch on &quot;anon&quot; repo&#39;</span>
+    <span class="nv">push : </span><span class="nf">-&gt;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;Success push on &quot;anon&quot; repo&#39;</span>
 
 
 
@@ -126,8 +131,7 @@
 <p>Put these into arrays</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-<span class="nv">repos   = </span><span class="p">[</span> <span class="nx">repoOne</span><span class="p">,</span> <span class="nx">repoTwo</span> <span class="p">]</span>
-<span class="nv">users = </span><span class="p">[</span> <span class="nx">userOne</span> <span class="p">]</span>
+<span class="nv">repos   = </span><span class="p">[</span> <span class="nx">repoOne</span><span class="p">,</span> <span class="nx">repoTwo</span> <span class="p">]</span> 
 
 
 
