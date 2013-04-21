@@ -1,6 +1,6 @@
 #NodeJS Git Server
 =========
-![image](https://github.com/qrpike/NodeJS-Git-Server/blob/master/header.png)
+![image](//github.com/qrpike/NodeJS-Git-Server/blob/master/header.png)
 
 
 A multi-tenant git server using NodeJS.
