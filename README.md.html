@@ -28,7 +28,13 @@
         <a href="#%23%23%20example%20usage">## Example Usage</a>
       </div>
       <div class="heading h1">
+        <a href="#%23%23%20https">## HTTPS</a>
+      </div>
+      <div class="heading h1">
         <a href="#%23%23%20cli%20usage">## CLI Usage</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23%23%20todo%20items">## TODO Items</a>
       </div>
       <div class="heading h3">
         <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">This is a work in progress - please feel free to contribute!</a>
@@ -48,8 +54,9 @@
 </div>
 
 
-<p><img src="header.png" alt="image" title="" />
-A multi-tenant git server using NodeJS.</p>
+<p><img src="https://raw.github.com/qrpike/NodeJS-Git-Server/master/header.png" alt="image" title="" /></p>
+
+<p>A multi-tenant git server using NodeJS.</p>
 
 <p>Read the Documented Code: <a href="http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html">Here</a></p>
 
@@ -122,6 +129,52 @@ A multi-tenant git server using NodeJS.</p>
 <p>This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. </p>
 
 
+<div class="pilwrap" id="%23%23%20https">
+  <h1>
+    <a href="#%23%23%20https" name="%23%23%20https" class="pilcrow">&#182;</a>
+    ## HTTPS
+  </h1>
+</div>
+
+
+<p>The ability to use HTTPS is now implemented for the module (not the cli <em>yet</em>). This is important so that your username &amp; password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.</p>
+
+<p>To enable HTTPS, send the module the 'cert' param:</p>
+
+
+<div class="highlight"><pre><code><span class="n">var</span> <span class="n">fs</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fs</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="n">var</span> <span class="n">certs</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">key</span>     <span class="o">:</span> <span class="n">fs</span><span class="p">.</span><span class="n">readFileSync</span><span class="p">(</span><span class="err">&#39;</span><span class="p">..</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span><span class="err">&#39;</span><span class="p">)</span>
+    <span class="n">cert</span>    <span class="o">:</span> <span class="n">fs</span><span class="p">.</span><span class="n">readFileSync</span><span class="p">(</span><span class="err">&#39;</span><span class="p">..</span><span class="o">/</span><span class="n">certs</span><span class="o">/</span><span class="n">certificate</span><span class="p">.</span><span class="n">pem</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="p">};</span>
+<span class="n">_g</span> <span class="o">=</span> <span class="n">new</span> <span class="n">GitServer</span><span class="p">([</span> <span class="n">newRepo</span> <span class="p">],</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">undefined</span><span class="p">,</span> <span class="n">certs</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+<p>To create these certs you can run:</p>
+
+
+<div class="highlight"><pre><code><span class="n">openssl</span> <span class="n">genrsa</span> <span class="o">-</span><span class="n">out</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="mi">1024</span> 
+<span class="n">openssl</span> <span class="n">req</span> <span class="o">-</span><span class="n">new</span> <span class="o">-</span><span class="n">key</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="o">-</span><span class="n">out</span> <span class="n">certrequest</span><span class="p">.</span><span class="n">csr</span> 
+<span class="n">openssl</span> <span class="n">x509</span> <span class="o">-</span><span class="n">req</span> <span class="o">-</span><span class="n">in</span> <span class="n">certrequest</span><span class="p">.</span><span class="n">csr</span> <span class="o">-</span><span class="n">signkey</span> <span class="n">privatekey</span><span class="p">.</span><span class="n">pem</span> <span class="o">-</span><span class="n">out</span> <span class="n">certificate</span><span class="p">.</span><span class="n">pem</span>
+</code></pre></div>
+
+
+
+<p>Also, be aware that when using HTTPS for the git server, when you try to clone,etc. It will give you an SSL error because git (which uses CURL) cannot verify the SSL Cert. To correct this, install a actual, verified SSL Cert ( Free ones here: <a href="http://www.startssl.com/?app=1">StartCom</a> )</p>
+
+<p>If you want to keep using the self signed cert like we created above ^ just tell git to not verify the cert. ( Other ways to do it <a href="http://www.f15ijp.com/2012/08/git-ssl-certificate-problem-how-to-turn-off-ssl-validation-for-a-repo/">here</a> )</p>
+
+
+<div class="highlight"><pre><code><span class="n">export</span> <span class="n">GIT_SSL_NO_VERIFY</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+
+
+
+<p>And you are good to go!</p>
+
+
 <div class="pilwrap" id="%23%23%20cli%20usage">
   <h1>
     <a href="#%23%23%20cli%20usage" name="%23%23%20cli%20usage" class="pilcrow">&#182;</a>
@@ -143,7 +196,7 @@ A multi-tenant git server using NodeJS.</p>
 <p>Get started by typing <code>git-server</code> or <code>gitserver</code> into your terminal.</p>
 
 <p>You should see something similar to this:
-<img src="cli-screenshot.png" alt="image" title="" /></p>
+<img src="https://raw.github.com/qrpike/NodeJS-Git-Server/master/cli-screenshot.png" alt="image" title="" /></p>
 
 <p>With this interface you can type the following to see the available commands:</p>
 
@@ -154,6 +207,21 @@ A multi-tenant git server using NodeJS.</p>
 
 
 <p>You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.</p>
+
+
+<div class="pilwrap" id="%23%23%20todo%20items">
+  <h1>
+    <a href="#%23%23%20todo%20items" name="%23%23%20todo%20items" class="pilcrow">&#182;</a>
+    ## TODO Items
+  </h1>
+</div>
+
+
+<ul>
+<li>Add HTTPS Support ( partially completed )</li>
+<li>Add onPush &amp; onFetch actions for repos</li>
+<li>Make YouTube demo of the app</li>
+</ul>
 
 
 <div class="pilwrap" id="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">

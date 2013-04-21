@@ -86,6 +86,7 @@
 
 
 
+
 </pre></div>
         </td>
       </tr>
@@ -99,6 +100,7 @@
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nv">repoPort    = </span><span class="nx">commander</span><span class="p">.</span><span class="nx">port</span> <span class="o">||</span> <span class="mi">7000</span>
 <span class="nv">logging     = </span><span class="nx">commander</span><span class="p">.</span><span class="nx">logging</span> <span class="o">||</span> <span class="kc">false</span> <span class="c1"># set logging too</span>
+
 
 
 
@@ -154,6 +156,7 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nx">mkdirp</span><span class="p">.</span><span class="nx">sync</span> <span class="nx">repoLocation</span>
+
 
 
 
@@ -290,8 +293,20 @@
         </td>
         <td class="code highlight"><div class="highlight"><pre>
     <span class="nx">@</span><span class="kc">on</span> <span class="s">&#39;changedData&#39;</span><span class="p">,</span> <span class="nx">@saveConfig</span>
-  
-  
+    
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>Little hack to reset the input after the gitServer logs any messages.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">setTimeout</span> <span class="nx">@cli</span><span class="p">.</span><span class="nx">resetInput</span><span class="p">,</span> <span class="mi">100</span>
   
   
 
@@ -301,7 +316,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
 </div>
 <p>Create a new repo</p>
         </td>
@@ -327,7 +342,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
 </div>
 <p>Create a new user</p>
         </td>
@@ -358,7 +373,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
 </div>
 <p>Add a user to a repo</p>
         </td>
@@ -391,7 +406,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Loop through and find this user</p>
@@ -422,7 +437,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>Get the number of columns needed from a % width</p>
@@ -453,7 +468,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <p>List out all the current users and their associated repo's &amp; permissions</p>
         </td>
@@ -476,7 +491,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <p>create new console table</p>
         </td>
@@ -492,7 +507,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <p>Fill up the table</p>
         </td>
@@ -509,7 +524,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <p>log it</p>
         </td>
@@ -527,7 +542,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <p>List out all the repo's and their associated users</p>
         </td>
@@ -541,7 +556,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
 <p>Create a new table</p>
         </td>
@@ -557,7 +572,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
+  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
 </div>
 <p>Fill up the table</p>
         </td>
@@ -574,7 +589,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-27" id="section-27">&#182;</a>
+  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
 </div>
 <p>log it</p>
         </td>
@@ -592,7 +607,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-28" id="section-28">&#182;</a>
+  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
 </div>
 <p>Save the data to the .db file</p>
         </td>
@@ -610,7 +625,7 @@
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-29" id="section-29">&#182;</a>
+  <a class="pilcrow" href="#section-30" id="section-30">&#182;</a>
 </div>
 <p>Start me up buttercup</p>
         </td>

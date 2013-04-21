@@ -55,7 +55,9 @@
         <td class="code highlight"><div class="highlight"><pre>
 <span class="nv">pushover  = </span><span class="nx">require</span> <span class="s">&#39;pushover&#39;</span>
 <span class="nv">http    = </span><span class="nx">require</span> <span class="s">&#39;http&#39;</span>
+<span class="nv">https   = </span><span class="nx">require</span> <span class="s">&#39;https&#39;</span>
 <span class="nv">async   = </span><span class="nx">require</span> <span class="s">&#39;async&#39;</span>
+<span class="nv">fs      = </span><span class="nx">require</span> <span class="s">&#39;fs&#39;</span>
 
 
 
@@ -96,11 +98,17 @@
       <span class="dox_type">Int</span>
       <span>Port on which to run this server.</span>
     </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">certs</span>
+      <span class="dox_type">Object</span>
+      <span>Object of 'key' and 'cert' with the location of the certs (only used for HTTPS)</span>
+    </div>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-  <span class="nv">constructor: </span><span class="nf">( @repos = [], @logging = false, @repoLocation = &#39;/tmp/repos&#39;, @port = 7000 )-&gt;</span>
+  <span class="nv">constructor: </span><span class="nf">( @repos = [], @logging = false, @repoLocation = &#39;/tmp/repos&#39;, @port = 7000, @certs )-&gt;</span>
+    
 
 </pre></div>
         </td>
@@ -153,7 +161,16 @@
 <p>Route requests to pushover:</p>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
-      <span class="vi">@server = </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span> <span class="nx">@git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">@git</span><span class="p">)</span>
+      <span class="k">if</span> <span class="nx">@certs</span><span class="o">?</span>
+        <span class="vi">@server = </span><span class="nx">https</span><span class="p">.</span><span class="nx">createServer</span> <span class="nx">@certs</span><span class="p">,</span> <span class="nx">@git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">@git</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="nv">red   = </span><span class="o">`</span><span class="s">&#39;\033[31m&#39;</span><span class="o">`</span>
+        <span class="nv">reset = </span><span class="o">`</span><span class="s">&#39;\033[0m&#39;</span><span class="o">`</span>
+        <span class="nv">message = </span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">          WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.</span>
+<span class="s">          Be careful, without HTTPS your user/pass will not be encrypted&quot;&quot;&quot;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">red</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="nx">reset</span>
+        <span class="vi">@server = </span><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span> <span class="nx">@git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">@git</span><span class="p">)</span>
 
 </pre></div>
         </td>
