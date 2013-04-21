@@ -70,7 +70,6 @@ You will see a list of possible commands, just enter a command and the prompt wi
 =========
 - Add HTTPS Support
 - Add onPush & onFetch actions for repos
-- 
 
 ### This is a work in progress - please feel free to contribute!
 please contribute
