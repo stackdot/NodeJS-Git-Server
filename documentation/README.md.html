@@ -27,6 +27,12 @@
       <div class="heading h1">
         <a href="#%23%23%20example%20usage">## Example Usage</a>
       </div>
+      <div class="heading h1">
+        <a href="#%23%23%20cli%20usage">## CLI Usage</a>
+      </div>
+      <div class="heading h1">
+        <a href="#%23%23%20todo%20items">## TODO Items</a>
+      </div>
       <div class="heading h3">
         <a href="#this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">This is a work in progress - please feel free to contribute!</a>
       </div>
@@ -44,6 +50,8 @@
   </h1>
 </div>
 
+
+<p><img src="https://raw.github.com/qrpike/NodeJS-Git-Server/master/header.png" alt="image" title="" /></p>
 
 <p>A multi-tenant git server using NodeJS.</p>
 
@@ -92,7 +100,7 @@
         <span class="p">{</span> <span class="nb">user</span><span class="p">:</span><span class="nx">newUser</span><span class="p">,</span> <span class="nx">permissions</span><span class="p">:</span><span class="err">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span><span class="s1">&#39;W&#39;</span><span class="cp">]</span> <span class="p">}</span>
     <span class="o">]</span>
 <span class="err">}</span>
-<span class="nt">_g</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">GitServer</span><span class="o">(</span><span class="cp">[</span> <span class="nx">newRepo</span> <span class="cp">]</span><span class="o">,</span> <span class="cp">[</span> <span class="nx">newUser</span> <span class="cp">]</span><span class="o">);</span>
+<span class="nt">_g</span> <span class="o">=</span> <span class="nt">new</span> <span class="nt">GitServer</span><span class="o">(</span><span class="cp">[</span> <span class="nx">newRepo</span> <span class="cp">]</span><span class="o">);</span>
 </code></pre></div>
 
 
@@ -116,6 +124,54 @@
 
 
 <p>This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. </p>
+
+
+<div class="pilwrap" id="%23%23%20cli%20usage">
+  <h1>
+    <a href="#%23%23%20cli%20usage" name="%23%23%20cli%20usage" class="pilcrow">&#182;</a>
+    ## CLI Usage
+  </h1>
+</div>
+
+
+<p>When you install this package globally using</p>
+
+
+<div class="highlight"><pre><code><span class="n">sudo</span> <span class="n">npm</span> <span class="n">install</span> <span class="o">-</span><span class="n">g</span> <span class="n">git</span><span class="o">-</span><span class="n">server</span>
+</code></pre></div>
+
+
+
+<p>You will now have a CLI interface you can run and interact with. </p>
+
+<p>Get started by typing <code>git-server</code> or <code>gitserver</code> into your terminal.</p>
+
+<p>You should see something similar to this:
+<img src="https://raw.github.com/qrpike/NodeJS-Git-Server/master/cli-screenshot.png" alt="image" title="" /></p>
+
+<p>With this interface you can type the following to see the available commands:</p>
+
+
+<div class="highlight"><pre><code><span class="n">git</span><span class="o">-</span><span class="n">server</span><span class="o">&gt;</span> <span class="n">help</span>
+</code></pre></div>
+
+
+
+<p>You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.</p>
+
+
+<div class="pilwrap" id="%23%23%20todo%20items">
+  <h1>
+    <a href="#%23%23%20todo%20items" name="%23%23%20todo%20items" class="pilcrow">&#182;</a>
+    ## TODO Items
+  </h1>
+</div>
+
+
+<ul>
+<li>Add HTTPS Support</li>
+<li>Add onPush &amp; onFetch actions for repos</li>
+</ul>
 
 
 <div class="pilwrap" id="this%20is%20a%20work%20in%20progress%20-%20please%20feel%20free%20to%20contribute!">

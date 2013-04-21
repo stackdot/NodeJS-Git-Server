@@ -46,7 +46,7 @@
   </div>
 </div>
         </td>
-        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">GitServer</span><span class="p">,</span> <span class="nx">async</span><span class="p">,</span> <span class="nx">http</span><span class="p">,</span> <span class="nx">pushover</span><span class="p">,</span>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">GitServer</span><span class="p">,</span> <span class="nx">async</span><span class="p">,</span> <span class="nx">fs</span><span class="p">,</span> <span class="nx">http</span><span class="p">,</span> <span class="nx">https</span><span class="p">,</span> <span class="nx">pushover</span><span class="p">,</span>
   <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
   <span class="nx">__indexOf</span> <span class="o">=</span> <span class="p">[].</span><span class="nx">indexOf</span> <span class="o">||</span> <span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span> <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span> <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="k">in</span> <span class="k">this</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">===</span> <span class="nx">item</span><span class="p">)</span> <span class="k">return</span> <span class="nx">i</span><span class="p">;</span> <span class="p">}</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="p">};</span>
 
@@ -54,7 +54,11 @@
 
 <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
 
+<span class="nx">https</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;https&#39;</span><span class="p">);</span>
+
 <span class="nx">async</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;async&#39;</span><span class="p">);</span>
+
+<span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
 
 <span class="nx">GitServer</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
@@ -88,17 +92,23 @@
       <span class="dox_type">Int</span>
       <span>Port on which to run this server.</span>
     </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">certs</span>
+      <span class="dox_type">Object</span>
+      <span>Object of 'key' and 'cert' with the location of the certs (only used for HTTPS)</span>
+    </div>
   </div>
 </div>
         </td>
         <td class="code highlight"><div class="highlight"><pre>
 
-  <span class="kd">function</span> <span class="nx">GitServer</span><span class="p">(</span><span class="nx">repos</span><span class="p">,</span> <span class="nx">logging</span><span class="p">,</span> <span class="nx">repoLocation</span><span class="p">,</span> <span class="nx">port</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">GitServer</span><span class="p">(</span><span class="nx">repos</span><span class="p">,</span> <span class="nx">logging</span><span class="p">,</span> <span class="nx">repoLocation</span><span class="p">,</span> <span class="nx">port</span><span class="p">,</span> <span class="nx">certs</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">_this</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">repos</span> <span class="o">=</span> <span class="nx">repos</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">repos</span> <span class="o">:</span> <span class="p">[];</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">logging</span> <span class="o">=</span> <span class="nx">logging</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">logging</span> <span class="o">:</span> <span class="kc">false</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">repoLocation</span> <span class="o">=</span> <span class="nx">repoLocation</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">repoLocation</span> <span class="o">:</span> <span class="s1">&#39;/tmp/repos&#39;</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">port</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">port</span> <span class="o">:</span> <span class="mi">7000</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">certs</span> <span class="o">=</span> <span class="nx">certs</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">getRepo</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">repoName</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">GitServer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getRepo</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
     <span class="p">};</span>
@@ -138,7 +148,16 @@
     <span class="p">};</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">gitListeners</span><span class="p">();</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">makeReposIfNull</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="nx">_this</span><span class="p">.</span><span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">));</span>
+      <span class="kd">var</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">red</span><span class="p">,</span> <span class="nx">reset</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">certs</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_this</span><span class="p">.</span><span class="nx">server</span> <span class="o">=</span> <span class="nx">https</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">certs</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">));</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">red</span> <span class="o">=</span> <span class="s1">&#39;\033[31m&#39;</span><span class="p">;</span>
+        <span class="nx">reset</span> <span class="o">=</span> <span class="s1">&#39;\033[0m&#39;</span><span class="p">;</span>
+        <span class="nx">message</span> <span class="o">=</span> <span class="s2">&quot;WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.\nBe careful, without HTTPS your user/pass will not be encrypted&quot;</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">red</span> <span class="o">+</span> <span class="nx">message</span> <span class="o">+</span> <span class="nx">reset</span><span class="p">);</span>
+        <span class="nx">_this</span><span class="p">.</span><span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">.</span><span class="nx">handle</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">git</span><span class="p">));</span>
+      <span class="p">}</span>
       <span class="k">return</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">_this</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server listening on &#39;</span><span class="p">,</span> <span class="nx">_this</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="s1">&#39;\r&#39;</span><span class="p">);</span>
       <span class="p">});</span>

@@ -26,9 +26,11 @@ commander
 	.parse( process.argv )
 
 
+
 # Set the port to either -p passed in, or fall back to port 7000
 repoPort		= commander.port || 7000
 logging			= commander.logging || false # set logging too
+
 
 
 # Get this users home directory if we didnt pass in where the repo location is
@@ -51,6 +53,7 @@ else
 
 # Create the folders if they dont exist
 mkdirp.sync repoLocation
+
 
 
 # If we have a .db file use the data in it, otherwise use a blank object
@@ -96,8 +99,9 @@ class GITCLI extends EventEmitter
 		
 		# If we trigger a `changedData` write the data to the .db file
 		@on 'changedData', @saveConfig
-	
-	
+		
+		# Little hack to reset the input after the gitServer logs any messages.
+		setTimeout @cli.resetInput, 100
 	
 	
 	# Create a new repo

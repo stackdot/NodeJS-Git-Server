@@ -12,7 +12,9 @@
 # Require the modules needed:
 pushover 	= require 'pushover'
 http		= require 'http'
+https		= require 'https'
 async		= require 'async'
+fs			= require 'fs'
 
 
 
@@ -27,8 +29,10 @@ class GitServer
 		@param {Array} repos List of repositories
 		@param {String} repoLocation Location where the repo's are/will be stored
 		@param {Int} port Port on which to run this server.
+		@param {Object} certs Object of 'key' and 'cert' with the location of the certs (only used for HTTPS)
 	###
-	constructor: ( @repos = [], @logging = false, @repoLocation = '/tmp/repos', @port = 7000 )->
+	constructor: ( @repos = [], @logging = false, @repoLocation = '/tmp/repos', @port = 7000, @certs )->
+		
 		# Create the pushover git object:
 		@git		= pushover @repoLocation, autoCreate:false
 		@permMap	= fetch:'R', push:'W'
@@ -37,7 +41,16 @@ class GitServer
 		# Go through all the @repo's and create them if they dont exist:
 		@makeReposIfNull =>
 			# Route requests to pushover:
-			@server	= http.createServer @git.handle.bind(@git)
+			if @certs?
+				@server	= https.createServer @certs, @git.handle.bind(@git)
+			else
+				red   = `'\033[31m'`
+				reset = `'\033[0m'`
+				message = """
+					WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.
+					Be careful, without HTTPS your user/pass will not be encrypted"""
+				console.log red + message + reset
+				@server	= http.createServer @git.handle.bind(@git)
 			# Open up the desired port ( 80 requires sudo )
 			@server.listen @port, =>
 				# Just let the console know we have started.

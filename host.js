@@ -6,7 +6,7 @@
 	This was initially created to be used as a multi-tenant git server with powerful event triggers.
 */
 
-var GitServer, async, http, pushover,
+var GitServer, async, fs, http, https, pushover,
   _this = this,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -14,7 +14,11 @@ pushover = require('pushover');
 
 http = require('http');
 
+https = require('https');
+
 async = require('async');
+
+fs = require('fs');
 
 GitServer = (function() {
   /*
@@ -22,14 +26,16 @@ GitServer = (function() {
   		@param {Array} repos List of repositories
   		@param {String} repoLocation Location where the repo's are/will be stored
   		@param {Int} port Port on which to run this server.
+  		@param {Object} certs Object of 'key' and 'cert' with the location of the certs (only used for HTTPS)
   */
 
-  function GitServer(repos, logging, repoLocation, port) {
+  function GitServer(repos, logging, repoLocation, port, certs) {
     var _this = this;
     this.repos = repos != null ? repos : [];
     this.logging = logging != null ? logging : false;
     this.repoLocation = repoLocation != null ? repoLocation : '/tmp/repos';
     this.port = port != null ? port : 7000;
+    this.certs = certs;
     this.getRepo = function(repoName) {
       return GitServer.prototype.getRepo.apply(_this, arguments);
     };
@@ -69,7 +75,16 @@ GitServer = (function() {
     };
     this.gitListeners();
     this.makeReposIfNull(function() {
-      _this.server = http.createServer(_this.git.handle.bind(_this.git));
+      var message, red, reset;
+      if (_this.certs != null) {
+        _this.server = https.createServer(_this.certs, _this.git.handle.bind(_this.git));
+      } else {
+        red = '\033[31m';
+        reset = '\033[0m';
+        message = "WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.\nBe careful, without HTTPS your user/pass will not be encrypted";
+        console.log(red + message + reset);
+        _this.server = http.createServer(_this.git.handle.bind(_this.git));
+      }
       return _this.server.listen(_this.port, function() {
         return _this.log('Server listening on ', _this.port, '\r');
       });
