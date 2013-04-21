@@ -1,6 +1,8 @@
 #NodeJS Git Server
 =========
 ![image](header.png)
+
+
 A multi-tenant git server using NodeJS.
 
 Read the Documented Code: [Here](http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html)
@@ -63,6 +65,12 @@ With this interface you can type the following to see the available commands:
 	git-server> help
 
 You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.
+
+## TODO Items
+=========
+- Add HTTPS Support
+- Add onPush & onFetch actions for repos
+- 
 
 ### This is a work in progress - please feel free to contribute!
 please contribute
