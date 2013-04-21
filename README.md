@@ -1,6 +1,6 @@
 #NodeJS Git Server
 =========
-![image](header.png)
+![image](https://github.com/qrpike/NodeJS-Git-Server/blob/master/header.png)
 
 
 A multi-tenant git server using NodeJS.
@@ -58,7 +58,7 @@ You will now have a CLI interface you can run and interact with.
 Get started by typing `git-server` or `gitserver` into your terminal.
 
 You should see something similar to this:
-![image](cli-screenshot.png)
+![image](https://github.com/qrpike/NodeJS-Git-Server/blob/master/cli-screenshot.png)
 
 With this interface you can type the following to see the available commands:
 
