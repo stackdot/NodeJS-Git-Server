@@ -47,8 +47,36 @@ To make this faster, we can use the basic auth structure:
 
 This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
 
+## HTTPS
+=========
+The ability to use HTTPS is now implemented for the module (not the cli *yet*). This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
+
+To enable HTTPS, send the module the 'cert' param:
+
+	var fs = require('fs');
+	var certs = {
+		key		: fs.readFileSync('../certs/privatekey.pem')
+		cert	: fs.readFileSync('../certs/certificate.pem')
+	};
+	_g = new GitServer([ newRepo ], undefined, undefined, undefined, certs);
+
+To create these certs you can run:
+
+	openssl genrsa -out privatekey.pem 1024 
+	openssl req -new -key privatekey.pem -out certrequest.csr 
+	openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
+
+Also, be aware that when using HTTPS for the git server, when you try to clone,etc. It will give you an SSL error because git (which uses CURL) cannot verify the SSL Cert. To correct this, install a actual, verified SSL Cert ( Free ones here: [StartCom](http://www.startssl.com/?app=1) )
+
+If you want to keep using the self signed cert like we created above ^ just tell git to not verify the cert. ( Other ways to do it [here](http://www.f15ijp.com/2012/08/git-ssl-certificate-problem-how-to-turn-off-ssl-validation-for-a-repo/) )
+
+	export GIT_SSL_NO_VERIFY=true
+
+And you are good to go!
+
 ## CLI Usage
 =========
+
 When you install this package globally using
 
 	sudo npm install -g git-server
@@ -68,8 +96,9 @@ You will see a list of possible commands, just enter a command and the prompt wi
 
 ## TODO Items
 =========
-- Add HTTPS Support
+- Add HTTPS Support ( partially completed )
 - Add onPush & onFetch actions for repos
+- Make YouTube demo of the app
 
 ### This is a work in progress - please feel free to contribute!
 please contribute
