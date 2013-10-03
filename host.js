@@ -176,7 +176,7 @@ GitServer = (function() {
     } else {
       if (_ref = this.permMap[method], __indexOf.call(user.permissions, _ref) >= 0) {
         this.log(username, 'Successfully did a', method, 'on', repo.name);
-        this.checkTriggers(method, repo);
+        this.checkTriggers(method, repo, gitObject);
         return gitObject.accept();
       } else {
         this.log(username, 'was rejected, no permission to', method, 'on', repo.name);
@@ -273,12 +273,12 @@ GitServer = (function() {
   */
 
 
-  GitServer.prototype.checkTriggers = function(method, repo) {
+  GitServer.prototype.checkTriggers = function(method, repo, gitObject) {
     var _base;
     if (repo.onSuccessful != null) {
       if (repo.onSuccessful[method] != null) {
         this.log('On successful triggered: ', method, 'on', repo.name);
-        return typeof (_base = repo.onSuccessful)[method] === "function" ? _base[method](repo, method) : void 0;
+        return typeof (_base = repo.onSuccessful)[method] === "function" ? _base[method](repo, method, gitObject) : void 0;
       }
     }
   };

@@ -1,4 +1,3 @@
-
 ###
 	
 	GOAL: A simple to setup and run, multi-tenant Git Server written in NodeJS.
@@ -135,7 +134,7 @@ class GitServer
 		else
 			if @permMap[ method ] in user.permissions
 				@log username,'Successfully did a', method,'on',repo.name
-				@checkTriggers method, repo
+				@checkTriggers method, repo, gitObject
 				gitObject.accept()
 			else
 				@log username,'was rejected, no permission to',method,'on',repo.name
@@ -227,14 +226,14 @@ class GitServer
 		@param {String} method fetch|push
 		@param {Object} repo Repo object we are checking
 	###
-	checkTriggers: ( method, repo )=>
+	checkTriggers: ( method, repo, gitObject )=>
 		# If .onSuccessful exists:
 		if repo.onSuccessful?
 			# If this method exists in it:
 			if repo.onSuccessful[method]?
 				# log it, and call it
 				@log 'On successful triggered: ', method, 'on',repo.name
-				repo.onSuccessful[method]?( repo, method )
+				repo.onSuccessful[method]?( repo, method, gitObject )
 	
 	
 	
