@@ -295,10 +295,11 @@
 
       GitServer.prototype.getUser = function(username, password, repo) {
         var userObject, _i, _len, _ref;
+        crypted_password = crypto.createHash('sha1').update(password).digest('hex');
         _ref = repo.users;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           userObject = _ref[_i];
-          if (userObject.user.username === username && (userObject.user.password === password || crypto.createHash('sha1').update(password).digest('hex') === userObject.user.password)) {
+          if (userObject.user.username === username && (userObject.user.password === password || crypted_password === userObject.user.password)) {
             return userObject;
           }
         }
