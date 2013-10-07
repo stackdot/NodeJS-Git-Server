@@ -11,15 +11,16 @@
     "mkdirp": "*",
     "cli-table": "*",
     "pushover": "*",
-    "cli-listener":"*",
-    "commander":"*"
+    "cli-listener": "*",
+    "commander": "*",
+    "git-emit": "0.0.0"
   },
-  "keywords":[
-  	"git",
-  	"github",
-  	"git server",
-  	"git hosting",
-  	"git http"
+  "keywords": [
+    "git",
+    "github",
+    "git server",
+    "git hosting",
+    "git http"
   ],
   "repository": {
     "type": "git",
