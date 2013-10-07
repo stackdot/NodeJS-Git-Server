@@ -13,7 +13,8 @@
     "pushover": "*",
     "cli-listener": "*",
     "commander": "*",
-    "git-emit": "0.0.0"
+    "git-emit": "0.0.0",
+    "event-proxy": "0.0.1"
   },
   "keywords": [
     "git",

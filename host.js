@@ -28,6 +28,8 @@
 
   EventEmitter = require('events').EventEmitter
 
+  proxy = require('event-proxy')
+
   GitServer = (function() {
   /*
       Constructor function for each instance of GitServer
@@ -105,12 +107,38 @@
       }
 
       GitServer.prototype.bindEvents = function(callback) {
+        var self = this;
         for (var i in this.repos) {
-          this.repos[i].path = path.normalize(this.repoLocation+"/"+this.repos[i].name);
-          this.repos[i].events = git_events(this.repos[i].path);
-          server.on('newListener', function (event, listener) {
-            this.repos[i].events.on(event, listener, this.repos[i]);
-          })
+          this.repos[i].path = path.normalize(this.repoLocation+"/"+this.repos[i].name+".git");
+          this.repos[i].git_events = git_events(this.repos[i].path);
+          this.repos[i].last_commit = {};
+          this.repos[i].event = function(repo, update) {
+            emitters = EventEmitter.listenerCount(self, update.name);
+            if(emitters < 1 && update.canAbort) {
+              update.accept();
+            } else {
+              self.emit(update.name, update, repo);
+            }
+          }
+          var map = {
+            "post-applypatch": this.repos[i].event,
+            "post-commit": this.repos[i].event,
+            "post-checkout": this.repos[i].event,
+            "post-merge": this.repos[i].event,
+            "post-receive": this.repos[i].event,
+            "post-update": this.repos[i].event,
+            "post-rewrite": this.repos[i].event,
+            "applypatch-msg": this.repos[i].event,
+            "pre-applypatch": this.repos[i].event,
+            "pre-commit": this.repos[i].event,
+            "prepare-commit-msg": this.repos[i].event,
+            "commit-msg": this.repos[i].event,
+            "pre-rebase": this.repos[i].event,
+            "pre-receive": this.repos[i].event,
+            "update": this.repos[i].event,
+            "pre-auto-gc": this.repos[i].event
+          }
+          proxy(process, map, this.repos[i].git_events, this.repos[i]);
         }
         callback();
       }
@@ -279,6 +307,17 @@
         var repo;
         this.log('Got a PUSH call for', push.repo);
         repo = this.getRepo(push.repo);
+        var data = {
+          status: push.status,
+          repo: push.repo,
+          service: push.service,
+          cwd: push.cwd,
+          last: push.last,
+          commit: push.commit,
+          evName: push.evName,
+          branch: push.branch
+        }
+        repo.last_commit = data;
         if (repo !== false) {
           return this.processSecurity(push, 'push', repo);
         } else {
