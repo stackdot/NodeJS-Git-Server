@@ -20,7 +20,11 @@
 
   fs = require('fs');
 
-  crypto = require('crypto')
+  crypto = require('crypto');
+
+  git_events = require('git-emit');
+
+  path = require('path');
 
   GitServer = (function() {
   /*
@@ -80,20 +84,30 @@
         };
         this.gitListeners();
         this.makeReposIfNull(function() {
-          var message, red, reset;
-          if (_this.certs != null) {
-            _this.server = https.createServer(_this.certs, _this.git.handle.bind(_this.git));
-          } else {
-            red = '\033[31m';
-            reset = '\033[0m';
-            message = "WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.\nBe careful, without HTTPS your user/pass will not be encrypted";
-            console.log(red + message + reset);
-            _this.server = http.createServer(_this.git.handle.bind(_this.git));
-          }
-          return _this.server.listen(_this.port, function() {
-            return _this.log('Server listening on ', _this.port, '\r');
+          _this.bindEvents(function() {
+            var message, red, reset;
+            if (_this.certs != null) {
+              _this.server = https.createServer(_this.certs, _this.git.handle.bind(_this.git));
+            } else {
+              red = '\033[31m';
+              reset = '\033[0m';
+              message = "WARNING: No SSL certs passed in. Running as HTTP and not HTTPS.\nBe careful, without HTTPS your user/pass will not be encrypted";
+              console.log(red + message + reset);
+              _this.server = http.createServer(_this.git.handle.bind(_this.git));
+            }
+            return _this.server.listen(_this.port, function() {
+              return _this.log('Server listening on ', _this.port, '\r');
+            });
           });
         });
+      }
+
+      GitServer.prototype.bindEvents = function(callback) {
+        for (var i in this.repos) {
+          this.repos[i].path = path.normalize(this.repoLocation+"/"+this.repos[i].name);
+          this.repos[i].events = git_events(this.repos[i].path);
+        }
+        callback();
       }
 
   /*
