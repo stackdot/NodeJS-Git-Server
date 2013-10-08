@@ -336,6 +336,7 @@
       GitServer.prototype.checkTriggers = function(method, repo, gitObject) {
         var _base;
         gitObject.name = method;
+        gitObject.canAbort = true;
         repo.event(repo, gitObject);
       };
 
