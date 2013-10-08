@@ -287,7 +287,12 @@
         repo = this.getRepo(fetch.repo);
         if (repo !== false) {
           if (repo.anonRead === true) {
+<<<<<<< HEAD
             return this.checkTriggers('fetch', repo, fetch);
+=======
+            this.checkTriggers('fetch', repo, fetch);
+            return fetch.accept();
+>>>>>>> master
           } else {
             return this.processSecurity(fetch, 'fetch', repo);
           }
