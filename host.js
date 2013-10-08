@@ -114,9 +114,9 @@
           this.repos[i].last_commit = {};
           this.repos[i].event = function(repo, update) {
             emitters = EventEmitter.listenerCount(self, update.name);
-            this.log("Emitting "+update.name+" event.");
+            self.log("Emitting "+update.name+" event.");
             if(emitters < 1 && update.canAbort) {
-              this.log("No event listeners on "+update.name+". Accepting....");
+              self.log("No event listeners on "+update.name+". Accepting....");
               update.accept();
             } else {
               self.emit(update.name, update, repo);
@@ -337,12 +337,8 @@
 
       GitServer.prototype.checkTriggers = function(method, repo, gitObject) {
         var _base;
-        if (repo.onSuccessful != null) {
-          if (repo.onSuccessful[method] != null) {
-            this.log('On successful triggered: ', method, 'on', repo.name);
-            return typeof (_base = repo.onSuccessful)[method] === "function" ? _base[method](repo, method, gitObject) : void 0;
-          }
-        }
+        gitObject.name = method;
+        repo.event(repo, gitObject);
       };
 
   /*
