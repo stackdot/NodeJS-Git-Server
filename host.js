@@ -227,8 +227,7 @@
         } else {
           if (_ref = this.permMap[method], __indexOf.call(user.permissions, _ref) >= 0) {
             this.log(username, 'Successfully did a', method, 'on', repo.name);
-            this.checkTriggers(method, repo, gitObject);
-            return gitObject.accept();
+            return this.checkTriggers(method, repo, gitObject);
           } else {
             this.log(username, 'was rejected, no permission to', method, 'on', repo.name);
             return gitObject.reject(500, "You dont have these permissions");
@@ -288,8 +287,7 @@
         repo = this.getRepo(fetch.repo);
         if (repo !== false) {
           if (repo.anonRead === true) {
-            this.checkTriggers('fetch', repo);
-            return fetch.accept();
+            return this.checkTriggers('fetch', repo, fetch);
           } else {
             return this.processSecurity(fetch, 'fetch', repo);
           }
