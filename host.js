@@ -114,7 +114,9 @@
           this.repos[i].last_commit = {};
           this.repos[i].event = function(repo, update) {
             emitters = EventEmitter.listenerCount(self, update.name);
+            this.log("Emitting "+update.name+" event.");
             if(emitters < 1 && update.canAbort) {
+              this.log("No event listeners on "+update.name+". Accepting....");
               update.accept();
             } else {
               self.emit(update.name, update, repo);
