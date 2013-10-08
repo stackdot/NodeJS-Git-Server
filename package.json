@@ -1,10 +1,11 @@
 {
   "name": "git-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple, multi-tenant git server written in NodeJS",
   "author": "Quinton Pike <@quinton.pike>",
   "contributors": [
-    "Quinton Pike <qrpike@gmail.com>"
+    "Quinton Pike <qrpike@gmail.com>",
+    "Justas Brazauskas <brazauskasjustas@gmail.con>"
   ],
   "dependencies": {
     "async": "*",
