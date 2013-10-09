@@ -12,7 +12,7 @@ var repo = {
 	users: [{ user:user, permissions:['R','W'] }]
 }
 var opts = {
-	repos: [],
+	repos: [repo],
 	logging: true,
 	repoLocation: '/tmp/test_repos',
 	port: 8000
@@ -46,9 +46,9 @@ describe('git_server',function() {
 				});
 			});
 			describe('#getRepo()', function() {
-				it('Should be a function', function() {
+				it('Should be a function and return an object', function() {
 					expect(server.getRepo).to.be.a('function');
-					expect(server.getRepo(repo.name)).to.have.property(['name', 'anonRead', 'users', ]);
+					expect(server.getRepo(repo.name+".git")).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
 				});
 			});
 		});
