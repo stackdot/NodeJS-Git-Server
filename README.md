@@ -111,7 +111,8 @@ Repo object is the object passed to start the server plus some additional method
   anonRead: false,
   users: [ { user: {username: "demo", password: "demo"}, permissions: ["R", "W"] } ],
   path: '/tmp/repos/stackdot.git',
-  last_commit: { status: 'pending',
+  last_commit: { 
+  	status: 'pending',
   	repo: 'anon.git',
   	service: 'receive-pack',
   	cwd: '/tmp/repos/stackdot.git',
