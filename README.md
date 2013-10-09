@@ -50,6 +50,8 @@ Server object emits these events:
 
 #####abortable events
 
+These events can be aborted or accepted. If there will be no listeners for any of these events, they will be automatically accepted.
+
 * fetch
 * commit
 * applypatch-msg
@@ -76,8 +78,12 @@ Server object emits these events:
 		]
 	}
 	server = new GitServer([ newRepo ]);
-	server.on('commit', function() {
-
+	server.on('commit', function(update, repo) {
+		// do some logging or other stuff
+		update.accept() //accept the update.
+	});
+	server.on('post-update', function(update, repo) {
+		//do some deploy stuff
 	});
 ```
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
