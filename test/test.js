@@ -2,6 +2,15 @@ var assert = require('assert');
 var expect = require('expect.js');
 var git_server = require('../host');
 var server;
+var user = {
+	username: 'demo',
+	password: 'demo'
+}
+var repo = {
+	name: 'test',
+	anonRead: true,
+	users: [{ user:user, permissions:['R','W'] }]
+}
 var opts = {
 	repos: [],
 	logging: true,
@@ -27,8 +36,18 @@ describe('git_server',function() {
 				});
 			});
 			describe('#repoLocation', function() {
-				it('Should be a string equals to'+, function() {
-					expect(server.logging).to.be.a('boolean');
+				it('Should be a string equals to '+opts.repoLocation, function() {
+					expect(server.repoLocation).to.be.a('string').and.to.be.equal(opts.repoLocation);
+				});
+			});
+			describe('#port', function() {
+				it('Should be an integer equals to '+opts.port, function() {
+					expect(server.port).to.be.a('number').and.to.be.equal(opts.port);
+				});
+			});
+			describe('#getRepo()', function() {
+				it('Should be a function', function() {
+					expect(server.certs).to.be.a('object').and.to.be.equal(opts.port);
 				});
 			});
 		});
