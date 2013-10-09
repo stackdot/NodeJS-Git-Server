@@ -38,7 +38,7 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 ## Events:
 Server object emits these events:
 
-#####passive events
+####passive events
 
 These events are informational only. They can not be aborted.
 
@@ -50,7 +50,7 @@ These events are informational only. They can not be aborted.
 * post-update
 * post-rewrite
 
-#####abortable events
+####abortable events
 
 These events can be aborted or accepted. If there will be no listeners for any of these events, they will be automatically accepted. If object can be aborted, it will have canAbort property in update argument.
 
