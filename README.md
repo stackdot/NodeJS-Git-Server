@@ -115,6 +115,23 @@ Repo object is the object passed to start the server plus some additional method
 }
 ```
 
+# Update object
+=========
+
+`update` is an http duplex object (see below) with these extra properties:
+
+```
+{
+  cwd: '/tmp/repos/stackdot.git', // Current repo dir
+  repo: 'stackdot.git', // Repo name
+  accept: [Function], // Method to accept request (if aplicable)
+  reject: [Function], // Method to reject request (if aplicable)
+  exists: true, // Does the repo exist
+  name: 'fetch', // Event name
+  canAbort: true // If event can be abbortable
+}
+```
+
 # HTTPS
 =========
 The ability to use HTTPS is now implemented for the module (not the cli *yet*). This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
