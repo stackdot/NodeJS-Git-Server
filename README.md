@@ -1,7 +1,7 @@
 #NodeJS Git Server
 
 ![image](https://raw.github.com/qrpike/NodeJS-Git-Server/master/header.png)
-
+[![Build Status](https://travis-ci.org/qrpike/NodeJS-Git-Server.png?branch=master)](https://travis-ci.org/qrpike/NodeJS-Git-Server)
 
 A multi-tenant git server using NodeJS.
 
