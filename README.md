@@ -101,6 +101,20 @@ To make this faster, we can use the basic auth structure:
 
 This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
 
+# Repo object
+=========
+Repo object is the object passed to start the server plus some additional methods and properties.
+
+```
+{ 
+  name: 'stackdot',
+  anonRead: false,
+  users: [ { user: {username: "demo", password: "demo"}, permissions: ["R", "W"] } ],
+  path: '/tmp/repos/stackdot.git',
+  last_commit: {}
+}
+```
+
 # HTTPS
 =========
 The ability to use HTTPS is now implemented for the module (not the cli *yet*). This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
