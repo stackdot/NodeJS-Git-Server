@@ -47,7 +47,9 @@ describe('git_server',function() {
 			});
 			describe('#getRepo()', function() {
 				it('Should be a function', function() {
-					expect(server.certs).to.be.a('object').and.to.be.equal(opts.port);
+					expect(server.getRepo).to.be.a('function');
+					repo = server.getRepo(repo.name);
+					expect(repo).to.have.properties(['name', 'anonRead', 'users', ]);
 				});
 			});
 		});
