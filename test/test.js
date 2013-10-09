@@ -45,6 +45,11 @@ describe('git_server',function() {
 					expect(server.port).to.be.a('number').and.to.be.equal(opts.port);
 				});
 			});
+			describe('#on()', function() {
+				it('Should be a function', function(accept) {
+					expect(server.on).to.be.a('function');
+				});
+			});
 			describe('#getRepo()', function() {
 				it('Should be a function and return repo object', function() {
 					expect(server.getRepo).to.be.a('function');
@@ -57,6 +62,41 @@ describe('git_server',function() {
 					expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.keys(['username', 'password']);
 				});
 			});
+			describe('#checkTriggers()', function() {
+				it('Should be a function', function() {
+					expect(server.checkTriggers).to.be.a('function');
+				});
+			});
+			describe('#onPush()', function() {
+				it('Should be a function', function() {
+					expect(server.onPush).to.be.a('function');
+				});
+			});
+			describe('#onFetch()', function() {
+				it('Should be a function', function() {
+					expect(server.onFetch).to.be.a('function');
+				});
+			});
+			describe('#makeReposIfNull()', function() {
+				it('Should be a function', function() {
+					expect(server.makeReposIfNull).to.be.a('function');
+				});
+			});
+			describe('#gitListeners()', function() {
+				it('Should be a function', function() {
+					expect(server.gitListeners).to.be.a('function');
+				});
+			});
+			describe('#permissableMethod()', function() {
+				it('Should be a function', function() {
+					expect(server.permissableMethod).to.be.a('function');
+				});
+			});
+			describe('#processSecurity()', function() {
+				it('Should be a function', function() {
+					expect(server.processSecurity).to.be.a('function');
+				});
+			});
 		});
-	});
+});
 });
