@@ -97,6 +97,16 @@ describe('git_server',function() {
 					expect(server.processSecurity).to.be.a('function');
 				});
 			});
+			describe('#log()', function() {
+				it('Should be a function', function() {
+					expect(server.log).to.be.a('function');
+				});
+			});
+			describe('#createRepo()', function() {
+				it('Should be a function', function() {
+					expect(server.createRepo).to.be.a('function');
+				});
+			});
 		});
 });
 });
