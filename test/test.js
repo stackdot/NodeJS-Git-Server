@@ -46,7 +46,7 @@ describe('git_server',function() {
 				});
 			});
 			describe('#on()', function() {
-				it('Should be a function', function(accept) {
+				it('Should be a function', function() {
 					expect(server.on).to.be.a('function');
 				});
 			});
@@ -59,7 +59,8 @@ describe('git_server',function() {
 			describe('#getUser()', function() {
 				it('Should be a function and return user object', function() {
 					expect(server.getUser).to.be.a('function');
-					expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.keys(['username', 'password']);
+					expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.keys(['user']);
+					expect(server.getUser(user.username, user.password, repo).user).to.be.an('object').and.to.have.keys(['username', 'password']);
 				});
 			});
 			describe('#checkTriggers()', function() {
@@ -109,7 +110,7 @@ describe('git_server',function() {
 			});
 			describe('#git', function() {
 				it('Should be an object', function() {
-					expect(server.log).to.be.an('object').and.to.have.keys(['dirMap', 'autoCreate', 'checkout']);
+					expect(server.git).to.be.an('object').and.to.have.keys(['dirMap', 'autoCreate', 'checkout']);
 				});
 			});
 			describe('#permMap', function() {
