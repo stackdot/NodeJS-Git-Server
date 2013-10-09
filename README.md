@@ -50,6 +50,8 @@ Server object emits these events:
 
 #####abortable events
 
+* fetch
+* commit
 * applypatch-msg
 * pre-applypatch
 * pre-commit
@@ -59,14 +61,24 @@ Server object emits these events:
 * pre-receive
 * update
 * pre-auto-gc
+
 ```
+	var GitServer = require('git-server');
+	var newUser = {
+		username:'demo',
+		password:'demo'
+	}
 	var newRepo = {
 		name:'myrepo',
 		anonRead:false,
 		users: [
 			{ user:newUser, permissions:['R','W'] }
-		],
+		]
 	}
+	server = new GitServer([ newRepo ]);
+	server.on('commit', function() {
+
+	});
 ```
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
 
