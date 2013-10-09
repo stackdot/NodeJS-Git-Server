@@ -107,6 +107,16 @@ describe('git_server',function() {
 					expect(server.createRepo).to.be.a('function');
 				});
 			});
+			describe('#git', function() {
+				it('Should be an object', function() {
+					expect(server.log).to.be.an('object').and.to.have.keys(['dirMap', 'autoCreate', 'checkout']);
+				});
+			});
+			describe('#permMap', function() {
+				it('Should be an object', function() {
+					expect(server.permMap).to.be.an('object').and.to.be.equal({ fetch: 'R', push: 'W' });
+				});
+			});
 		});
 });
 });
