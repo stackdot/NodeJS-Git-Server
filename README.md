@@ -33,28 +33,41 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 			{ user:newUser, permissions:['R','W'] }
 		]
 	}
-	_g = new GitServer([ newRepo ]);
+	server = new GitServer([ newRepo ]);
 
-##### Event Triggers:
-If you want onSuccessful triggers, you can add them to each repo like so:
+## Events:
+Server object emits these events:
 
+#####passive events
+
+* post-applypatch
+* post-commit
+* post-checkout
+* post-merge
+* post-receive
+* post-update
+* post-rewrite
+
+#####abortable events
+
+* applypatch-msg
+* pre-applypatch
+* pre-commit
+* prepare-commit-msg
+* commit-msg
+* pre-rebase
+* pre-receive
+* update
+* pre-auto-gc
+```
 	var newRepo = {
 		name:'myrepo',
 		anonRead:false,
 		users: [
 			{ user:newUser, permissions:['R','W'] }
 		],
-		onSuccessful : {
-			fetch : function( repo, method ){
-				console.log('Successful fetch/pull/clone on repo:',repo.name);
-			}
-			push  : function( repo, method ){
-				console.log('PUSHed:', repo.name);
-				// Possibly do some deploy scripts etc.
-			}
-		}
 	}
-
+```
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
 
 	git clone http://localhost:7000/myrepo.git
