@@ -101,7 +101,7 @@ To make this faster, we can use the basic auth structure:
 
 This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
 
-# Repo object
+## Repo object
 
 Repo object is the object passed to start the server plus some additional methods and properties.
 
@@ -115,7 +115,7 @@ Repo object is the object passed to start the server plus some additional method
 }
 ```
 
-# Update object
+## Update object
 
 `update` is an http duplex object (see below) with these extra properties:
 
