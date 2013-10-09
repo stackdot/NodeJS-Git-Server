@@ -4,8 +4,8 @@
   "description": "A simple, multi-tenant git server written in NodeJS",
   "author": "Quinton Pike <@quinton.pike>",
   "contributors": [
-  "Quinton Pike <qrpike@gmail.com>",
-  "Justas Brazauskas <brazauskasjustas@gmail.con>"
+    "Quinton Pike <qrpike@gmail.com>",
+    "Justas Brazauskas <brazauskasjustas@gmail.con>"
   ],
   "dependencies": {
     "async": "*",
@@ -21,12 +21,15 @@
     "expect.js": "~0.2.0",
     "mocha": "~1.13.0"
   },
+  "scripts": {
+    "test": "make test"
+  },
   "keywords": [
-  "git",
-  "github",
-  "git server",
-  "git hosting",
-  "git http"
+    "git",
+    "github",
+    "git server",
+    "git hosting",
+    "git http"
   ],
   "repository": {
     "type": "git",
