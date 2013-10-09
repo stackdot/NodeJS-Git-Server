@@ -114,7 +114,12 @@ describe('git_server',function() {
 			});
 			describe('#permMap', function() {
 				it('Should be an object', function() {
-					expect(server.permMap).to.be.an('object').and.to.be.equal({ fetch: 'R', push: 'W' });
+					expect(server.permMap).to.be.an('object').and.to.be.eql({ fetch: 'R', push: 'W' });
+				});
+			});
+			describe('#server', function() {
+				it('Should be an object', function() {
+					expect(server.permMap).to.be.an('object');
 				});
 			});
 		});
