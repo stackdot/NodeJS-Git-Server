@@ -17,7 +17,7 @@
     "git-emit": "0.0.0",
     "event-proxy": "0.0.1"
   },
-  "devDependencies"{
+  "devDependencies": {
     "expect.js": "~0.2.0",
     "mocha": "~1.13.0"
   },
