@@ -19,7 +19,7 @@ To install the git server run:
 
 ## Example Usage
 =========
-The GitServer is a very easy to get up and running git server. It uses the [Pushover](https://github.com/substack/pushover) module for listening to git events, and its own layer to do the security for each repo & user.
+The GitServer is a very easy to get up and running git server. It uses the [Pushover](https://github.com/substack/pushover) and [git-emit](https://github.com/substack/node-git-emit) modules for listening to git events, and its own layer to do the security for each repo & user.
 
 	var GitServer = require('git-server');
 	var newUser = {
