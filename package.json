@@ -19,8 +19,7 @@
   },
   "devDependencies": {
     "expect.js": "~0.2.0",
-    "mocha": "~1.13.0",
-    "istanbul": "~0.1.44"
+    "mocha": "~1.13.0"
   },
   "scripts": {
     "test": "make test"
