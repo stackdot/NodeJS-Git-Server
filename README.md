@@ -10,14 +10,14 @@ Read the [Documented Source Code Here](http://qrpike.github.io/NodeJS-Git-Server
 Made to be able to support many git repo's and users with Read/Write customizable permissions.
 
 
-## Install Git Server
+# Install Git Server
 =========
 To install the git server run:
 
 	npm install git-server
 
 
-## Example Usage
+# Example Usage
 =========
 The GitServer is a very easy to get up and running git server. It uses the [Pushover](https://github.com/substack/pushover) and [git-emit](https://github.com/substack/node-git-emit) modules for listening to git events, and its own layer to do the security for each repo & user.
 
@@ -35,10 +35,11 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 	}
 	server = new GitServer([ newRepo ]);
 
-## Events:
+# Events:
+=========
 Server object emits these events:
 
-####passive events
+##passive events
 
 These events are informational only. They can not be aborted.
 
@@ -50,7 +51,7 @@ These events are informational only. They can not be aborted.
 * post-update
 * post-rewrite
 
-####abortable events
+##abortable events
 
 These events can be aborted or accepted. If there will be no listeners for any of these events, they will be automatically accepted. If object can be aborted, it will have canAbort property in update argument.
 
@@ -100,7 +101,7 @@ To make this faster, we can use the basic auth structure:
 
 This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
 
-## HTTPS
+# HTTPS
 =========
 The ability to use HTTPS is now implemented for the module (not the cli *yet*). This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
 
@@ -127,7 +128,7 @@ If you want to keep using the self signed cert like we created above ^ just tell
 
 And you are good to go!
 
-## CLI Usage
+# CLI Usage
 =========
 
 When you install this package globally using
@@ -147,7 +148,7 @@ With this interface you can type the following to see the available commands:
 
 You will see a list of possible commands, just enter a command and the prompt will ask you for any additional details needed.
 
-## TODO Items
+# TODO Items
 =========
 - Add HTTPS Support ( partially completed )
 - Add onPush & onFetch actions for repos
