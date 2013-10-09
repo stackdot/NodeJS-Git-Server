@@ -40,6 +40,8 @@ Server object emits these events:
 
 #####passive events
 
+These events are informational only. They can not be aborted.
+
 * post-applypatch
 * post-commit
 * post-checkout
@@ -50,7 +52,7 @@ Server object emits these events:
 
 #####abortable events
 
-These events can be aborted or accepted. If there will be no listeners for any of these events, they will be automatically accepted.
+These events can be aborted or accepted. If there will be no listeners for any of these events, they will be automatically accepted. If object can be aborted, it will have canAbort property in update argument.
 
 * fetch
 * commit
