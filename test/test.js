@@ -46,9 +46,15 @@ describe('git_server',function() {
 				});
 			});
 			describe('#getRepo()', function() {
-				it('Should be a function and return an object', function() {
+				it('Should be a function and return repo object', function() {
 					expect(server.getRepo).to.be.a('function');
 					expect(server.getRepo(repo.name+".git")).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+				});
+			});
+			describe('#getUser()', function() {
+				it('Should be a function and return user object', function() {
+					expect(server.getUser).to.be.a('function');
+					expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.keys(['username', 'password']);
 				});
 			});
 		});
