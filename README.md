@@ -17,7 +17,9 @@ To install the git server run:
 	npm install git-server run
 
 To run tests
-	
+
+	git clone https://github.com/qrpike/NodeJS-Git-Server.git
+	cd ./NodeJS-Git-Server
 	make test
 
 
