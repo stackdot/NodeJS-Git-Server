@@ -141,11 +141,18 @@ describe('behaviour', function() {
 		});
 	});
 	describe('Push', function() {
-		it('Should emit post-update event', function(done) {
-			server.on('post-update', function(repo, update) {
+		it('Should emit fetch event', function(done) {
+			server.on('push', function(repo, update) {
 				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
 				expect(update).to.be.an('object');
+				expect(update.accept).to.be.a('function');
+				expect(update.reject).to.be.a('function');
+				update.reject()
 				done();
+			});
+			exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string');
 			});
 		});
 		it('Should push rails repo to '+repo.name+' repo', function(done) {
