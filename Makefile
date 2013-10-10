@@ -2,7 +2,8 @@ TESTS = test
 REPORTER = spec
 XML_FILE = reports/TEST-all.xml
 HTML_FILE = reports/coverage.html
- 
+ssl = GIT_SSL_NO_VERIFY=true
+
 test: test-mocha
  
 test-ci:
@@ -11,7 +12,8 @@ test-ci:
 test-all: clean test-ci test-cov
  
 test-mocha:
-	@NODE_ENV=test @GIT_SSL_NO_VERIFY=true mocha \
+	@echo ${ssl}
+	@NODE_ENV=test mocha \
 	    --timeout 100000 \
 		--reporter $(REPORTER) \
 		$(TESTS)

@@ -25,7 +25,9 @@ describe('git_server',function() {
 	it('Should expose a function', function() {
 		expect(git_server).to.be.a('function');
 	});
+
 	expect(server = new git_server(opts.repos, opts.logging, opts.repoLocation, opts.port)).to.be.an('object');
+
 	describe('server', function() {
 		describe('#repos', function() {
 			it('Should be an Array', function() {
@@ -126,17 +128,15 @@ describe('git_server',function() {
 			});
 		});
 	});
-describe('behaviour', function() {
-	it('Should clone a repo', function(done) {
-		child = exec('git clone --depth 10 git@github.com:rails/rails /tmp/'+test_repo_name,
-			function (error, stdout, stderr) {
-				console.log('stdout: ' + stdout);
-				console.log('stderr: ' + stderr);
-				if (error !== null) {
-					console.log('exec error: ' + error);
-				}
-				done();
-			});
+
+	describe('behaviour', function() {
+		it('Should clone a repo', function(done) {
+			exec('git clone --depth 10 git@github.com:rails/rails /tmp/'+test_repo_name,
+				function (error, stdout, stderr) {
+					expect(stdout).to.be.a('string');
+					expect(stderr).to.be.a('string').and.to.be.equal('');
+					done(error);
+				});
+		});
 	});
-});
 });
