@@ -17,7 +17,7 @@ var repo = {
 };
 var opts = {
 	repos: [repo],
-	logging: true,
+	logging: false,
 	repoLocation: '/tmp/test_repos',
 	port: 8000
 };
@@ -210,10 +210,40 @@ describe('behaviour', function() {
 					});
 				});
 			});
-		});
+			describe('Passive events', function() {
+				describe('Post-receive', function() {
+					it('Should emit post-receive event', function(done) {
+						server.once('post-receive', function(update, repo) {
+							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+							done();
+						});
+						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+							expect(stdout).to.be.a('string');
+							expect(stderr).to.be.a('string');
+						});
+					});
+				});
+				describe('Post-update', function() {
+					it('Should emit post-update event', function(done) {
+						server.once('post-update', function(update, repo) {
+							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+							done();
+						});
+						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+							expect(stdout).to.be.a('string');
+							expect(stderr).to.be.a('string');
+						});
+					});
+				});
+			});
+});
 });
 describe('Push', function() {
-	it('Should push rails repo to '+repo.name+' repo', function(done) {
+	it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
 		exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 			expect(stdout).to.be.a('string');
 			expect(stderr).to.be.a('string');
