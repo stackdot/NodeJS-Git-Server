@@ -12,6 +12,7 @@ test-ci:
 test-all: clean test-ci test-cov
  
 test-mocha:
+	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@echo ${ssl}
 	@echo YOURPACKAGE_COVERAGE=1
 	@NODE_ENV=test mocha \
