@@ -12,6 +12,7 @@ test-all: clean test-ci test-cov
  
 test-mocha:
 	@NODE_ENV=test mocha \
+	    --timeout 10000 \
 		--reporter $(REPORTER) \
 		$(TESTS)
  
