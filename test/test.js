@@ -323,7 +323,7 @@ describe('behaviour', function() {
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+					exec('cd /tmp/'+test_rails_name+' && git gc --auto', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
