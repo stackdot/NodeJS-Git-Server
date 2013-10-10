@@ -204,7 +204,7 @@ describe('behaviour', function() {
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git gc --auto', function (error, stdout, stderr) {
+					exec('cd '+opts.repoLocation+"/"+repo.name+'.git'+' && git gc --auto', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
