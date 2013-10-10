@@ -282,7 +282,7 @@ describe('behaviour', function() {
 				it('Should emit pre-receive event', function(done) {
 					server.once('pre-receive', function(update, repo) {
 						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+						expect(update).to.be.an('object');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
@@ -299,7 +299,7 @@ describe('behaviour', function() {
 				it('Should emit update event', function(done) {
 					server.once('update', function(update, repo) {
 						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+						expect(update).to.be.an('object');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
@@ -316,7 +316,7 @@ describe('behaviour', function() {
 				it('Should emit pre-auto-gc event', function(done) {
 					server.once('pre-auto-gc', function(update, repo) {
 						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+						expect(update).to.be.an('object');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
