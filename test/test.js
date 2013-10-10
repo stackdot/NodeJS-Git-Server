@@ -1,6 +1,9 @@
 var assert = require('assert');
+var exec = require('child_process').exec;
 var expect = require('expect.js');
+var helper = require('./helper');
 var git_server = require('../host');
+var test_repo_name = helper.random();
 var server;
 var user = {
 	username: 'demo',
@@ -123,4 +126,17 @@ describe('git_server',function() {
 			});
 		});
 	});
+describe('behaviour', function() {
+	it('Should clone a repo', function(done) {
+		child = exec('git clone --depth 10 git@github.com:rails/rails /tmp/'+test_repo_name,
+			function (error, stdout, stderr) {
+				console.log('stdout: ' + stdout);
+				console.log('stderr: ' + stderr);
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+				done();
+			});
+	});
+});
 });
