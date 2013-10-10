@@ -26,7 +26,7 @@ var repo = {
 var repo2 = {
 	name: helper.random(),
 	anonRead: false,
-	users: [{ user:user, permissions:['R','W']}, { user:user2, permissions:['W']}, { user:user2, permissions:['R']}]
+	users: [{ user:user, permissions:['R','W']}, { user:user2, permissions:['W']}, { user:user3, permissions:['R']}]
 }
 var opts = {
 	repos: [repo, repo2],
@@ -284,14 +284,26 @@ describe('git_server', function() {
 			});
 		});
 		describe('Wrong credentials', function() {
-			it('Should clone a local repo with wrong credentials', function(done) {
+			it('Should try clone a local repo with wrong credentials', function(done) {
 				exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 					expect(stdout).to.be.a('string');
 					expect(stderr).to.be.a('string').and.not.to.be.equal('');
+					expect(error).not.to.be.equal('');
 					done();
 				});
 			});
 		});
+		describe('No read permission', function() {
+			it('Should try clone a local repo with lack of read permissions', function(done) {
+				exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+					expect(stdout).to.be.a('string');
+					expect(stderr).to.be.a('string').and.not.to.be.equal('');
+					expect(error).not.to.be.equal('');
+					done();
+				});
+			});
+		});
+
 	});
 	});
 });
