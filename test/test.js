@@ -7,8 +7,8 @@ var test_octocat_name = helper.random();
 var test_repo_name = helper.random();
 var server;
 var user = {
-	username: 'demo',
-	password: 'demo'
+	username: helper.random(),
+	password: helper.random()
 };
 var repo = {
 	name: helper.random(),
@@ -18,7 +18,7 @@ var repo = {
 var opts = {
 	repos: [repo],
 	logging: false,
-	repoLocation: '/tmp/test_repos',
+	repoLocation: '/tmp/'+helper.random(),
 	port: 8000
 };
 
@@ -210,37 +210,37 @@ describe('behaviour', function() {
 					});
 				});
 			});
-			describe('Passive events', function() {
-				describe('Post-receive', function() {
-					it('Should emit post-receive event', function(done) {
-						server.once('post-receive', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
+		});
+		describe('Passive events', function() {
+			describe('Post-receive', function() {
+				it('Should emit post-receive event', function(done) {
+					server.once('post-receive', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+						done();
 					});
-				});
-				describe('Post-update', function() {
-					it('Should emit post-update event', function(done) {
-						server.once('post-update', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
 					});
 				});
 			});
-});
+			describe('Post-update', function() {
+				it('Should emit post-update event', function(done) {
+					server.once('post-update', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+						done();
+					});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
+					});
+				});
+			});
+		});
 });
 describe('Push', function() {
 	it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
@@ -252,8 +252,8 @@ describe('Push', function() {
 	});
 });
 describe('Clone local repo', function() {
-	it('Should clone a local repo', function(done) {
-		exec('git clone http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+test_repo_name, function (error, stdout, stderr) {
+	it('Should clone a local repo anonymously', function(done) {
+		exec('git clone http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+test_repo_name, function (error, stdout, stderr) {
 			expect(stdout).to.be.a('string');
 			expect(stderr).to.be.a('string').and.to.be.equal('');
 			done(error);
