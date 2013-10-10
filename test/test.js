@@ -290,7 +290,7 @@ describe('Clone', function() {
 			exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
 				done();
 			});
 		});
@@ -300,7 +300,7 @@ describe('Clone', function() {
 			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
 				done();
 			});
 		});
