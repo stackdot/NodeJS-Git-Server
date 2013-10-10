@@ -142,7 +142,7 @@ describe('behaviour', function() {
 	});
 	describe('Push', function() {
 		it('Should emit fetch event', function(done) {
-			server.on('push', function(repo, update) {
+			server.on('push', function(update, repo) {
 				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
 				expect(update).to.be.an('object');
 				expect(update.accept).to.be.a('function');
