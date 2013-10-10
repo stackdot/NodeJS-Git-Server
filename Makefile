@@ -20,11 +20,14 @@ test-mocha:
 		--require blanket \
 		$(TESTS)
  
-test-cov: lib-cov
-	@APP_COVERAGE=1 $(MAKE) test-mocha REPORTER=html-cov > $(HTML_FILE)
- 
-lib-cov:
-	jscoverage . lib-cov
+test-cov: 
+	@echo TRAVIS_JOB_ID=$(TRAVIS_JOB_ID)
+	@echo ${ssl}
+	@NODE_ENV=test mocha \
+	    --timeout 10000 \
+	    --require blanket \
+		--reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js \
+		$(TESTS)
  
 clean:
 	rm -f reports/*
