@@ -146,7 +146,7 @@ describe('behaviour', function() {
 				it('Should emit fetch event', function(done) {
 					server.once('fetch', function(update, repo) {
 						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
@@ -163,7 +163,7 @@ describe('behaviour', function() {
 				it('Should emit push event', function(done) {
 					server.once('push', function(update, repo) {
 						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
