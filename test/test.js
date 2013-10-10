@@ -29,6 +29,11 @@ var repo2 = {
 	anonRead: false,
 	users: [{ user:user, permissions:['R','W']}, { user:user2, permissions:['W']}, { user:user3, permissions:['R']}]
 }
+var repo3 = {
+	name: helper.random(),
+	anonRead: false,
+	users: [{ user:user, permissions:['R','W']}]
+}
 var opts = {
 	repos: [repo, repo2],
 	logging: false,
@@ -129,6 +134,14 @@ setTimeout(function() {
 			describe('#createRepo()', function() {
 				it('Should be a function', function() {
 					expect(server.createRepo).to.be.a('function');
+				});
+				it('Should create a repo', function(done) {
+					server.createRepo(repo3, done);
+				});
+				it('Should not create a repo', function(done) {
+					repo = repo3;
+					delete repo.anonRead;
+					server.createRepo(repo, done);
 				});
 			});
 			describe('#git', function() {
@@ -329,7 +342,6 @@ describe('Clone', function() {
 			});
 		});
 	});
-
 });
 });
 });
