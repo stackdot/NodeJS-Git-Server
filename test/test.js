@@ -34,15 +34,17 @@ var opts = {
 	repoLocation: '/tmp/'+helper.random(),
 	port: 8000
 };
+server = new git_server(opts.repos, opts.logging, opts.repoLocation, opts.port);
 
 describe('git_server', function() {
 	it('Should expose a function', function() {
 		expect(git_server).to.be.a('function');
 	});
 
-	expect(server = new git_server(opts.repos, opts.logging, opts.repoLocation, opts.port)).to.be.an('object');
-
 	describe('server', function() {
+		it('Should be an object', function() {
+			expect(server).to.be.an('object');
+		});
 		describe('#repos', function() {
 			it('Should be an Array', function() {
 				expect(server.repos).to.be.an('array');
@@ -143,167 +145,167 @@ describe('git_server', function() {
 		});
 	});
 
-	describe('behaviour', function() {
-		describe('Clone a Spoon-Knife repo', function() {
-			it('Should clone a repo', function(done) {
-				exec('git clone https://github.com/octocat/Spoon-Knife.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
-					expect(stdout).to.be.a('string');
-					expect(stderr).to.be.a('string').and.to.be.equal('');
-					done(error);
-				});
-			});
-		});
-		describe('Events', function() {
-			describe('Abortable events', function() {
-				describe('Fetch', function() {
-					it('Should emit fetch event', function(done) {
-						server.once('fetch', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.accept).to.be.a('function');
-							expect(update.reject).to.be.a('function');
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-							update.reject();
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-				describe('Pre-receive', function() {
-					it('Should emit pre-receive event', function(done) {
-						server.once('pre-receive', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object');
-							expect(update.accept).to.be.a('function');
-							expect(update.reject).to.be.a('function');
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-							update.reject();
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-				describe('Update', function() {
-					it('Should emit update event', function(done) {
-						server.once('update', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object');
-							expect(update.accept).to.be.a('function');
-							expect(update.reject).to.be.a('function');
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-							update.reject();
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-				describe('Push', function() {
-					it('Should emit push event', function(done) {
-						server.once('push', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.accept).to.be.a('function');
-							expect(update.reject).to.be.a('function');
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-							update.reject();
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-			});
-			describe('Passive events', function() {
-				describe('Post-receive', function() {
-					it('Should emit post-receive event', function(done) {
-						server.once('post-receive', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-				describe('Post-update', function() {
-					it('Should emit post-update event', function(done) {
-						server.once('post-update', function(update, repo) {
-							expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-							expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
-							expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
-							done();
-						});
-						exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-							expect(stdout).to.be.a('string');
-							expect(stderr).to.be.a('string');
-						});
-					});
-				});
-			});
-	});
-	describe('Push', function() {
-		it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
-			exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+describe('behaviour', function() {
+	describe('Clone a Spoon-Knife repo', function() {
+		it('Should clone a repo', function(done) {
+			exec('git clone https://github.com/octocat/Spoon-Knife.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string');
+				expect(stderr).to.be.a('string').and.to.be.equal('');
 				done(error);
 			});
 		});
 	});
-	describe('Clone', function() {
-		describe('Anonymously', function() {
-			it('Should clone a local repo anonymously', function(done) {
-				exec('git clone http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
-					expect(stdout).to.be.a('string');
-					expect(stderr).to.be.a('string').and.to.be.equal('');
-					done(error);
+	describe('Events', function() {
+		describe('Abortable events', function() {
+			describe('Fetch', function() {
+				it('Should emit fetch event', function(done) {
+					server.once('fetch', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(update.accept).to.be.a('function');
+						expect(update.reject).to.be.a('function');
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+						update.reject();
+						done();
+					});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
+					});
+				});
+			});
+			describe('Pre-receive', function() {
+				it('Should emit pre-receive event', function(done) {
+					server.once('pre-receive', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object');
+						expect(update.accept).to.be.a('function');
+						expect(update.reject).to.be.a('function');
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+						update.reject();
+						done();
+					});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
+					});
+				});
+			});
+			describe('Update', function() {
+				it('Should emit update event', function(done) {
+					server.once('update', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object');
+						expect(update.accept).to.be.a('function');
+						expect(update.reject).to.be.a('function');
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+						update.reject();
+						done();
+					});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
+					});
+				});
+			});
+			describe('Push', function() {
+				it('Should emit push event', function(done) {
+					server.once('push', function(update, repo) {
+						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(update.accept).to.be.a('function');
+						expect(update.reject).to.be.a('function');
+						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+						update.reject();
+						done();
+					});
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+						expect(stdout).to.be.a('string');
+						expect(stderr).to.be.a('string');
+					});
 				});
 			});
 		});
-		describe('Authenticated', function() {
-			it('Should clone a local repo with autentication', function(done) {
-				exec('git clone http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
-					expect(stdout).to.be.a('string');
-					expect(stderr).to.be.a('string').and.to.be.equal('');
-					done(error);
-				});
+describe('Passive events', function() {
+	describe('Post-receive', function() {
+		it('Should emit post-receive event', function(done) {
+			server.once('post-receive', function(update, repo) {
+				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+				expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+				expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+				done();
+			});
+			exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string');
 			});
 		});
-		describe('Wrong credentials', function() {
-			it('Should try clone a local repo with wrong credentials', function(done) {
-				exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
-					expect(stdout).to.be.a('string');
-					expect(stderr).to.be.a('string').and.not.to.be.equal('');
-					expect(error).not.to.be.equal('');
-					done();
-				});
+	});
+	describe('Post-update', function() {
+		it('Should emit post-update event', function(done) {
+			server.once('post-update', function(update, repo) {
+				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+				expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+				expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
+				done();
+			});
+			exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string');
 			});
 		});
-		describe('No read permission', function() {
-			it('Should try clone a local repo with lack of read permissions', function(done) {
-				exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
-					expect(stdout).to.be.a('string');
-					expect(stderr).to.be.a('string').and.not.to.be.equal('');
-					expect(error).not.to.be.equal('');
-					done();
-				});
+	});
+});
+});
+describe('Push', function() {
+	it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
+		exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			expect(stdout).to.be.a('string');
+			expect(stderr).to.be.a('string');
+			done(error);
+		});
+	});
+});
+describe('Clone', function() {
+	describe('Anonymously', function() {
+		it('Should clone a local repo anonymously', function(done) {
+			exec('git clone http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.to.be.equal('');
+				done(error);
 			});
 		});
+	});
+	describe('Authenticated', function() {
+		it('Should clone a local repo with autentication', function(done) {
+			exec('git clone http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.to.be.equal('');
+				done(error);
+			});
+		});
+	});
+	describe('Wrong credentials', function() {
+		it('Should try clone a local repo with wrong credentials', function(done) {
+			exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal('');
+				done();
+			});
+		});
+	});
+	describe('No read permission', function() {
+		it('Should try clone a local repo with lack of read permissions', function(done) {
+			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal('');
+				done();
+			});
+		});
+	});
 
-	});
-	});
+});
+});
 });
