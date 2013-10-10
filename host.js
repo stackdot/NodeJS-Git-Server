@@ -113,7 +113,11 @@
           this.repos[i].git_events = git_events(this.repos[i].path);
           this.repos[i].last_commit = {};
           this.repos[i].event = function(repo, update) {
-            emitters = EventEmitter.listenerCount(self, update.name);
+            if(EventEmitter.listenerCount) {
+              emitters = EventEmitter.listenerCount(self, update.name);
+            } else {
+              emitters = self.listeners(update.name).length;
+            }
             self.log("Emitting "+update.name+" event.");
             if(emitters < 1 && update.canAbort) {
               self.log("No event listeners on "+update.name+". Accepting....");
