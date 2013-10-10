@@ -131,7 +131,7 @@ describe('git_server',function() {
 
 	describe('behaviour', function() {
 		it('Should clone a repo', function(done) {
-			exec('git clone --depth 10 git@github.com:rails/rails /tmp/'+test_repo_name,
+			exec('git clone --depth 10 https://github.com/rails/rails.git /tmp/'+test_repo_name,
 				function (error, stdout, stderr) {
 					expect(stdout).to.be.a('string');
 					expect(stderr).to.be.a('string').and.to.be.equal('');
