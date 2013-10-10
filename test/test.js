@@ -10,13 +10,26 @@ var user = {
 	username: helper.random(),
 	password: helper.random()
 };
+var user2 = {
+	username: helper.random(),
+	password: helper.random()
+};
+var user3 = {
+	username: helper.random(),
+	password: helper.random()
+};
 var repo = {
 	name: helper.random(),
 	anonRead: true,
-	users: [{ user:user, permissions:['R','W'] }]
+	users: [{ user:user, permissions:['R','W']}]
 };
+var repo2 = {
+	name: helper.random(),
+	anonRead: false,
+	users: [{ user:user, permissions:['R','W']}, { user:user2, permissions:['W']}, { user:user2, permissions:['R']}]
+}
 var opts = {
-	repos: [repo],
+	repos: [repo, repo2],
 	logging: false,
 	repoLocation: '/tmp/'+helper.random(),
 	port: 8000
