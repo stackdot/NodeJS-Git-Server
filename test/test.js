@@ -3,6 +3,7 @@ var exec = require('child_process').exec;
 var expect = require('expect.js');
 var helper = require('./helper');
 var git_server = require('../host');
+var test_rails_name = helper.random();
 var test_repo_name = helper.random();
 var server;
 var user = {
@@ -132,7 +133,7 @@ describe('git_server',function() {
 describe('behaviour', function() {
 	describe('Clone a rails repo', function() {
 		it('Should clone a repo', function(done) {
-			exec('git clone https://github.com/rails/rails.git /tmp/'+test_repo_name, function (error, stdout, stderr) {
+			exec('git clone https://github.com/rails/rails.git /tmp/'+test_rails_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.to.be.equal('');
 				done(error);
@@ -141,9 +142,25 @@ describe('behaviour', function() {
 	});
 	describe('Push', function() {
 		it('Should push rails repo to '+repo.name+' repo', function(done) {
-			exec('cd /tmp/'+test_repo_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string');
+				done(error);
+			});
+		});
+		it('Should emit post-update event', function(done) {
+			server.on('post-update', function(repo, update) {
+				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+				expect(update).to.be.an('object');
+				done();
+			});
+		});
+	});
+	describe('Clone local repo', function() {
+		it('Should clone a local repo', function(done) {
+			exec('git clone http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+test_repo_name, function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.to.be.equal('');
 				done(error);
 			});
 		});
