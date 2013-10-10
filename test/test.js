@@ -270,6 +270,15 @@ describe('git_server', function() {
 				});
 			});
 		});
+		describe('Wrong credentials', function() {
+			it('Should clone a local repo with wrong credentials', function(done) {
+				exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+					expect(stdout).to.be.a('string');
+					expect(stderr).to.be.a('string').and.not.to.be.equal('');
+					done(error);
+				});
+			});
+		});
 	});
 	});
 });
