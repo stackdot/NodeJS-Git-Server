@@ -1,5 +1,5 @@
 TESTS = test
-REPORTER = spec
+REPORTER = mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
 XML_FILE = reports/TEST-all.xml
 HTML_FILE = reports/coverage.html
 ssl = GIT_SSL_NO_VERIFY=true
@@ -13,6 +13,7 @@ test-all: clean test-ci test-cov
  
 test-mocha:
 	@echo ${ssl}
+	@echo YOURPACKAGE_COVERAGE=1
 	@NODE_ENV=test mocha \
 	    --timeout 10000 \
 		--reporter $(REPORTER) \
