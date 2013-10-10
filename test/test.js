@@ -10,7 +10,7 @@ var user = {
 	password: 'demo'
 };
 var repo = {
-	name: 'test',
+	name: helper.random(),
 	anonRead: true,
 	users: [{ user:user, permissions:['R','W'] }]
 };
@@ -129,14 +129,25 @@ describe('git_server',function() {
 		});
 	});
 
-	describe('behaviour', function() {
+describe('behaviour', function() {
+	describe('Clone a rails repo', function() {
 		it('Should clone a repo', function(done) {
-			exec('git clone --depth 10 https://github.com/rails/rails.git /tmp/'+test_repo_name,
-				function (error, stdout, stderr) {
+			exec('git clone --depth 10 https://github.com/rails/rails.git /tmp/'+test_repo_name, function (error, stdout, stderr) {
 					expect(stdout).to.be.a('string');
 					expect(stderr).to.be.a('string').and.to.be.equal('');
 					done(error);
 				});
 		});
 	});
+	describe('Push', function() {
+		it('Should push rails repo to '+repo.name+' repo', function(done) {
+			exec('git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+				console.log("stdout", stdout);
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.to.be.equal('');
+				done();
+			});
+		});
+	});
+});
 });
