@@ -16,6 +16,7 @@ test-mocha:
 	@NODE_ENV=test mocha \
 	    --timeout 10000 \
 		--reporter $(REPORTER) \
+		--require blanket \
 		$(TESTS)
  
 test-cov: lib-cov
