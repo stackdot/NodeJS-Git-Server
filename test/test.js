@@ -138,9 +138,9 @@ describe('git_server', function() {
 				server.createRepo(repo3, done);
 			});
 			it('Should not create a repo', function(done) {
-				repo = repo3;
-				delete repo.anonRead;
-				server.createRepo(repo, done);
+				repo4 = repo3;
+				delete repo4.anonRead;
+				server.createRepo(repo4, done);
 			});
 		});
 		describe('#git', function() {
