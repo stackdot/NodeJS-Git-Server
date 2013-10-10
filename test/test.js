@@ -176,108 +176,108 @@ describe('behaviour', function() {
 					});
 				});
 			});
-			describe('Applypatch-msg', function() {
-				it('Should emit applypatch-msg event', function(done) {
-					server.once('applypatch-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-applypatch', function() {
-				it('Should emit pre-applypatch event', function(done) {
-					server.once('pre-applypatch', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-commit', function() {
-				it('Should emit pre-commit event', function(done) {
-					server.once('pre-commit', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Prepare-commit-msg', function() {
-				it('Should emit prepare-commit-msg event', function(done) {
-					server.once('prepare-commit-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Commit-msg', function() {
-				it('Should emit commit-msg event', function(done) {
-					server.once('commit-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-rebase', function() {
-				it('Should emit pre-rebase event', function(done) {
-					server.once('pre-rebase', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
+			// describe('Applypatch-msg', function() {
+			// 	it('Should emit applypatch-msg event', function(done) {
+			// 		server.once('applypatch-msg', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
+			// describe('Pre-applypatch', function() {
+			// 	it('Should emit pre-applypatch event', function(done) {
+			// 		server.once('pre-applypatch', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
+			// describe('Pre-commit', function() {
+			// 	it('Should emit pre-commit event', function(done) {
+			// 		server.once('pre-commit', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
+			// describe('Prepare-commit-msg', function() {
+			// 	it('Should emit prepare-commit-msg event', function(done) {
+			// 		server.once('prepare-commit-msg', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
+			// describe('Commit-msg', function() {
+			// 	it('Should emit commit-msg event', function(done) {
+			// 		server.once('commit-msg', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
+			// describe('Pre-rebase', function() {
+			// 	it('Should emit pre-rebase event', function(done) {
+			// 		server.once('pre-rebase', function(update, repo) {
+			// 			expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+			// 			expect(update).to.be.an('object').and.to.have.keys(['accept', 'reject', 'canAbort', ]);
+			// 			expect(update.accept).to.be.a('function');
+			// 			expect(update.reject).to.be.a('function');
+			// 			expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
+			// 			update.reject();
+			// 			done();
+			// 		});
+			// 		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+			// 			expect(stdout).to.be.a('string');
+			// 			expect(stderr).to.be.a('string');
+			// 		});
+			// 	});
+			// });
 			describe('Pre-receive', function() {
 				it('Should emit pre-receive event', function(done) {
 					server.once('pre-receive', function(update, repo) {
