@@ -14,7 +14,7 @@ test-all: clean test-ci test-cov
 test-mocha:
 	@echo ${ssl}
 	@NODE_ENV=test mocha \
-	    --timeout 40000 \
+	    --timeout 10000 \
 		--reporter $(REPORTER) \
 		$(TESTS)
  

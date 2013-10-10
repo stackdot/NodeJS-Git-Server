@@ -3,7 +3,7 @@ var exec = require('child_process').exec;
 var expect = require('expect.js');
 var helper = require('./helper');
 var git_server = require('../host');
-var test_rails_name = helper.random();
+var test_octocat_name = helper.random();
 var test_repo_name = helper.random();
 var server;
 var user = {
@@ -17,7 +17,7 @@ var repo = {
 };
 var opts = {
 	repos: [repo],
-	logging: false,
+	logging: true,
 	repoLocation: '/tmp/test_repos',
 	port: 8000
 };
@@ -131,9 +131,9 @@ describe('git_server',function() {
 	});
 
 describe('behaviour', function() {
-	describe('Clone a rails repo', function() {
+	describe('Clone a Spoon-Knife repo', function() {
 		it('Should clone a repo', function(done) {
-			exec('git clone https://github.com/rails/rails.git /tmp/'+test_rails_name, function (error, stdout, stderr) {
+			exec('git clone https://github.com/octocat/Spoon-Knife.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.to.be.equal('');
 				done(error);
@@ -153,7 +153,7 @@ describe('behaviour', function() {
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
@@ -170,7 +170,7 @@ describe('behaviour', function() {
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
@@ -187,24 +187,7 @@ describe('behaviour', function() {
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-auto-gc', function() {
-				it('Should emit pre-auto-gc event', function(done) {
-					server.once('pre-auto-gc', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd '+opts.repoLocation+"/"+repo.name+'.git'+' && git gc --auto', function (error, stdout, stderr) {
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
@@ -218,122 +201,20 @@ describe('behaviour', function() {
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.accept();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Applypatch-msg', function() {
-				it('Should emit applypatch-msg event', function(done) {
-					server.once('applypatch-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
 						update.reject();
 						done();
 					});
-					exec('cd /tmp/'+test_rails_name+' && git rm ./Rakefile && git add . && git commit -m \'Avesome changes\' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+					exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 						expect(stdout).to.be.a('string');
 						expect(stderr).to.be.a('string');
 					});
 				});
 			});
-			describe('Pre-applypatch', function() {
-				it('Should emit pre-applypatch event', function(done) {
-					server.once('pre-applypatch', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-commit', function() {
-				it('Should emit pre-commit event', function(done) {
-					server.once('pre-commit', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Prepare-commit-msg', function() {
-				it('Should emit prepare-commit-msg event', function(done) {
-					server.once('prepare-commit-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Commit-msg', function() {
-				it('Should emit commit-msg event', function(done) {
-					server.once('commit-msg', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-			describe('Pre-rebase', function() {
-				it('Should emit pre-rebase event', function(done) {
-					server.once('pre-rebase', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object');
-						expect(update.accept).to.be.a('function');
-						expect(update.reject).to.be.a('function');
-						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
-						update.reject();
-						done();
-					});
-					exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-						expect(stdout).to.be.a('string');
-						expect(stderr).to.be.a('string');
-					});
-				});
-			});
-});
+		});
 });
 describe('Push', function() {
 	it('Should push rails repo to '+repo.name+' repo', function(done) {
-		exec('cd /tmp/'+test_rails_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
+		exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
 			expect(stdout).to.be.a('string');
 			expect(stderr).to.be.a('string');
 			done(error);
