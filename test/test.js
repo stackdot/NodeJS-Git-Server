@@ -258,11 +258,32 @@ describe('Passive events', function() {
 });
 });
 describe('Push', function() {
-	it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
-		exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git master', function (error, stdout, stderr) {
-			expect(stdout).to.be.a('string');
-			expect(stderr).to.be.a('string');
-			done(error);
+	describe('Authenticated', function() {
+		it('Should push Spoon-Knife repo to '+repo.name+' repo', function(done) {
+			exec('cd /tmp/'+test_octocat_name+' && git push http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo2.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string');
+				done(error);
+			});
+		});
+	});
+	describe('Anonymously', function() {
+		it('Should try to push Spoon-Knife repo anonymously to '+repo2.name+' repo and fail', function(done) {
+			exec('cd /tmp/'+test_octocat_name+' && git push http://localhost:'+server.port+'/'+repo2.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
+			});
+		});
+	});
+	describe('No write permissions', function() {
+		it('Should try to push Spoon-Knife repo with lack of write permissions to '+repo2.name+' repo and fail', function(done) {
+			exec('cd /tmp/'+test_octocat_name+' && git push http://'+user3.username+':'+user3.password+'@localhost:'+server.port+'/'+repo2.name+'.git master', function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string');
+				done(error);
+			});
 		});
 	});
 });
