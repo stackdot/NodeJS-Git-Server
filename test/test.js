@@ -129,11 +129,15 @@ describe('git_server', function() {
 			it('Should be a function', function() {
 				expect(server.log).to.be.a('function');
 			});
-			it('Should log an empty line', function() {
+			it('Should log an empty line', function(done) {
 				logging = server.logging;
 				server.logging = true;
-				expect(server.log("")).to.be.a('function').and.to.be.a(console.log);
-				server.logging = logging;
+				process.stdout.on('data', function() {
+					console.log(""+data);
+					server.logging = logging;
+					done();
+				});
+				server.log("");
 			});
 		});
 		describe('#createRepo()', function() {
