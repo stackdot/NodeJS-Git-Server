@@ -131,12 +131,14 @@ describe('git_server', function() {
 			});
 			it('Should log an empty line', function(done) {
 				logging = server.logging;
+				log = console.log;
 				server.logging = true;
-				process.stdout.on('data', function() {
-					console.log(""+data);
+				global.console.log = function() {
 					server.logging = logging;
+					global.console.log = log;
+					expect(arguments[0]).to.be.a('string').and.to.be.eql("LOG: ");
 					done();
-				});
+				}
 				server.log("");
 			});
 		});
