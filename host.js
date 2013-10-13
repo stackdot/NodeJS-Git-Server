@@ -153,14 +153,16 @@
 
       GitServer.prototype.createRepo = function(repo, callback) {
         if ((repo.name == null) || (repo.anonRead == null)) {
+          callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
           this.log('Not enough details, need atleast .name and .anonRead');
-          false;
+          return false;
         }
         if (!this.getRepo(repo.name)) {
           this.log('Creating repo', repo.name);
           this.repos.push(repo);
           return this.git.create(repo.name, callback);
         } else {
+          callback(new Error('This repo already exists'), null)
           return this.log('This repo already exists');
         }
       };
