@@ -142,6 +142,9 @@ describe('git_server', function() {
 				delete repo4.anonRead;
 				server.createRepo(repo4, done);
 			});
+			it('Should not create a repo, because this repo should exist', function(done) {
+				server.createRepo(repo3, done);
+			});
 		});
 		describe('#git', function() {
 			it('Should be an object', function() {
