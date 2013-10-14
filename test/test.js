@@ -157,8 +157,11 @@ describe('git_server', function() {
 					done();
 				});
 			});
-			it('Should not create a repo, because this repo should not exist', function(done) {
-				server.createRepo(repo, done);
+			it('Should not create a repo, because this repo should exist', function(done) {
+				server.createRepo(repo, function(err, success) {
+					expect(err).not.to.be("");
+					done();
+				});
 			});
 		});
 		describe('#git', function() {
