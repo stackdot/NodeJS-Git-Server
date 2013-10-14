@@ -41,7 +41,7 @@ var opts = {
 	port: 8000
 };
 
-server = new git_server(opts.repos, opts.logging, opts.repoLocation, opts.port);
+server = new git_server(opts);
 
 describe('git_server', function() {
 	it('Should expose a function', function() {
