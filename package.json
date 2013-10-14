@@ -40,7 +40,7 @@
     "url": "https://github.com/qrpike/NodeJS-Git-Server"
   },
   "homepage": "http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html",
-  "main": "host.js",
+  "main": "main.js",
   "bin": {
     "git-server": "cli.js",
     "gitserver": "cli.js"

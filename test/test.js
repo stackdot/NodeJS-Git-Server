@@ -2,7 +2,7 @@ var assert = require('assert');
 var exec = require('child_process').exec;
 var expect = require('expect.js');
 var helper = require('./helper');
-var git_server = require('../host');
+var git_server = require('../main');
 
 var test_octocat_name = helper.random();
 var test_repo_name = helper.random();
