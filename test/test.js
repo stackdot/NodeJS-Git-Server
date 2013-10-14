@@ -152,7 +152,10 @@ describe('git_server', function() {
 			it('Should not create a repo', function(done) {
 				repo4 = repo3;
 				delete repo4.anonRead;
-				server.createRepo(repo4, done);
+				server.createRepo(repo4, function(err, success) {
+					expect(err).not.to.be("");
+					done();
+				});
 			});
 			it('Should not create a repo, because this repo should not exist', function(done) {
 				server.createRepo(repo, done);
