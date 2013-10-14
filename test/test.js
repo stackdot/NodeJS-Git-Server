@@ -323,6 +323,18 @@ describe('Push', function() {
 		});
 	});
 });
+describe('Fetch', function() {
+	describe('Non existent Repo', function() {
+		it('Should try to fetch non existing repo', function(done) {
+			exec('git fetch http://localhost:'+server.port+'/'+helper.random()+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
+			});
+		});
+	});
+});
 describe('Clone', function() {
 	describe('Anonymously', function() {
 		it('Should clone a local repo anonymously', function(done) {
