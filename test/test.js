@@ -326,23 +326,24 @@ describe('Push', function() {
 describe('Fetch', function() {
 	describe('Anonymously', function() {
 		it('Should fetch a local repo anonymously', function(done) {
-			exec('git fetch http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
+			exec('cd /tmp/'+test_octocat_name+' && git fetch http://localhost:'+server.port+'/'+repo.name+'.git', function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.to.be.equal('');
+				expect(stderr).to.be.a('string');
 				done(error);
 			});
 		});
 		it('Should fetch a local repo anonymously and fail', function(done) {
-			exec('git fetch http://localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
+			exec('cd /tmp/'+test_octocat_name+' && git fetch http://localhost:'+server.port+'/'+repo2.name+'.git', function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.to.be.equal('');
-				done(error);
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
 			});
 		});
 	});
 	describe('Non existent Repo', function() {
 		it('Should try to fetch non existing repo', function(done) {
-			exec('git fetch http://localhost:'+server.port+'/'+helper.random()+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+			exec('git fetch http://localhost:'+server.port+'/'+helper.random()+'.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
 				expect(error).not.to.be.equal(null);
