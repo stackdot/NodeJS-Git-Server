@@ -38,7 +38,8 @@ var opts = {
 	repos: [repo, repo2],
 	logging: false,
 	repoLocation: '/tmp/'+helper.random(),
-	port: 8000
+	port: 8000,
+	httpApi: true
 };
 
 server = new git_server(opts);
