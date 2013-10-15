@@ -4,8 +4,8 @@
   "description": "A simple, multi-tenant git server written in NodeJS",
   "author": "Quinton Pike <@quinton.pike>",
   "contributors": [
-  "Quinton Pike <qrpike@gmail.com>",
-  "Justas Brazauskas <brazauskasjustas@gmail.con>"
+    "Quinton Pike <qrpike@gmail.com>",
+    "Justas Brazauskas <brazauskasjustas@gmail.con>"
   ],
   "dependencies": {
     "async": "*",
@@ -15,7 +15,8 @@
     "cli-listener": "*",
     "commander": "*",
     "git-emit": "0.0.0",
-    "event-proxy": "0.0.1"
+    "event-proxy": "0.0.1",
+    "connect": "~2.9.0"
   },
   "devDependencies": {
     "expect.js": "~0.2.0",
@@ -26,14 +27,16 @@
   },
   "scripts": {
     "test": "make test",
-    "blanket": { "pattern": "host.js"}
+    "blanket": {
+      "pattern": "host.js"
+    }
   },
   "keywords": [
-  "git",
-  "github",
-  "git server",
-  "git hosting",
-  "git http"
+    "git",
+    "github",
+    "git server",
+    "git hosting",
+    "git http"
   ],
   "repository": {
     "type": "git",
