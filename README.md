@@ -148,9 +148,9 @@ Repo object is the object passed to start the server plus some additional method
 
 # HTTPS
 
-The ability to use HTTPS is now implemented for the module (not the cli *yet*). This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
+The ability to use HTTPS is now implemented for the module and the cli. This is important so that your username & password is encrypted when being sent over the wire. If you are not using username/password then you may want to disregard this section.
 
-To enable HTTPS, send the module the 'cert' param:
+To enable HTTPS in the module, use the 'cert' param:
 
 	var fs = require('fs');
 	var certs = {
@@ -158,6 +158,10 @@ To enable HTTPS, send the module the 'cert' param:
 		cert	: fs.readFileSync('../certs/certificate.pem')
 	};
 	_g = new GitServer([ newRepo ], undefined, undefined, undefined, certs);
+
+To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cert' options:
+
+	git-server[|gitserver] --ssl --key ../certs/privatekey.pem --cert ../certs/certificate.pem
 
 To create these certs you can run:
 
@@ -195,7 +199,6 @@ You will see a list of possible commands, just enter a command and the prompt wi
 
 # TODO Items
 
-- Add HTTPS Support ( partially completed )
 - Add onPush & onFetch actions for repos
 - Make YouTube demo of the app
 
