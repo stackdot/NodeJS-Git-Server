@@ -14,7 +14,7 @@ Made to be able to support many git repo's and users with Read/Write customizabl
 
 To install the git server run:
 
-	npm install git-server run
+	npm install git-server
 
 To run tests
 
