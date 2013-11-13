@@ -53,7 +53,7 @@ if (commander.ssl && commander.key && commander.cert) {
     key: readFile(commander.key),
     cert: readFile(commander.cert)
   };
-  
+
   if(commander.certificateAuthority) {
     // Properly concatinate the ca chain for node https
     var caChain = function caChain(cc) {
@@ -358,6 +358,10 @@ GITCLI = (function(_super) {
 
 })(EventEmitter);
 
-_g = new GitServer(repos.repos, logging, repoLocation, repoPort);
+if (!certs) {
+  _g = new GitServer(repos.repos, logging, repoLocation, repoPort);
+} else {
+  _g = new GitServer(repos.repos, logging, repoLocation, repoPort, certs);
+}
 
 _c = new GITCLI(_g, repos.users);
