@@ -27,7 +27,15 @@ Table = require('cli-table');
 
 commander = require('commander');
 
-commander.version('0.0.1').option('-p, --port [value]', 'Port to run Git on', parseInt).option('-d, --directory [value]', 'Directory of the repos').option('-l, --logging', 'Verbose logging on or off').parse(process.argv);
+commander.version('0.2.2')
+  .option('-p, --port [value]', 'Port to run Git on', parseInt)
+  .option('-d, --directory [value]', 'Directory of the repos')
+  .option('-l, --logging', 'Verbose logging on or off')
+  .option('-s, --ssl', 'Enable SSL support; requires key and cert options')
+  .option('-k, --key [value]', 'SSL key path (required for ssl)')
+  .option('-c, --cert [value]', 'SSL cert path (required for ssl)')
+  .option('-a, --certificate-authority [value]', 'SSL certificate authority path')
+  .parse(process.argv);
 
 repoPort = commander.port || 7000;
 
