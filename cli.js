@@ -13,7 +13,7 @@ EventEmitter = require('events').EventEmitter;
 
 CLI = require('cli-listener');
 
-GitServer = require('./host.js');
+GitServer = require('./lib/host.js');
 
 mkdirp = require('mkdirp');
 
