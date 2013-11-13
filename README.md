@@ -199,7 +199,6 @@ You will see a list of possible commands, just enter a command and the prompt wi
 
 # TODO Items
 
-- Add onPush & onFetch actions for repos
 - Make YouTube demo of the app
 
 ### This is a work in progress - please feel free to contribute!
