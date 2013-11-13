@@ -159,9 +159,9 @@ To enable HTTPS in the module, use the 'cert' param:
 	};
 	_g = new GitServer([ newRepo ], undefined, undefined, undefined, certs);
 
-To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cert' options.
+To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cert' options:
 
-  git-server[|gitserver] --ssl --key ../certs/privatekey.pem --cert ../certs/certificate.pem
+	git-server[|gitserver] --ssl --key ../certs/privatekey.pem --cert ../certs/certificate.pem
 
 To create these certs you can run:
 
