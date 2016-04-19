@@ -12,6 +12,9 @@ var EventEmitter, GitServer, Table, async, commander, certs, fs, getUserHomeDir,
 
 EventEmitter = require('events').EventEmitter
 
+const myEmitter = new EventEmitter();
+
+
 GitServer = require('./lib/host.js')
 
 mkdirp = require('mkdirp')
@@ -26,12 +29,6 @@ Table = require('cli-table')
 
 commander = require('commander')
 
-var mosca = require('mosca')
-var mqtt = require('mqtt')
-
-var mqttServ = new mosca.Server({})
-
-var client = mqtt.connect('ws://localhost:7000')
 
 commander.version('0.2.2')
   .option('-p, --port [value]', 'Port to run Git on', parseInt)
@@ -123,14 +120,40 @@ if (!certs) {
 }
 console.log(repos)
 
-// *****************************************************************************
-
-function saveConfig () {
-  console.log('evento emitidoooooooo')
-  var config
-  config = JSON.stringify({
-    repos: this.gitServer.repos,
-    users: this.users
-  })
-  return fs.writeFileSync(repoDB, config)
+if(fs.existsSync(repoDB)){
+fs.watch(repoDB, { persistent: true }, function (event, fileName) {
+  console.log("Event: " + event);
+  console.log(fileName + "\n");
+  //mostramos el codigo para ver lo q ha cambiado
+  var content = fs.readFileSync(repoDB);
+  var json = JSON.stringify(eval("(" + content + ")"));
+  console.log(json);
+});
 }
+
+function createUser (name, email, pass) {
+//console.log('usuario en creacioooon ' + name + ' ' + pass + ' ' + JSON.stringify(repos.users))
+  var _this = this;
+    var user = {
+        username: name,
+        email: email,
+        password: pass
+      }
+      //console.log(user)
+      //console.log(repos)
+      repos.users.push(user);
+      //console.log(repos)
+      //myEmitter.emit('changedData');
+      var userson = JSON.stringify(
+        {
+          repos: repos.repos,
+          users: repos.users
+        }
+      );
+      fs.writeFileSync(repoDB, userson);
+console.log('usuario añadido')
+      //return callback();
+}
+
+
+module.exports = createUser
