@@ -63,11 +63,20 @@ options = {
   repos: repos.repos,
   logging: true,
   repoLocation: '/Users/lourdeslirosalinas/git-server/repos',
-  port: 7000,
+  port: 7002,
   httpApi: true,
   certs: certif
 }
 
-// Creación del servidor
+// Server
 
-_git = new GitServer(options);
+_git = new GitServer(options)
+module.exports = _git
+
+/*var repo1 = {
+  name: 'repo1',
+  anonRead: 'y',
+  users: []
+}
+
+_git.createRepo(repo1)*/
