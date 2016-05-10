@@ -109,6 +109,29 @@ function createUser (user, repos, users, callback) {
   }
 }
 
+function deleteUser (user, repos, users, callback) {
+  this.repos = repos
+  if ((user.username == null) || (user.password == null)) {
+    callback(new Error('Username and password are necessary'), null)
+    console.log('Username and password are necessary')
+    return false
+  }
+  if (this.getUser(user.username)) {
+    console.log('Deleting user', user.username)
+    repos.users.pop(user)
+    var reposon = JSON.stringify(
+      {
+        repos: repos.repos,
+        users: repos.users
+      }
+    )
+    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+  } else {
+    // callback(new Error('This repo already exists'), null)
+    return console.log('This user doesn\'\t exist')
+  }
+}
+
 function createRepo (repo, repos, users, callback) {
 //  this.repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).repos
   this.repos = repos
@@ -170,8 +193,9 @@ var user1 = {
   password: 'demo1'
 }
 
-createRepo(repo1, repositorios, usuarios)
-createUser(user1, repositorios, usuarios)
+// createRepo(repo1, repositorios, usuarios)
+// createUser(user1, repositorios, usuarios)
+deleteUser(user1, repositorios, usuarios)
 
 // repositorios.push(repo9)
 // console.log(repositorios)
