@@ -38,6 +38,7 @@ mkdirp.sync(repoLocation)
 
 if (fs.existsSync(repoDB)) {
   repos = JSON.parse(fs.readFileSync(repoDB))
+  console.log(repos.repos)
 } else {
   repos = {
     repos: [],
@@ -73,10 +74,18 @@ options = {
 _git = new GitServer(options)
 module.exports = _git
 
-/*var repo1 = {
-  name: 'repo1',
-  anonRead: 'y',
-  users: []
+/* var repo8 = {
+  name: 'repo8',
+  anonRead: true,
+  users: [
+    {
+      user: {
+        username: 'demo2',
+        password: 'demo2'
+      },
+      permissions: ['R', 'W']
+    }
+  ]
 }
 
-_git.createRepo(repo1)*/
+_git.createRepo(repo8) */
