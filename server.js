@@ -44,6 +44,8 @@ if (fs.existsSync(repoDB)) {
     repos: [],
     users: []
   }
+  var reposon = JSON.stringify(repos)
+  fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
 }
 
 // Obtención de los certificados
