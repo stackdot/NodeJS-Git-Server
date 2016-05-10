@@ -103,12 +103,6 @@ function createUser (user, repos, users, callback) {
       }
     )
     fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
-
-    this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
-      autoCreate: false
-    })
-
-    return this.git.create(user.username, callback)
   } else {
     // callback(new Error('This repo already exists'), null)
     return console.log('This user already exists')
