@@ -4,6 +4,7 @@ var fs = require('fs')
 // var certif, repos, options
 // var _git2 = require('./server.js')
 var pushover = require('pushover')
+var rmdir = require('rmdir')
 
 /* repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
 
@@ -126,9 +127,10 @@ function deleteUser (user, repos, users, callback) {
       }
     )
     fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+    return console.log('This user has been deleted')
   } else {
     // callback(new Error('This repo already exists'), null)
-    return console.log('This user doesn\'\t exist')
+    return console.log('This user doesnt exist')
   }
 }
 
@@ -166,6 +168,45 @@ function createRepo (repo, repos, users, callback) {
   }
 }
 
+function deleteRepo (repo, repos, users, callback) {
+//  this.repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).repos
+  this.repos = repos
+  if (repo.name == null) {
+    console.log('Nombre: ' + repo.name)
+    callback(new Error('Not enough details, need atleast .name'), null)
+    console.log('Not enough details, need atleast .name')
+    return false
+  }
+  if (this.getRepo(repo.name)) {
+    console.log('Deleting repo', repo.name)
+    // var reposit = new Array(this.repos)
+    // reposit.push(repo)
+    repositorios.repos.pop(repo)
+
+    var reposon = JSON.stringify(
+      {
+        repos: repos.repos,
+        users: repos.users
+      }
+    )
+    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+
+    // Borramos el repositorio
+    rmdir('/Users/lourdeslirosalinas/git-server/repos/' + repo.name + '.git', function (err, dirs, files) {
+      throw err
+    })
+
+    this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
+      autoCreate: false
+    })
+
+    return console.log('This repo has been deleted')
+  } else {
+    // callback(new Error('This repo already exists'), null)
+    return console.log('This repo doesnt exists')
+  }
+}
+
 var repo1 = {
   name: 'repo5',
   anonRead: false,
@@ -193,12 +234,7 @@ var user1 = {
   password: 'demo1'
 }
 
-// createRepo(repo1, repositorios, usuarios)
-// createUser(user1, repositorios, usuarios)
+createRepo(repo1, repositorios, usuarios)
+createUser(user1, repositorios, usuarios)
 deleteUser(user1, repositorios, usuarios)
-
-// repositorios.push(repo9)
-// console.log(repositorios)
-
-// _git.createRepo(repo1)
-// _git2.createRepo(repo2)
+deleteRepo(repo1, repositorios, usuarios)
