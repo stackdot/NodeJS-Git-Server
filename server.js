@@ -12,8 +12,6 @@ var mkdirp = require('mkdirp')
 
 GitServer = require('./main.js')
 
-// Obtención de los repositorios
-
 var directory = '/Users/lourdeslirosalinas/git-server/repos'
 
 getUserHomeDir = function () {
@@ -48,7 +46,6 @@ if (fs.existsSync(repoDB)) {
   fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
 }
 
-// Obtención de los certificados
 var readFileSync = fs.readFileSync
 var resolve = require('path').resolve
 
@@ -71,23 +68,5 @@ options = {
   certs: certif
 }
 
-// Server
-
 _git = new GitServer(options)
 module.exports = _git
-
-/* var repo8 = {
-  name: 'repo8',
-  anonRead: true,
-  users: [
-    {
-      user: {
-        username: 'demo2',
-        password: 'demo2'
-      },
-      permissions: ['R', 'W']
-    }
-  ]
-}
-
-_git.createRepo(repo8) */
