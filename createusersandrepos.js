@@ -1,5 +1,3 @@
-// Testeo del servidor e importaciones
-
 var fs = require('fs')
 var pushover = require('pushover')
 var rmdir = require('rmdir')
@@ -13,9 +11,8 @@ if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
   }
 }
 
-getRepo = function (repoName) {
+function getRepo (repoName) {
   var repo, _i, _len, _ref, repos
-  // _ref = this.repos;
   if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
     repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
   }else {
@@ -34,9 +31,8 @@ getRepo = function (repoName) {
   return false
 }
 
-getUser = function (userName) {
+function getUser (userName) {
   var user, _i, _len, _ref, repos
-  // _ref = this.repos;
   if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
     repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
   }else {
@@ -62,7 +58,7 @@ function createUser (user, repos, users, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  if (!this.getUser(user.username)) {
+  if (!getUser(user.username)) {
     console.log('Creating user', user.username)
     repos.users.push(user)
     var reposon = JSON.stringify(
@@ -73,7 +69,7 @@ function createUser (user, repos, users, callback) {
     )
     fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
   } else {
-    // callback(new Error('This repo already exists'), null)
+    // callback(new Error('This user already exists'), null)
     return console.log('This user already exists')
   }
 }
@@ -85,7 +81,7 @@ function deleteUser (user, repos, users, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  if (this.getUser(user.username)) {
+  if (getUser(user.username)) {
     console.log('Deleting user', user.username)
     repos.users.pop(user)
     var reposon = JSON.stringify(
@@ -97,24 +93,20 @@ function deleteUser (user, repos, users, callback) {
     fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
     return console.log('This user has been deleted')
   } else {
-    // callback(new Error('This repo already exists'), null)
-    return console.log('This user doesnt exist')
+    // callback(new Error('This user doesnt exist'), null)
+    return console.log('This user doesn\'t exist')
   }
 }
 
 function createRepo (repo, repos, users, callback) {
-//  this.repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).repos
   this.repos = repos
   if ((repo.name == null) || (repo.anonRead == null)) {
-    console.log('Nombre: ' + repo.name + ', Anonimo? ' + repo.anonRead)
     callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
     console.log('Not enough details, need atleast .name and .anonRead')
     return false
   }
-  if (!this.getRepo(repo.name)) {
+  if (!getRepo(repo.name)) {
     console.log('Creating repo', repo.name)
-    // var reposit = new Array(this.repos)
-    // reposit.push(repo)
     repositories.repos.push(repo)
 
     var reposon = JSON.stringify(
@@ -140,15 +132,12 @@ function deleteRepo (repo, repos, users, callback) {
 //  this.repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).repos
   this.repos = repos
   if (repo.name == null) {
-    console.log('Nombre: ' + repo.name)
     callback(new Error('Not enough details, need atleast .name'), null)
     console.log('Not enough details, need atleast .name')
     return false
   }
-  if (this.getRepo(repo.name)) {
+  if (getRepo(repo.name)) {
     console.log('Deleting repo', repo.name)
-    // var reposit = new Array(this.repos)
-    // reposit.push(repo)
     repositories.repos.pop(repo)
 
     var reposon = JSON.stringify(
@@ -158,8 +147,6 @@ function deleteRepo (repo, repos, users, callback) {
       }
     )
     fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
-
-    // Borramos el repositorio
     rmdir('/Users/lourdeslirosalinas/git-server/repos/' + repo.name + '.git', function (err, dirs, files) {
       throw err
     })
@@ -170,14 +157,10 @@ function deleteRepo (repo, repos, users, callback) {
 
     return console.log('This repo has been deleted')
   } else {
-    // callback(new Error('This repo already exists'), null)
-    return console.log('This repo doesnt exists')
+    // callback(new Error('This repo doesnt exists'), null)
+    return console.log('This repo doesn\'t exists')
   }
 }
-
-/*
-
-**************** How to use it: Example
 
 var repo1 = {
   name: 'repo5',
@@ -205,7 +188,7 @@ var user1 = {
   username: 'demo1',
   password: 'demo1'
 }
-
+/*
 createRepo(repo1, repositories)
 createUser(user1, repositories)
 deleteUser(user1, repositories)
