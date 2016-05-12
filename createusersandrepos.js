@@ -1,45 +1,13 @@
 // Testeo del servidor e importaciones
-// var _git = require('./lib/host.js')
+
 var fs = require('fs')
-// var certif, repos, options
-// var _git2 = require('./server.js')
 var pushover = require('pushover')
 var rmdir = require('rmdir')
 
-/* repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
-
-var readFileSync = fs.readFileSync
-var resolve = require('path').resolve
-
-var readFile = function (path) {
-  path = resolve(path)
-  return readFileSync(path, {encoding: 'utf8'}).toString()
-}
-
-certif = {
-  key: readFile('/Users/lourdeslirosalinas/privatekey.pem'),
-  cert: readFile('/Users/lourdeslirosalinas/certificate.pem')
-}
-
-options = {
-  repos: repos.repos,
-  logging: true,
-  repoLocation: '/Users/lourdeslirosalinas/git-server/repos',
-  port: 7000,
-  httpApi: true,
-  certs: certif
-}
-
-// Creación del servidor
-
-_git = new GitServer2(options)
-*/
-
 if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-  var repositorios = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
-  var usuarios = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).users
+  var repositories = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
 } else {
-  repositorios = {
+  repositories = {
     repos: [],
     users: []
   }
@@ -147,7 +115,7 @@ function createRepo (repo, repos, users, callback) {
     console.log('Creating repo', repo.name)
     // var reposit = new Array(this.repos)
     // reposit.push(repo)
-    repositorios.repos.push(repo)
+    repositories.repos.push(repo)
 
     var reposon = JSON.stringify(
       {
@@ -181,7 +149,7 @@ function deleteRepo (repo, repos, users, callback) {
     console.log('Deleting repo', repo.name)
     // var reposit = new Array(this.repos)
     // reposit.push(repo)
-    repositorios.repos.pop(repo)
+    repositories.repos.pop(repo)
 
     var reposon = JSON.stringify(
       {
@@ -206,6 +174,10 @@ function deleteRepo (repo, repos, users, callback) {
     return console.log('This repo doesnt exists')
   }
 }
+
+/*
+
+**************** How to use it: Example
 
 var repo1 = {
   name: 'repo5',
@@ -234,7 +206,9 @@ var user1 = {
   password: 'demo1'
 }
 
-createRepo(repo1, repositorios, usuarios)
-createUser(user1, repositorios, usuarios)
-deleteUser(user1, repositorios, usuarios)
-deleteRepo(repo1, repositorios, usuarios)
+createRepo(repo1, repositories)
+createUser(user1, repositories)
+deleteUser(user1, repositories)
+deleteRepo(repo1, repositories)
+
+*/
