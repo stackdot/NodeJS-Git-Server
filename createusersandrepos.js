@@ -1,9 +1,8 @@
-var fs = require('fs')
+var fs = require('fs-extra')
 var pushover = require('pushover')
-var rmdir = require('rmdir')
 
 if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-  var repositories = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
+  var repositories = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
 } else {
   repositories = {
     repos: [],
@@ -14,7 +13,7 @@ if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
 function getRepo (repoName) {
   var repo, _i, _len, _ref, repos
   if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-    repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
+    repos = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
   }else {
     repos = {
       repos: [],
@@ -25,7 +24,7 @@ function getRepo (repoName) {
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     repo = _ref[_i]
     if (repo.name + '.git' === repoName || repoName === repo.name) {
-      return repo
+      return _i
     }
   }
   return false
@@ -34,7 +33,7 @@ function getRepo (repoName) {
 function getUser (userName) {
   var user, _i, _len, _ref, repos
   if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-    repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db'))
+    repos = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
   }else {
     repos = {
       repos: [],
@@ -45,7 +44,7 @@ function getUser (userName) {
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     user = _ref[_i]
     if (user.username === userName || userName === user.username) {
-      return user
+      return _i
     }
   }
   return false
@@ -58,16 +57,13 @@ function createUser (user, repos, users, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  if (!getUser(user.username)) {
+  if (getUser(user.username) === false) {
     console.log('Creating user', user.username)
     repos.users.push(user)
-    var reposon = JSON.stringify(
-      {
-        repos: repos.repos,
-        users: repos.users
-      }
-    )
-    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+      repos: repos.repos,
+      users: repos.users
+    })
   } else {
     // callback(new Error('This user already exists'), null)
     return console.log('This user already exists')
@@ -81,16 +77,14 @@ function deleteUser (user, repos, users, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  if (getUser(user.username)) {
+  var i = getUser(user.username)
+  if (i !== false) {
     console.log('Deleting user', user.username)
-    repos.users.pop(user)
-    var reposon = JSON.stringify(
-      {
-        repos: repos.repos,
-        users: repos.users
-      }
-    )
-    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+    repos.users.splice(i, 1)
+    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+      repos: repos.repos,
+      users: repos.users
+    })
     return console.log('This user has been deleted')
   } else {
     // callback(new Error('This user doesnt exist'), null)
@@ -105,17 +99,15 @@ function createRepo (repo, repos, users, callback) {
     console.log('Not enough details, need atleast .name and .anonRead')
     return false
   }
-  if (!getRepo(repo.name)) {
+  var i = getRepo(repo.name)
+  if (i === false) {
     console.log('Creating repo', repo.name)
     repositories.repos.push(repo)
 
-    var reposon = JSON.stringify(
-      {
-        repos: repos.repos,
-        users: repos.users
-      }
-    )
-    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+      repos: repos.repos,
+      users: repos.users
+    })
 
     this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
       autoCreate: false
@@ -129,27 +121,23 @@ function createRepo (repo, repos, users, callback) {
 }
 
 function deleteRepo (repo, repos, users, callback) {
-//  this.repos = JSON.parse(fs.readFileSync('/Users/lourdeslirosalinas/git-server/repos.db')).repos
   this.repos = repos
   if (repo.name == null) {
     callback(new Error('Not enough details, need atleast .name'), null)
     console.log('Not enough details, need atleast .name')
     return false
   }
-  if (getRepo(repo.name)) {
+  var i = getRepo(repo.name)
+  if (i !== false) {
     console.log('Deleting repo', repo.name)
-    repositories.repos.pop(repo)
-
-    var reposon = JSON.stringify(
-      {
-        repos: repos.repos,
-        users: repos.users
-      }
-    )
-    fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
-    rmdir('/Users/lourdeslirosalinas/git-server/repos/' + repo.name + '.git', function (err, dirs, files) {
-      throw err
+    this.repos.repos.splice(i, 1)
+    fs.writeJSONSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+      repos: repos.repos,
+      users: repos.users
     })
+    fs.removeSync('/Users/lourdeslirosalinas/git-server/repos/' + repo.name + '.git')/*, function (err) {
+      throw err
+    }*/
 
     this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
       autoCreate: false
@@ -163,7 +151,29 @@ function deleteRepo (repo, repos, users, callback) {
 }
 
 var repo1 = {
-  name: 'repo5',
+  name: 'repo1',
+  anonRead: false,
+  users: [
+    {
+      user: {
+        username: 'demo1',
+        password: 'demo1'
+      },
+      permissions: ['R', 'W']
+    }
+  ],
+  onSuccessful: {
+    fetch: function () {
+      return console.log('Successful fetch on "repo6" repo')
+    },
+    push: function () {
+      return console.log('Success push on "repo6" repo')
+    }
+  }
+}
+
+var repo2 = {
+  name: 'repo2',
   anonRead: false,
   users: [
     {
@@ -185,13 +195,13 @@ var repo1 = {
 }
 
 var user1 = {
-  username: 'demo1',
-  password: 'demo1'
+  username: 'demo4',
+  password: 'demo4'
 }
-/*
-createRepo(repo1, repositories)
-createUser(user1, repositories)
-deleteUser(user1, repositories)
-deleteRepo(repo1, repositories)
 
-*/
+//createRepo(repo1, repositories)
+//createRepo(repo2, repositories)
+
+//createUser(user1, repositories)
+//deleteUser(user1, repositories)
+deleteRepo(repo1, repositories)

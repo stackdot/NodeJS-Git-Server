@@ -6,7 +6,7 @@ var repoDB
 var repoLocation
 var options
 var _git
-var fs = require('fs')
+var fs = require('fs-extra')
 var path = require('path')
 var mkdirp = require('mkdirp')
 
@@ -35,15 +35,14 @@ if (directory !== void 0) {
 mkdirp.sync(repoLocation)
 
 if (fs.existsSync(repoDB)) {
-  repos = JSON.parse(fs.readFileSync(repoDB))
+  repos = fs.readJsonSync(repoDB)
   console.log(repos.repos)
 } else {
   repos = {
     repos: [],
     users: []
   }
-  var reposon = JSON.stringify(repos)
-  fs.writeFileSync('/Users/lourdeslirosalinas/git-server/repos.db', reposon)
+  fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', repos)
 }
 
 var readFileSync = fs.readFileSync
