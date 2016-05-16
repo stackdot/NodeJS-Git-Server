@@ -42,7 +42,7 @@ if (fs.existsSync(repoDB)) {
     repos: [],
     users: []
   }
-  fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', repos)
+  fs.writeJsonSync(repoDB, repos)
 }
 
 var readFileSync = fs.readFileSync

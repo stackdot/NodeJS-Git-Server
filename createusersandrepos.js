@@ -1,8 +1,11 @@
 var fs = require('fs-extra')
 var pushover = require('pushover')
 
-if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-  var repositories = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
+var repoLocation = '/Users/lourdeslirosalinas/git-server/repos'
+var repoDB = '/Users/lourdeslirosalinas/git-server/repos.db'
+
+if (fs.existsSync(repoDB)) {
+  var repositories = fs.readJsonSync(repoDB)
 } else {
   repositories = {
     repos: [],
@@ -12,8 +15,8 @@ if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
 
 function getRepo (repoName) {
   var repo, _i, _len, _ref, repos
-  if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-    repos = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
+  if (fs.existsSync(repoDB)) {
+    repos = fs.readJsonSync(repoDB)
   }else {
     repos = {
       repos: [],
@@ -32,8 +35,8 @@ function getRepo (repoName) {
 
 function getUser (userName) {
   var user, _i, _len, _ref, repos
-  if (fs.existsSync('/Users/lourdeslirosalinas/git-server/repos.db')) {
-    repos = fs.readJsonSync('/Users/lourdeslirosalinas/git-server/repos.db')
+  if (fs.existsSync(repoDB)) {
+    repos = fs.readJsonSync(repoDB)
   }else {
     repos = {
       repos: [],
@@ -50,7 +53,7 @@ function getUser (userName) {
   return false
 }
 
-function createUser (user, repos, users, callback) {
+function createUser (user, repos, callback) {
   this.repos = repos
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
@@ -60,7 +63,7 @@ function createUser (user, repos, users, callback) {
   if (getUser(user.username) === false) {
     console.log('Creating user', user.username)
     repos.users.push(user)
-    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+    fs.writeJsonSync(repoDB, {
       repos: repos.repos,
       users: repos.users
     })
@@ -70,7 +73,7 @@ function createUser (user, repos, users, callback) {
   }
 }
 
-function deleteUser (user, repos, users, callback) {
+function deleteUser (user, repos, callback) {
   this.repos = repos
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
@@ -81,7 +84,7 @@ function deleteUser (user, repos, users, callback) {
   if (i !== false) {
     console.log('Deleting user', user.username)
     repos.users.splice(i, 1)
-    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+    fs.writeJsonSync(repoDB, {
       repos: repos.repos,
       users: repos.users
     })
@@ -92,7 +95,7 @@ function deleteUser (user, repos, users, callback) {
   }
 }
 
-function createRepo (repo, repos, users, callback) {
+function createRepo (repo, repos, callback) {
   this.repos = repos
   if ((repo.name == null) || (repo.anonRead == null)) {
     callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
@@ -104,12 +107,12 @@ function createRepo (repo, repos, users, callback) {
     console.log('Creating repo', repo.name)
     repositories.repos.push(repo)
 
-    fs.writeJsonSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+    fs.writeJsonSync(repoDB, {
       repos: repos.repos,
       users: repos.users
     })
 
-    this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
+    this.git = pushover(repoLocation, {
       autoCreate: false
     })
 
@@ -120,7 +123,7 @@ function createRepo (repo, repos, users, callback) {
   }
 }
 
-function deleteRepo (repo, repos, users, callback) {
+function deleteRepo (repo, repos, callback) {
   this.repos = repos
   if (repo.name == null) {
     callback(new Error('Not enough details, need atleast .name'), null)
@@ -131,7 +134,7 @@ function deleteRepo (repo, repos, users, callback) {
   if (i !== false) {
     console.log('Deleting repo', repo.name)
     this.repos.repos.splice(i, 1)
-    fs.writeJSONSync('/Users/lourdeslirosalinas/git-server/repos.db', {
+    fs.writeJSONSync(repoDB, {
       repos: repos.repos,
       users: repos.users
     })
@@ -139,7 +142,7 @@ function deleteRepo (repo, repos, users, callback) {
       throw err
     }*/
 
-    this.git = pushover('/Users/lourdeslirosalinas/git-server/repos', {
+    this.git = pushover(repoLocation, {
       autoCreate: false
     })
 
@@ -204,4 +207,4 @@ var user1 = {
 
 //createUser(user1, repositories)
 //deleteUser(user1, repositories)
-deleteRepo(repo1, repositories)
+//deleteRepo(repo1, repositories)
