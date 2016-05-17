@@ -8,10 +8,7 @@ function getRepositories () {
   if (fs.existsSync(repoDB)) {
     var repositories = fs.readJsonSync(repoDB)
   } else {
-    repositories = {
-      repos: [],
-      users: []
-    }
+    repositories = {repos: [], users: []}
   }
   return repositories
 }
@@ -44,10 +41,7 @@ function getUser (userName) {
 
 function createUser (username, password, callback) {
   this.repos = getRepositories()
-  var user = {
-    username: username,
-    password: password
-  }
+  var user = {username: username, password: password}
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
     console.log('Username and password are necessary')
@@ -56,18 +50,16 @@ function createUser (username, password, callback) {
   if (getUser(user.username) === false) {
     console.log('Creating user', user.username)
     this.repos.users.push(user)
-    fs.writeJsonSync(repoDB, {
-      repos: this.repos.repos,
-      users: this.repos.users
-    })
+    fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
   } else {
     // callback(new Error('This user already exists'), null)
     return console.log('This user already exists')
   }
 }
 
-function deleteUser (user, callback) {
+function deleteUser (username, password, callback) {
   this.repos = getRepositories()
+  var user = {username: username, password: password}
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
     console.log('Username and password are necessary')
@@ -77,10 +69,7 @@ function deleteUser (user, callback) {
   if (i !== false) {
     console.log('Deleting user', user.username)
     this.repos.users.splice(i, 1)
-    fs.writeJsonSync(repoDB, {
-      repos: this.repos.repos,
-      users: this.repos.users
-    })
+    fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
     return console.log('This user has been deleted')
   } else {
     // callback(new Error('This user doesnt exist'), null)
@@ -88,8 +77,35 @@ function deleteUser (user, callback) {
   }
 }
 
-function createRepo (repo, callback) {
+function createRepo (repoName, anonRead, userName, password, R, W, callback) {
   this.repos = getRepositories()
+  var permissions
+
+  if (R === true) {
+    if (W === true) {
+      permissions = ['R', 'W']
+    }else {
+      permissions = ['R']
+    }
+  }else {
+    if (W === true) {
+      permissions = ['W']
+    }else {
+      permissions = [ ]
+    }
+  }
+
+  var repo = {name: repoName, anonRead: anonRead, users: [{user: {username: userName, password: password}, permissions: permissions}],
+    onSuccessful: {
+      fetch: function () {
+        return console.log('Successful fetch on this repo')
+      },
+      push: function () {
+        return console.log('Success push on this repo')
+      }
+    }
+  }
+
   if ((repo.name == null) || (repo.anonRead == null)) {
     callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
     console.log('Not enough details, need atleast .name and .anonRead')
@@ -100,10 +116,7 @@ function createRepo (repo, callback) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
 
-    fs.writeJsonSync(repoDB, {
-      repos: this.repos.repos,
-      users: this.repos.users
-    })
+    fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
 
     this.git = pushover(repoLocation, {
       autoCreate: false
@@ -116,22 +129,19 @@ function createRepo (repo, callback) {
   }
 }
 
-function deleteRepo (repo, callback) {
+function deleteRepo (repoName, callback) {
   this.repos = getRepositories()
-  if (repo.name == null) {
+  if (repoName == null) {
     callback(new Error('Not enough details, need atleast .name'), null)
     console.log('Not enough details, need atleast .name')
     return false
   }
-  var i = getRepo(repo.name)
+  var i = getRepo(repoName)
   if (i !== false) {
-    console.log('Deleting repo', repo.name)
+    console.log('Deleting repo', repoName)
     this.repos.repos.splice(i, 1)
-    fs.writeJSONSync(repoDB, {
-      repos: this.repos.repos,
-      users: this.repos.users
-    })
-    fs.removeSync('/Users/lourdeslirosalinas/git-server/repos/' + repo.name + '.git')/*, function (err) {
+    fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
+    fs.removeSync('/Users/lourdeslirosalinas/git-server/repos/' + repoName + '.git')/*, function (err) {
       throw err
     }*/
 
@@ -146,58 +156,7 @@ function deleteRepo (repo, callback) {
   }
 }
 
-var repo1 = {
-  name: 'repo1',
-  anonRead: false,
-  users: [
-    {
-      user: {
-        username: 'demo1',
-        password: 'demo1'
-      },
-      permissions: ['R', 'W']
-    }
-  ],
-  onSuccessful: {
-    fetch: function () {
-      return console.log('Successful fetch on "repo6" repo')
-    },
-    push: function () {
-      return console.log('Success push on "repo6" repo')
-    }
-  }
-}
-
-var repo2 = {
-  name: 'repo2',
-  anonRead: false,
-  users: [
-    {
-      user: {
-        username: 'demo1',
-        password: 'demo1'
-      },
-      permissions: ['R', 'W']
-    }
-  ],
-  onSuccessful: {
-    fetch: function () {
-      return console.log('Successful fetch on this repo')
-    },
-    push: function () {
-      return console.log('Success push on this repo')
-    }
-  }
-}
-
-var user1 = {
-  username: 'demo4',
-  password: 'demo4'
-}
-
-createRepo(repo1)
-//createRepo(repo2))
-
-createUser('demo1', 'demo1')
-//deleteUser(user1)
-//deleteRepo(repo1)
+// createUser('demo1', 'demo1')
+// deleteUser('demo1', 'demo1')
+// createRepo('repo1', false, 'demo1', 'demo1', true, true)
+// deleteRepo('repo1')
