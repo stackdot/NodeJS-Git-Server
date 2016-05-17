@@ -156,7 +156,7 @@ function deleteRepo (repoName, callback) {
   }
 }
 
-// createUser('demo1', 'demo1')
-// deleteUser('demo1', 'demo1')
-// createRepo('repo1', false, 'demo1', 'demo1', true, true)
-// deleteRepo('repo1')
+module.exports.deleteRepo = deleteRepo
+module.exports.createUser = createUser
+module.exports.createRepo = createRepo
+module.exports.deleteUser = deleteUser
