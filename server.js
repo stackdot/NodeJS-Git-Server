@@ -38,10 +38,7 @@ if (fs.existsSync(repoDB)) {
   repos = fs.readJsonSync(repoDB)
   console.log(repos.repos)
 } else {
-  repos = {
-    repos: [],
-    users: []
-  }
+  repos = {repos: [], users: []}
   fs.writeJsonSync(repoDB, repos)
 }
 
