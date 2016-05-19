@@ -1,0 +1,22 @@
+{
+  "repos": [
+    {
+      "name": "repo1",
+      "anonRead": false,
+      "users": [
+        {
+          "user": {
+            "username": "demo1",
+            "password": "demo1"
+          },
+          "permissions": [
+            "R",
+            "W"
+          ]
+        }
+      ],
+      "onSuccessful": {}
+    }
+  ],
+  "users": []
+}

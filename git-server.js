@@ -6,15 +6,12 @@ var mkdirp = require('mkdirp')
 
 GitServer = require('./main.js')
 
-var repoLocation = '/Users/lourdeslirosalinas/git-server/repos'
-var repoDB = repoLocation + '.db'
-
 var readFile = function (path) {
   path = require('path').resolve(path)
   return fs.readFileSync(path, {encoding: 'utf8'}).toString()
 }
 
-function getRepositories () {
+function getRepositories (repoDB) {
   if (fs.existsSync(repoDB)) {
     var repositories = fs.readJsonSync(repoDB)
   } else {
@@ -23,9 +20,9 @@ function getRepositories () {
   return repositories
 }
 
-function getRepo (repoName) {
+function getRepo (repoName, repoDB) {
   var repo, _i, _len, _ref, repos
-  repos = getRepositories()
+  repos = getRepositories(repoDB)
   _ref = repos.repos
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     repo = _ref[_i]
@@ -36,9 +33,9 @@ function getRepo (repoName) {
   return false
 }
 
-function getUser (userName) {
+function getUser (userName, repoDB) {
   var user, _i, _len, _ref, repos
-  repos = getRepositories()
+  repos = getRepositories(repoDB)
   _ref = repos.users
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     user = _ref[_i]
@@ -49,15 +46,16 @@ function getUser (userName) {
   return false
 }
 
-function createUser (username, password, callback) {
-  this.repos = getRepositories()
+function createUser (username, password, repoLocation, callback) {
+  var repoDB = repoLocation + '.db'
+  this.repos = getRepositories(repoDB)
   var user = {username: username, password: password}
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
     console.log('Username and password are necessary')
     return false
   }
-  if (getUser(user.username) === false) {
+  if (getUser(user.username, repoDB) === false) {
     console.log('Creating user', user.username)
     this.repos.users.push(user)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
@@ -67,15 +65,16 @@ function createUser (username, password, callback) {
   }
 }
 
-function deleteUser (username, password, callback) {
-  this.repos = getRepositories()
+function deleteUser (username, password, repoLocation, callback) {
+  var repoDB = repoLocation + '.db'
+  this.repos = getRepositories(repoDB)
   var user = {username: username, password: password}
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
     console.log('Username and password are necessary')
     return false
   }
-  var i = getUser(user.username)
+  var i = getUser(user.username, repoDB)
   if (i !== false) {
     console.log('Deleting user', user.username)
     this.repos.users.splice(i, 1)
@@ -87,8 +86,9 @@ function deleteUser (username, password, callback) {
   }
 }
 
-function createRepo (repoName, anonRead, userName, password, R, W, callback) {
-  this.repos = getRepositories()
+function createRepo (repoName, anonRead, userName, password, R, W, repoLocation, callback) {
+  var repoDB = repoLocation + '.db'
+  this.repos = getRepositories(repoDB)
   var permissions
 
   if (R === true) {
@@ -121,7 +121,7 @@ function createRepo (repoName, anonRead, userName, password, R, W, callback) {
     console.log('Not enough details, need atleast .name and .anonRead')
     return false
   }
-  var i = getRepo(repo.name)
+  var i = getRepo(repo.name, repoDB)
   if (i === false) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
@@ -139,14 +139,15 @@ function createRepo (repoName, anonRead, userName, password, R, W, callback) {
   }
 }
 
-function deleteRepo (repoName, callback) {
-  this.repos = getRepositories()
+function deleteRepo (repoName, repoLocation, callback) {
+  var repoDB = repoLocation + '.db'
+  this.repos = getRepositories(repoDB)
   if (repoName == null) {
     callback(new Error('Not enough details, need atleast .name'), null)
     console.log('Not enough details, need atleast .name')
     return false
   }
-  var i = getRepo(repoName)
+  var i = getRepo(repoName, repoDB)
   if (i !== false) {
     console.log('Deleting repo', repoName)
     this.repos.repos.splice(i, 1)
@@ -200,7 +201,7 @@ var listen = function (port, logging, directory, certs, enable_http_api, callbac
     certs: certs || undefined
   }
   var _git = new GitServer(options)
-  return callback()
+  return callback(options)
 }
 
 module.exports.deleteRepo = deleteRepo
