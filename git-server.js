@@ -20,7 +20,7 @@ function getRepositories (repoDB) {
   return repositories
 }
 
-function getRepo (repoName, repoDB) {
+function getRepoIndex (repoName, repoDB) {
   var repo, _i, _len, _ref, repos
   repos = getRepositories(repoDB)
   _ref = repos.repos
@@ -33,7 +33,7 @@ function getRepo (repoName, repoDB) {
   return false
 }
 
-function getUser (userName, repoDB) {
+function getUserIndex (userName, repoDB) {
   var user, _i, _len, _ref, repos
   repos = getRepositories(repoDB)
   _ref = repos.users
@@ -55,7 +55,7 @@ function createUser (username, password, repoLocation, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  if (getUser(user.username, repoDB) === false) {
+  if (getUserIndex(user.username, repoDB) === false) {
     console.log('Creating user', user.username)
     this.repos.users.push(user)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
@@ -74,7 +74,7 @@ function deleteUser (username, password, repoLocation, callback) {
     console.log('Username and password are necessary')
     return false
   }
-  var i = getUser(user.username, repoDB)
+  var i = getUserIndex(user.username, repoDB)
   if (i !== false) {
     console.log('Deleting user', user.username)
     this.repos.users.splice(i, 1)
@@ -121,7 +121,7 @@ function createRepo (repoName, anonRead, userName, password, R, W, repoLocation,
     console.log('Not enough details, need atleast .name and .anonRead')
     return false
   }
-  var i = getRepo(repo.name, repoDB)
+  var i = getRepoIndex(repo.name, repoDB)
   if (i === false) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
@@ -147,7 +147,7 @@ function deleteRepo (repoName, repoLocation, callback) {
     console.log('Not enough details, need atleast .name')
     return false
   }
-  var i = getRepo(repoName, repoDB)
+  var i = getRepoIndex(repoName, repoDB)
   if (i !== false) {
     console.log('Deleting repo', repoName)
     this.repos.repos.splice(i, 1)
