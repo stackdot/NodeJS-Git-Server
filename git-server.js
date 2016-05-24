@@ -167,30 +167,35 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
   }
 }
 
-function deleteRepo (repoName, repoLocation, callback) {
+var deleteRepo = function (repoName, repoLocation, callback) {
+  var args = []
+  for (var i = 0; i < arguments.length; i++) {
+    args.push(arguments[i])
+  }
+  callback = args.pop()
+
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
-  if (repoName == null) {
+  if (arguments.length < 3) {
     callback(new Error('Not enough details, need atleast .name'), null)
     console.log('Not enough details, need atleast .name')
     return false
   }
-  var i = getRepoIndex(repoName, repoDB)
-  if (i !== false) {
+
+  var index = getRepoIndex(repoName, repoDB)
+  if (index !== false) {
     console.log('Deleting repo', repoName)
-    this.repos.repos.splice(i, 1)
+    this.repos.repos.splice(index, 1)
     fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    fs.removeSync(repoLocation + repoName + '.git')/*, function (err) {
-      throw err
-    }*/
+    fs.removeSync(repoLocation + repoName + '.git')
 
-    this.git = pushover(repoLocation, {
+    /*this.git = pushover(repoLocation, {
       autoCreate: false
-    })
-
-    return console.log('This repo has been deleted')
+    })*/
+    console.log('This repo has been deleted')
+    return callback()
   } else {
-    // callback(new Error('This repo doesnt exists'), null)
+    callback(new Error('This repo doesnt exists'), null)
     return console.log('This repo doesn\'t exists')
   }
 }

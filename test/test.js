@@ -435,6 +435,8 @@ describe('Clone', function() {
 	});*/
 
 describe('gitServer new functions', function() {
+
+
 	describe('#gitServer.createRepo()', function() {
 		it('Should be a function', function() {
 			expect(gitServer.createRepo).to.be.a('function');
@@ -455,18 +457,36 @@ describe('gitServer new functions', function() {
 			});
 		});
 	});
-});
 
-	/*describe('Delete repo', function() {
-		it('Should delete a repo from git-server', function(done) {
-			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/test/'+helper.random(), function (error, stdout, stderr) {
-				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
-				done();
+		describe('#gitServer.deleteRepo()', function() {
+			it('Should be a function', function() {
+				expect(gitServer.deleteRepo).to.be.a('function');
+			});
+			it('Should delete a repo', function(done) {
+				this.timeout(7000)
+				gitServer.deleteRepo('repotest', opts.repoLocation, done);
+			});
+			it('Should not delete a repo, because there are no parameters', function(done) {
+				gitServer.deleteRepo(function (err, success) {
+					expect(err).not.to.be("");
+					done();
+				});
+			});
+			it('Should not delete a repo because parameters are wrong', function(done) {
+				gitServer.deleteRepo(opts.repoLocation, function(err, success) {
+					expect(err).not.to.be("");
+					done();
+				});
+			});
+			it('Should not delete a repo, because this repo shouldn\'t exist', function(done) {
+				gitServer.deleteRepo('repotest', opts.repoLocation, function(err, success) {
+					expect(err).not.to.be("");
+					done();
+				});
 			});
 		});
-	});*/
+
+});
 
 //////////////////////////
 
