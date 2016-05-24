@@ -49,8 +49,7 @@ var opts = {
 gitServer.createUser(user.username, user.password, opts.repoLocation)
 gitServer.createUser(user2.username, user2.password, opts.repoLocation)
 gitServer.createUser(user3.username, user3.password, opts.repoLocation)
-server = gitServer.listen(opts.repos, opts.logging, opts.repoLocation, opts.port/*, opts.certs, opts.httpApi*/)
-
+server = gitServer.listen(opts.repos, opts.logging, opts.repoLocation, opts.port, opts.certs, opts.httpApi)
 
 describe('git_server', function() {
 	it('Should expose a function', function() {

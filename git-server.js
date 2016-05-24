@@ -169,7 +169,7 @@ function deleteRepo (repoName, repoLocation, callback) {
   }
 }
 /* ********************************************* LISTEN **********************************************************************/
-var listen = function (repos, logging, repoLocation, port, /* certs, enable_http_api,*/ callback) {
+var listen = function (repos, logging, repoLocation, port, certs, enable_http_api, callback) {
   var getUserHomeDir
   var repositories
 
@@ -247,9 +247,9 @@ var listen = function (repos, logging, repoLocation, port, /* certs, enable_http
     repos: repositories.repos,
     logging: logging || false,
     repoLocation: repoPath,
-    port: port || 7002/*,
+    port: port || 7002,
     certs: certs || undefined,
-    httpApi: enable_http_api || true*/
+    httpApi: enable_http_api || true
   }
 
   var _git = new GitServer(options)
