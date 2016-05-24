@@ -88,10 +88,17 @@ function deleteUser (username, password, repoLocation, callback) {
   }
 }
 
-function createRepo (repoName, anonRead, userName, password, R, W, repoLocation, callback) {
+var createRepo = function (repoName, anonRead, userName, password, R, W, repoLocation, callback) {
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
   var permissions
+
+  var args = []
+  for (var i = 0; i < arguments.length; i++) {
+    args.push(arguments[i])
+  }
+
+  callback = args.pop()
 
   if (R === true) {
     if (W === true) {
@@ -118,13 +125,31 @@ function createRepo (repoName, anonRead, userName, password, R, W, repoLocation,
     }
   }
 
+  if (typeof repo.anonRead !== 'boolean') {
+    if (callback) {
+      callback(new Error('.anonRead parameter is missing'), null)
+    }else {
+      console.log(new Error('.anonRead parameter is missing'))
+    }
+    return false
+  }
+
+  if (typeof repo.name !== 'string') {
+    if (callback) {
+      callback(new Error('repo name parameter is missing'), null)
+    }else {
+      console.log(new Error('repo name parameter is missing'))
+    }
+    return false
+  }
+
   if ((repo.name == null) || (repo.anonRead == null)) {
     callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
     console.log('Not enough details, need atleast .name and .anonRead')
     return false
   }
-  var i = getRepoIndex(repo.name, repoDB)
-  if (i === false) {
+  var index = getRepoIndex(repo.name, repoDB)
+  if (index === false) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
 
@@ -137,6 +162,7 @@ function createRepo (repoName, anonRead, userName, password, R, W, repoLocation,
     return this.git.create(repo.name, callback)
   } else {
     // callback(new Error('This repo already exists'), null)
+    callback(new Error('This repo already exists'), null)
     return console.log('This repo already exists')
   }
 }
@@ -253,7 +279,9 @@ var listen = function (repos, logging, repoLocation, port, certs, enable_http_ap
   }
 
   var _git = new GitServer(options)
-
+  if (callback) {
+    callback('Lets create repos!', repoLocation)
+  }
   return _git
 }
 

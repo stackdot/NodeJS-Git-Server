@@ -21,6 +21,7 @@ var user3 = {
 	username: helper.random(),
 	password: helper.random()
 }
+
 var repo = {
 	name: helper.random(),
 	anonRead: true,
@@ -32,6 +33,11 @@ var repo2 = {
 	users: [{ user:user, permissions:['R','W']}, { user:user2, permissions:['W']}, { user:user3, permissions:['R']}]
 }
 var repo3 = {
+	name: helper.random(),
+	anonRead: false,
+	users: [{ user:user, permissions:['R','W']}]
+}
+var repotest = {
 	name: helper.random(),
 	anonRead: false,
 	users: [{ user:user, permissions:['R','W']}]
@@ -402,4 +408,67 @@ describe('Clone', function() {
 	});
 });
 });
+
+///////////////// New methods
+
+	/*describe('Add user', function() {
+		it('Should add a user', function(done) {
+			exec(gitServer.createUser(testuser.username, testuser.password, opts.repoLocation), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
+			});
+		});
+	});*/
+
+
+	/*describe('Delete user', function() {
+		it('Should delete a user', function(done) {
+			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/test/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
+			});
+		});
+	});*/
+
+describe('gitServer new functions', function() {
+	describe('#gitServer.createRepo()', function() {
+		it('Should be a function', function() {
+			expect(gitServer.createRepo).to.be.a('function');
+		});
+		it('Should create a repo', function(done) {
+			gitServer.createRepo('repotest', true, 'demo1', 'demo1', true, true, opts.repoLocation, done);
+		});
+		it('Should not create a repo', function(done) {
+			gitServer.createRepo('repotest', 'demo1', 'demo1', true, true, opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+		it('Should not create a repo, because this repo should exist', function(done) {
+			gitServer.createRepo('repotest', true, 'demo1', 'demo1', true, true, opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+	});
+});
+
+	/*describe('Delete repo', function() {
+		it('Should delete a repo from git-server', function(done) {
+			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/test/'+helper.random(), function (error, stdout, stderr) {
+				expect(stdout).to.be.a('string');
+				expect(stderr).to.be.a('string').and.not.to.be.equal('');
+				expect(error).not.to.be.equal(null);
+				done();
+			});
+		});
+	});*/
+
+//////////////////////////
+
+
 });
