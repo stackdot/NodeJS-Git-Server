@@ -92,6 +92,8 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
   var permissions
+  var users = true
+  var pass = true
 
   var args = []
   for (var i = 0; i < arguments.length; i++) {
@@ -149,7 +151,17 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
     return false
   }
   var index = getRepoIndex(repo.name, repoDB)
-  if (index === false) {
+  var index2 = getUserIndex(userName, repoDB)
+  if (index2 === false) {
+    users = false
+  }else {
+    if (this.repos.users[index2].password !== password) {
+      pass = false
+      callback(new Error('Incorrect password'), null)
+      return console.log('Incorrect password')
+    }
+  }
+  if (index === false && users === true && pass === true) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
 
@@ -162,8 +174,13 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
     return this.git.create(repo.name, callback)
   } else {
     // callback(new Error('This repo already exists'), null)
-    callback(new Error('This repo already exists'), null)
-    return console.log('This repo already exists')
+    if (users === true) {
+      callback(new Error('This repo already exists'), null)
+      return console.log('This repo already exists')
+    }else {
+      callback(new Error('You have to create ' + userName + ' user before asociate it to a repo!'), null)
+      return console.log('You have to create ' + userName + ' user before asociate it to a repo!')
+    }
   }
 }
 
@@ -189,9 +206,6 @@ var deleteRepo = function (repoName, repoLocation, callback) {
     fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
     fs.removeSync(repoLocation + repoName + '.git')
 
-    /*this.git = pushover(repoLocation, {
-      autoCreate: false
-    })*/
     console.log('This repo has been deleted')
     return callback()
   } else {

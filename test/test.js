@@ -22,6 +22,11 @@ var user3 = {
 	password: helper.random()
 }
 
+var test = {
+	username: 'test',
+	password: 'test'
+}
+
 var repo = {
 	name: helper.random(),
 	anonRead: true,
@@ -55,6 +60,8 @@ var opts = {
 gitServer.createUser(user.username, user.password, opts.repoLocation)
 gitServer.createUser(user2.username, user2.password, opts.repoLocation)
 gitServer.createUser(user3.username, user3.password, opts.repoLocation)
+gitServer.createUser(test.username, test.password, opts.repoLocation)
+
 server = gitServer.listen(opts.repos, opts.logging, opts.repoLocation, opts.port, opts.certs, opts.httpApi)
 
 describe('git_server', function() {
@@ -442,16 +449,28 @@ describe('gitServer new functions', function() {
 			expect(gitServer.createRepo).to.be.a('function');
 		});
 		it('Should create a repo', function(done) {
-			gitServer.createRepo('repotest', true, 'demo1', 'demo1', true, true, opts.repoLocation, done);
+			gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation, done);
 		});
 		it('Should not create a repo', function(done) {
-			gitServer.createRepo('repotest', 'demo1', 'demo1', true, true, opts.repoLocation, function(err, success) {
+			gitServer.createRepo('repotest', 'test', 'test', true, true, opts.repoLocation, function(err, success) {
 				expect(err).not.to.be("");
 				done();
 			});
 		});
 		it('Should not create a repo, because this repo should exist', function(done) {
-			gitServer.createRepo('repotest', true, 'demo1', 'demo1', true, true, opts.repoLocation, function(err, success) {
+			gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+		it('Should not create a repo, because this user doesn\'t exist', function(done) {
+			gitServer.createRepo('repotest', true, 'test1', 'test1', true, true, opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+		it('Should not create a repo, because this password is not correct', function(done) {
+			gitServer.createRepo('repotest', true, 'test', 'test1', true, true, opts.repoLocation, function(err, success) {
 				expect(err).not.to.be("");
 				done();
 			});
