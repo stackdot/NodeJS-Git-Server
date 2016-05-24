@@ -6,6 +6,8 @@ var mkdirp = require('mkdirp')
 
 GitServer = require('./main.js')
 
+
+
 var readFile = function (path) {
   path = require('path').resolve(path)
   return fs.readFileSync(path, {encoding: 'utf8'}).toString()
@@ -152,7 +154,7 @@ function deleteRepo (repoName, repoLocation, callback) {
     console.log('Deleting repo', repoName)
     this.repos.repos.splice(i, 1)
     fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    fs.removeSync('/Users/lourdeslirosalinas/git-server/repos/' + repoName + '.git')/*, function (err) {
+    fs.removeSync(repoLocation + repoName + '.git')/*, function (err) {
       throw err
     }*/
 
@@ -166,10 +168,10 @@ function deleteRepo (repoName, repoLocation, callback) {
     return console.log('This repo doesn\'t exists')
   }
 }
-
-var listen = function (port, logging, directory, certs, enable_http_api, callback) {
+/* ********************************************* LISTEN **********************************************************************/
+var listen = function (repos, logging, repoLocation, port, /* certs, enable_http_api,*/ callback) {
   var getUserHomeDir
-  var repos
+  var repositories
 
   getUserHomeDir = function () {
     var dir
@@ -181,27 +183,78 @@ var listen = function (port, logging, directory, certs, enable_http_api, callbac
     return process.env[dir]
   }
 
-  var repoLocation = directory || path.join(getUserHomeDir(), './git-server/repos')
-  var repoDB = repoLocation + '.db'
-  mkdirp.sync(repoLocation)
+  var repoPath = repoLocation || path.join(getUserHomeDir(), './git-server/repos')
+  var repoDB = repoPath + '.db'
+  mkdirp.sync(repoPath)
+
+  var _i, _len, _ref, _i2, _len2, _ref2, repo, us, users
 
   if (fs.existsSync(repoDB)) {
-    repos = fs.readJsonSync(repoDB)
+    repositories = fs.readJsonSync(repoDB)
+    //  Addition of repos to json file
+    _ref = repos
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      repo = _ref[_i]
+      if ((repo.name == null) || (repo.anonRead == null)) {
+        callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
+        this.log('Not enough details, need atleast .name and .anonRead')
+        return false
+      }
+      _ref2 = repo.users
+      users = true
+      for (_i2 = 0, _len2 = _ref2.length; _i2 < _len2; _i2++) {
+        us = _ref2[_i2]
+        if (getUserIndex(us.user.username, repoDB) === false) {
+          console.log('You have to create ' + us.user.username + ' user before asociate it to a repo!')
+          users = false
+        }
+      }
+      if ((getRepoIndex(repo.name, repoDB) === false) && (users === true)) {
+        repositories.repos.push(repo)
+        fs.writeJsonSync(repoDB, repositories)
+      }
+    }
   } else {
-    repos = {repos: [], users: []}
-    fs.writeJsonSync(repoDB, repos)
+    repositories = {repos: [], users: []}
+
+    fs.writeJsonSync(repoDB, repositories)
+    //  Addition of repos to json file
+    _ref = repos
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      repo = _ref[_i]
+      if ((repo.name == null) || (repo.anonRead == null)) {
+        callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
+        this.log('Not enough details, need atleast .name and .anonRead')
+        return false
+      }
+      _ref2 = repo.users
+      users = true
+      for (_i2 = 0, _len2 = _ref2.length; _i2 < _len2; _i2++) {
+        us = _ref2[_i2]
+        if (getUserIndex(us.user.username, repoDB) === false) {
+          console.log('You have to create ' + us.user.username + ' user before asociate it to a repo!')
+          users = false
+        }
+      }
+      if ((getRepoIndex(repo.name, repoDB) === false) && (users === true)) {
+        repositories.repos.push(repo)
+        fs.writeJsonSync(repoDB, repositories)
+      }
+    }
   }
 
   var options = {
-    repos: repos.repos,
+    repos: repositories.repos,
     logging: logging || false,
-    repoLocation: repoLocation,
-    port: port || 7002,
-    httpApi: enable_http_api || true,
-    certs: certs || undefined
+    repoLocation: repoPath,
+    port: port || 7002/*,
+    certs: certs || undefined,
+    httpApi: enable_http_api || true*/
   }
+
   var _git = new GitServer(options)
-  return callback(options)
+
+  return _git
 }
 
 module.exports.deleteRepo = deleteRepo
