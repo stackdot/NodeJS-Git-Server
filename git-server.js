@@ -6,8 +6,6 @@ var mkdirp = require('mkdirp')
 
 GitServer = require('./main.js')
 
-
-
 var readFile = function (path) {
   path = require('path').resolve(path)
   return fs.readFileSync(path, {encoding: 'utf8'}).toString()
@@ -32,7 +30,7 @@ function getRepoIndex (repoName, repoDB) {
       return _i
     }
   }
-  return false
+  return -1
 }
 
 function getUserIndex (userName, repoDB) {
@@ -45,45 +43,72 @@ function getUserIndex (userName, repoDB) {
       return _i
     }
   }
-  return false
+  return -1
 }
 
-function createUser (username, password, repoLocation, callback) {
+var createUser = function (username, password, repoLocation, callback) {
+  var args = []
+  for (var i = 0; i < arguments.length; i++) {
+    args.push(arguments[i])
+  }
+
+  callback = args.pop()
+
+
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
   var user = {username: username, password: password}
-  if ((user.username == null) || (user.password == null)) {
-    callback(new Error('Username and password are necessary'), null)
-    console.log('Username and password are necessary')
+//  if ((user.username == null) || (user.password == null)) {
+  if (args.length < 3) {
+    callback(new Error('Username, password and repoLocation are necessary'), null)
+    console.log('Username, password and repoLocation are necessary')
     return false
   }
-  if (getUserIndex(user.username, repoDB) === false) {
-    console.log('Creating user', user.username)
+
+
+  if (getUserIndex(user.username, repoDB) === -1) {
     this.repos.users.push(user)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
+    callback(console.log('Creating user'))
+    return console.log('Creating user')
   } else {
-    // callback(new Error('This user already exists'), null)
-    return console.log('This user already exists')
+    callback(new Error(user.username + ' already exists'), null)
+    return console.log(user.username + ' already exists')
   }
 }
 
 function deleteUser (username, password, repoLocation, callback) {
+
+  var args = []
+  for (var i = 0; i < arguments.length; i++) {
+    args.push(arguments[i])
+  }
+
+  callback = args.pop()
+
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
+
+  if (args.length < 3) {
+    callback(new Error('Username, password and repoLocation are necessary'), null)
+    console.log('Username, password and repoLocation are necessary')
+    return false
+  }
+
   var user = {username: username, password: password}
   if ((user.username == null) || (user.password == null)) {
     callback(new Error('Username and password are necessary'), null)
     console.log('Username and password are necessary')
     return false
   }
-  var i = getUserIndex(user.username, repoDB)
-  if (i !== false) {
+  var index = getUserIndex(user.username, repoDB)
+  if (index !== -1) {
     console.log('Deleting user', user.username)
-    this.repos.users.splice(i, 1)
+    this.repos.users.splice(index, 1)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    return console.log('This user has been deleted')
+    return callback()
   } else {
-    // callback(new Error('This user doesnt exist'), null)
+    callback(new Error('This user doesnt exist'), null)
     return console.log('This user doesn\'t exist')
   }
 }
@@ -152,7 +177,7 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
   }
   var index = getRepoIndex(repo.name, repoDB)
   var index2 = getUserIndex(userName, repoDB)
-  if (index2 === false) {
+  if (index2 === -1) {
     users = false
   }else {
     if (this.repos.users[index2].password !== password) {
@@ -161,7 +186,7 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
       return console.log('Incorrect password')
     }
   }
-  if (index === false && users === true && pass === true) {
+  if (index === -1 && users === true && pass === true) {
     console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
 
@@ -200,7 +225,7 @@ var deleteRepo = function (repoName, repoLocation, callback) {
   }
 
   var index = getRepoIndex(repoName, repoDB)
-  if (index !== false) {
+  if (index !== -1) {
     console.log('Deleting repo', repoName)
     this.repos.repos.splice(index, 1)
     fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
@@ -249,12 +274,12 @@ var listen = function (repos, logging, repoLocation, port, certs, enable_http_ap
       users = true
       for (_i2 = 0, _len2 = _ref2.length; _i2 < _len2; _i2++) {
         us = _ref2[_i2]
-        if (getUserIndex(us.user.username, repoDB) === false) {
+        if (getUserIndex(us.user.username, repoDB) === -1) {
           console.log('You have to create ' + us.user.username + ' user before asociate it to a repo!')
           users = false
         }
       }
-      if ((getRepoIndex(repo.name, repoDB) === false) && (users === true)) {
+      if ((getRepoIndex(repo.name, repoDB) === -1) && (users === true)) {
         repositories.repos.push(repo)
         fs.writeJsonSync(repoDB, repositories)
       }
@@ -276,12 +301,12 @@ var listen = function (repos, logging, repoLocation, port, certs, enable_http_ap
       users = true
       for (_i2 = 0, _len2 = _ref2.length; _i2 < _len2; _i2++) {
         us = _ref2[_i2]
-        if (getUserIndex(us.user.username, repoDB) === false) {
+        if (getUserIndex(us.user.username, repoDB) === -1) {
           console.log('You have to create ' + us.user.username + ' user before asociate it to a repo!')
           users = false
         }
       }
-      if ((getRepoIndex(repo.name, repoDB) === false) && (users === true)) {
+      if ((getRepoIndex(repo.name, repoDB) === -1) && (users === true)) {
         repositories.repos.push(repo)
         fs.writeJsonSync(repoDB, repositories)
       }

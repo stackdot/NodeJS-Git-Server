@@ -57,10 +57,15 @@ var opts = {
 }
 
 // server = new git_server(opts);
-gitServer.createUser(user.username, user.password, opts.repoLocation)
-gitServer.createUser(user2.username, user2.password, opts.repoLocation)
-gitServer.createUser(user3.username, user3.password, opts.repoLocation)
-gitServer.createUser(test.username, test.password, opts.repoLocation)
+gitServer.createUser(user.username, user.password, opts.repoLocation, function() {
+})
+gitServer.createUser(user2.username, user2.password, opts.repoLocation, function() {
+})
+gitServer.createUser(user3.username, user3.password, opts.repoLocation, function() {
+})
+gitServer.createUser(test.username, test.password, opts.repoLocation, function() {
+
+})
 
 server = gitServer.listen(opts.repos, opts.logging, opts.repoLocation, opts.port, opts.certs, opts.httpApi)
 
@@ -442,6 +447,50 @@ describe('Clone', function() {
 	});*/
 
 describe('gitServer new functions', function() {
+
+
+	describe('#gitServer.createUser()', function() {
+		it('Should be a function', function() {
+			expect(gitServer.createUser).to.be.a('function');
+		});
+		it('Should create a user', function(done) {
+			gitServer.createUser('user-test','pass-test', opts.repoLocation, done);
+		});
+		it('Should not create a user (missing paramenter)', function(done) {
+			gitServer.createUser('user-test2', opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+		it('Should not create a user, because this user should exist', function(done) {
+			gitServer.createUser('user-test','pass-test', opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+	});
+
+	describe('#gitServer.deleteUser()', function() {
+		it('Should be a function', function() {
+			expect(gitServer.deleteUser).to.be.a('function');
+		});
+		it('Should delete a user', function(done) {
+			gitServer.deleteUser('user-test','pass-test', opts.repoLocation, done);
+		});
+		it('Should not delete a user (missing paramenter)', function(done) {
+			gitServer.deleteUser('user-test2', opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+		it('Should not delete a user, because this user shouldn\'t exist', function(done) {
+			gitServer.deleteUser('user-test','pass-test', opts.repoLocation, function(err, success) {
+				expect(err).not.to.be("");
+				done();
+			});
+		});
+	});
+
 
 
 	describe('#gitServer.createRepo()', function() {
