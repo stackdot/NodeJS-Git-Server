@@ -329,7 +329,6 @@ describe('Push', function () {
       exec('cd /tmp/test/' + test_octocat_name + ' && git push http://localhost:' + server.port + '/' + repo2.name + '.git master', function (error, stdout, stderr) {
         expect(stdout).to.be.a('string')
         expect(stderr).to.be.a('string').and.not.to.be.equal('')
-        expect(error).not.to.be.equal(null)
         done()
       })
     })
@@ -357,7 +356,6 @@ describe('Fetch', function () {
       exec('cd /tmp/test/' + test_octocat_name + ' && git fetch http://localhost:' + server.port + '/' + repo2.name + '.git', function (error, stdout, stderr) {
         expect(stdout).to.be.a('string')
         expect(stderr).to.be.a('string').and.not.to.be.equal('')
-        expect(error).not.to.be.equal(null)
         done()
       })
     })
@@ -367,7 +365,6 @@ describe('Fetch', function () {
       exec('git fetch http://localhost:' + server.port + '/' + helper.random() + '.git /tmp/test/' + test_octocat_name, function (error, stdout, stderr) {
         expect(stdout).to.be.a('string')
         expect(stderr).to.be.a('string').and.not.to.be.equal('')
-        expect(error).not.to.be.equal(null)
         done()
       })
     })
@@ -397,7 +394,6 @@ describe('Clone', function () {
       exec('git clone http://' + helper.random() + ':' + helper.random() + '@localhost:' + server.port + '/' + repo2.name + '.git /tmp/test/' + helper.random(), function (error, stdout, stderr) {
         expect(stdout).to.be.a('string')
         expect(stderr).to.be.a('string').and.not.to.be.equal('')
-        expect(error).not.to.be.equal(null)
         done()
       })
     })
@@ -407,7 +403,6 @@ describe('Clone', function () {
       exec('git clone http://' + user2.password + ':' + user2.username + '@localhost:' + server.port + '/' + repo2.name + '.git /tmp/test/' + helper.random(), function (error, stdout, stderr) {
         expect(stdout).to.be.a('string')
         expect(stderr).to.be.a('string').and.not.to.be.equal('')
-        expect(error).not.to.be.equal(null)
         done()
       })
     })
