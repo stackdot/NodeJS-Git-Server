@@ -324,8 +324,9 @@ var listen = function (repos, logging, repoLocation, port, certs, enable_http_ap
 
   var _git = new GitServer(options)
   if (callback) {
-    callback('Lets create repos!', repoLocation)
+    callback(null, options.repoLocation)
   }
+
   return _git
 }
 
