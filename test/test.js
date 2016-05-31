@@ -50,15 +50,10 @@ var opts = {
 }
 
 // server = new git_server(opts)
-gitServer.createUser(user.username, user.password, opts.repoLocation, function () {
-})
-gitServer.createUser(user2.username, user2.password, opts.repoLocation, function () {
-})
-gitServer.createUser(user3.username, user3.password, opts.repoLocation, function () {
-})
-gitServer.createUser(test.username, test.password, opts.repoLocation, function () {
-
-})
+gitServer.createUser(user.username, user.password, opts.repoLocation)
+gitServer.createUser(user2.username, user2.password, opts.repoLocation)
+gitServer.createUser(user3.username, user3.password, opts.repoLocation)
+gitServer.createUser(test.username, test.password, opts.repoLocation)
 
 server = gitServer.listen(opts.repos, opts.logging, opts.repoLocation, opts.port, opts.certs, opts.httpApi)
 
@@ -99,7 +94,7 @@ describe('git_server', function () {
     describe('#getRepo()', function () {
       it('Should be a function and return repo object', function () {
         expect(server.getRepo).to.be.a('function')
-        expect(server.getRepo(repo.name + '.git')).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ])
+        expect(server.getRepo(repo.name + '.git')).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users',])
       })
     })
     describe('#getUser()', function () {
@@ -415,20 +410,17 @@ describe('gitServer new functions', function () {
     it('Should be a function', function () {
       expect(gitServer.createUser).to.be.a('function')
     })
-    it('Should create a user', function (done) {
-      gitServer.createUser('user-test', 'pass-test', opts.repoLocation, done)
+    it('Should create a user', function () {
+      var createUser1 = gitServer.createUser('user-test', 'pass-test', opts.repoLocation)
+      expect(createUser1).to.equal('Creating user')
     })
-    it('Should not create a user (missing paramenter)', function (done) {
-      gitServer.createUser('user-test2', opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a user (missing paramenter)', function () {
+      var createUser2 = gitServer.createUser('user-test2', opts.repoLocation)
+      expect(createUser2).to.equal('Username, password and repoLocation are necessary')
     })
-    it('Should not create a user, because this user should exist', function (done) {
-      gitServer.createUser('user-test', 'pass-test', opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a user, because this user should exist', function () {
+      var createUser3 = gitServer.createUser('user-test', 'pass-test', opts.repoLocation)
+      expect(createUser3).to.equal('This user already exists')
     })
   })
 
@@ -436,20 +428,18 @@ describe('gitServer new functions', function () {
     it('Should be a function', function () {
       expect(gitServer.deleteUser).to.be.a('function')
     })
-    it('Should delete a user', function (done) {
-      gitServer.deleteUser('user-test', 'pass-test', opts.repoLocation, done)
+    it('Should delete a user', function () {
+      var deleteUser1 = gitServer.deleteUser('user-test', 'pass-test', opts.repoLocation)
+      expect(deleteUser1).to.equal('Deleting user')
     })
-    it('Should not delete a user (missing paramenter)', function (done) {
-      gitServer.deleteUser('user-test2', opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not delete a user (missing paramenter)', function () {
+      var deleteUser2 = gitServer.deleteUser('user-test2', opts.repoLocation)
+      expect(deleteUser2).to.equal('Username, password and repoLocation are necessary')
+
     })
-    it('Should not delete a user, because this user shouldn\'t exist', function (done) {
-      gitServer.deleteUser('user-test', 'pass-test', opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not delete a user, because this user shouldn\'t exist', function () {
+      var deleteUser3 = gitServer.deleteUser('user-test', 'pass-test', opts.repoLocation)
+      expect(deleteUser3).to.equal('This user doesn\'t exist')
     })
   })
 
@@ -457,60 +447,46 @@ describe('gitServer new functions', function () {
     it('Should be a function', function () {
       expect(gitServer.createRepo).to.be.a('function')
     })
-    it('Should create a repo', function (done) {
-      gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation, done)
+    it('Should create a repo', function () {
+      var createRepo1 = gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation)
+      expect(createRepo1).to.equal('Creating repo')
     })
-    it('Should not create a repo', function (done) {
-      gitServer.createRepo('repotest', 'test', 'test', true, true, opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a repo', function () {
+      var createRepo2 = gitServer.createRepo('repotest', 'test', 'test', true, true, opts.repoLocation)
+      expect(createRepo2).to.equal('.anonRead parameter is missing')
     })
-    it('Should not create a repo, because this repo should exist', function (done) {
-      gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a repo, because this repo should exist', function () {
+      var createRepo3 = gitServer.createRepo('repotest', true, 'test', 'test', true, true, opts.repoLocation)
+      expect(createRepo3).to.equal('This repo already exists')
     })
-    it('Should not create a repo, because this user doesn\'t exist', function (done) {
-      gitServer.createRepo('repotest', true, 'test1', 'test1', true, true, opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a repo, because this user doesn\'t exist', function () {
+      var createRepo4 = gitServer.createRepo('repotest', true, 'test1', 'test1', true, true, opts.repoLocation)
+      expect(createRepo4).to.equal('You have to create test1 user before asociate it to a repo!')
     })
-    it('Should not create a repo, because this password is not correct', function (done) {
-      gitServer.createRepo('repotest', true, 'test', 'test1', true, true, opts.repoLocation, function (err, success) {
-        expect(err).not.to.be('')
-        done()
-      })
+    it('Should not create a repo, because this password is not correct', function () {
+      var createRepo5 = gitServer.createRepo('repotest', true, 'test', 'test1', true, true, opts.repoLocation)
+      expect(createRepo5).to.equal('Incorrect password')
     })
   })
-
     describe('#gitServer.deleteRepo()', function () {
       it('Should be a function', function () {
         expect(gitServer.deleteRepo).to.be.a('function')
       })
-      it('Should delete a repo', function (done) {
-        this.timeout(7000)
-        gitServer.deleteRepo('repotest', opts.repoLocation, done)
+      it('Should delete a repo', function () {
+        var deleteRepo1 = gitServer.deleteRepo('repotest', opts.repoLocation)
+        expect(deleteRepo1).to.equal('Deleting repo')
       })
-      it('Should not delete a repo, because there are no parameters', function (done) {
-        gitServer.deleteRepo(function (err, success) {
-          expect(err).not.to.be('')
-          done()
-        })
+      it('Should not delete a repo, because there are no parameters', function () {
+        var deleteRepo2 = gitServer.deleteRepo()
+        expect(deleteRepo2).to.equal('Not enough details, need atleast .name')
       })
-      it('Should not delete a repo because parameters are wrong', function (done) {
-        gitServer.deleteRepo(opts.repoLocation, function (err, success) {
-          expect(err).not.to.be('')
-          done()
-        })
+      it('Should not delete a repo because parameters are wrong', function () {
+        var deleteRepo3 = gitServer.deleteRepo(opts.repoLocation)
+        expect(deleteRepo3).to.equal('Not enough details, need atleast .name')
       })
-      it('Should not delete a repo, because this repo shouldn\'t exist', function (done) {
-        gitServer.deleteRepo('repotest', opts.repoLocation, function (err, success) {
-          expect(err).not.to.be('')
-          done()
-        })
+      it('Should not delete a repo, because this repo shouldn\'t exist', function () {
+        var deleteRepo4 = gitServer.deleteRepo('repotest', opts.repoLocation)
+        expect(deleteRepo4).to.equal('This repo doesn\'t exists')
       })
     })
 })

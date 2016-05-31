@@ -46,86 +46,83 @@ function getUserIndex (userName, repoDB) {
   return -1
 }
 
-var createUser = function (username, password, repoLocation, callback) {
+var createUser = function (username, password, repoLocation) {
   var args = []
   for (var i = 0; i < arguments.length; i++) {
     args.push(arguments[i])
   }
 
-  callback = args.pop()
-
-
+  var msg
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
   var user = {username: username, password: password}
-//  if ((user.username == null) || (user.password == null)) {
   if (args.length < 3) {
-    callback(new Error('Username, password and repoLocation are necessary'), null)
-    console.log('Username, password and repoLocation are necessary')
-    return false
+    msg = 'Username, password and repoLocation are necessary'
+    console.log(msg)
+    return msg
   }
-
 
   if (getUserIndex(user.username, repoDB) === -1) {
     this.repos.users.push(user)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    callback(console.log('Creating user'))
-    return console.log('Creating user')
+    msg = 'Creating user'
+    console.log(msg)
+    return msg
   } else {
-    callback(new Error(user.username + ' already exists'), null)
-    return console.log(user.username + ' already exists')
+    msg = 'This user already exists'
+    console.log(msg)
+    return msg
   }
 }
 
-function deleteUser (username, password, repoLocation, callback) {
-
+function deleteUser (username, password, repoLocation) {
   var args = []
   for (var i = 0; i < arguments.length; i++) {
     args.push(arguments[i])
   }
 
-  callback = args.pop()
-
+  var msg
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
 
   if (args.length < 3) {
-    callback(new Error('Username, password and repoLocation are necessary'), null)
-    console.log('Username, password and repoLocation are necessary')
-    return false
+    msg = 'Username, password and repoLocation are necessary'
+    console.log(msg)
+    return msg
   }
 
   var user = {username: username, password: password}
-  if ((user.username == null) || (user.password == null)) {
-    callback(new Error('Username and password are necessary'), null)
-    console.log('Username and password are necessary')
-    return false
-  }
+  /* if ((user.username == null) || (user.password == null)) {
+    msg = 'Username and password are necessary'
+    console.log(msg)
+    return msg
+  } */
   var index = getUserIndex(user.username, repoDB)
   if (index !== -1) {
-    console.log('Deleting user', user.username)
     this.repos.users.splice(index, 1)
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    return callback()
+    msg = 'Deleting user'
+    console.log(msg)
+    return msg
   } else {
-    callback(new Error('This user doesnt exist'), null)
-    return console.log('This user doesn\'t exist')
+    msg = 'This user doesn\'t exist'
+    console.log(msg)
+    return msg
   }
 }
 
-var createRepo = function (repoName, anonRead, userName, password, R, W, repoLocation, callback) {
+var createRepo = function (repoName, anonRead, userName, password, R, W, repoLocation) {
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
   var permissions
   var users = true
   var pass = true
 
+  var msg
   var args = []
   for (var i = 0; i < arguments.length; i++) {
     args.push(arguments[i])
   }
-
-  callback = args.pop()
 
   if (R === true) {
     if (W === true) {
@@ -153,27 +150,21 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
   }
 
   if (typeof repo.anonRead !== 'boolean') {
-    if (callback) {
-      callback(new Error('.anonRead parameter is missing'), null)
-    }else {
-      console.log(new Error('.anonRead parameter is missing'))
-    }
-    return false
+    msg = '.anonRead parameter is missing'
+    console.log(msg)
+    return msg
   }
 
   if (typeof repo.name !== 'string') {
-    if (callback) {
-      callback(new Error('repo name parameter is missing'), null)
-    }else {
-      console.log(new Error('repo name parameter is missing'))
-    }
-    return false
+    msg = 'repo name parameter is missing'
+    console.log(msg)
+    return msg
   }
 
   if ((repo.name == null) || (repo.anonRead == null)) {
-    callback(new Error('Not enough details, need atleast .name and .anonRead'), null)
-    console.log('Not enough details, need atleast .name and .anonRead')
-    return false
+    msg = 'Not enough details, need atleast .name and .anonRead'
+    console.log(msg)
+    return msg
   }
   var index = getRepoIndex(repo.name, repoDB)
   var index2 = getUserIndex(userName, repoDB)
@@ -182,12 +173,12 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
   }else {
     if (this.repos.users[index2].password !== password) {
       pass = false
-      callback(new Error('Incorrect password'), null)
-      return console.log('Incorrect password')
+      msg = 'Incorrect password'
+      console.log(msg)
+      return msg
     }
   }
   if (index === -1 && users === true && pass === true) {
-    console.log('Creating repo', repo.name)
     this.repos.repos.push(repo)
 
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
@@ -195,47 +186,51 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
     this.git = pushover(repoLocation, {
       autoCreate: false
     })
-
-    return this.git.create(repo.name, callback)
+    this.git.create(repo.name)
+    msg = 'Creating repo'
+    console.log(msg)
+    return msg
   } else {
-    // callback(new Error('This repo already exists'), null)
     if (users === true) {
-      callback(new Error('This repo already exists'), null)
-      return console.log('This repo already exists')
+      msg = 'This repo already exists'
+      console.log(msg)
+      return msg
     }else {
-      callback(new Error('You have to create ' + userName + ' user before asociate it to a repo!'), null)
-      return console.log('You have to create ' + userName + ' user before asociate it to a repo!')
+      msg = 'You have to create ' + userName + ' user before asociate it to a repo!'
+      console.log(msg)
+      return msg
     }
   }
 }
 
-var deleteRepo = function (repoName, repoLocation, callback) {
+var deleteRepo = function (repoName, repoLocation) {
   var args = []
   for (var i = 0; i < arguments.length; i++) {
     args.push(arguments[i])
   }
-  callback = args.pop()
 
+  var msg
   var repoDB = repoLocation + '.db'
   this.repos = getRepositories(repoDB)
-  if (arguments.length < 3) {
-    callback(new Error('Not enough details, need atleast .name'), null)
-    console.log('Not enough details, need atleast .name')
-    return false
+  if (arguments.length < 2) {
+    msg = 'Not enough details, need atleast .name'
+    console.log(msg)
+    return msg
   }
 
   var index = getRepoIndex(repoName, repoDB)
   if (index !== -1) {
-    console.log('Deleting repo', repoName)
     this.repos.repos.splice(index, 1)
     fs.writeJSONSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
     fs.removeSync(repoLocation + repoName + '.git')
 
-    console.log('This repo has been deleted')
-    return callback()
+    msg = 'Deleting repo'
+    console.log(msg)
+    return msg
   } else {
-    callback(new Error('This repo doesnt exists'), null)
-    return console.log('This repo doesn\'t exists')
+    msg = 'This repo doesn\'t exists'
+    console.log(msg)
+    return msg
   }
 }
 /* ********************************************* LISTEN **********************************************************************/
