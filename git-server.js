@@ -11,6 +11,16 @@ var readFile = function (path) {
   return fs.readFileSync(path, {encoding: 'utf8'}).toString()
 }
 
+var getUserHomeDir = function () {
+  var dir
+  if (process.platform === 'win32') {
+    dir = 'USERPROFILE'
+  } else {
+    dir = 'HOME'
+  }
+  return process.env[dir]
+}
+
 function getRepositories (repoDB) {
   if (fs.existsSync(repoDB)) {
     var repositories = fs.readJsonSync(repoDB)
@@ -47,17 +57,23 @@ function getUserIndex (userName, repoDB) {
 }
 
 var createUser = function (username, password, repoLocation) {
-  var args = []
-  for (var i = 0; i < arguments.length; i++) {
-    args.push(arguments[i])
-  }
-
   var msg
-  var repoDB = repoLocation + '.db'
+  var repoPath
+
+  if (typeof repoLocation !== 'string') {
+    repoPath = path.join(getUserHomeDir(), './git-server/repos')
+    msg = 'Using default repoLocation...'
+    console.log(msg)
+  }else {
+    repoPath = repoLocation
+  }
+  var repoDB = repoPath + '.db'
+  mkdirp.sync(repoPath)
   this.repos = getRepositories(repoDB)
+
   var user = {username: username, password: password}
-  if (args.length < 3) {
-    msg = 'Username, password and repoLocation are necessary'
+  if (arguments.length < 2) {
+    msg = 'Username and password are necessary'
     console.log(msg)
     return msg
   }
@@ -76,27 +92,27 @@ var createUser = function (username, password, repoLocation) {
 }
 
 function deleteUser (username, password, repoLocation) {
-  var args = []
-  for (var i = 0; i < arguments.length; i++) {
-    args.push(arguments[i])
-  }
-
   var msg
-  var repoDB = repoLocation + '.db'
+  var repoPath
+  if (typeof repoLocation !== 'string') {
+    repoPath = path.join(getUserHomeDir(), './git-server/repos')
+    msg = 'Using default repoLocation...' + repoPath
+    console.log(msg)
+  }else {
+    repoPath = repoLocation
+  }
+  var repoDB = repoPath + '.db'
+  mkdirp.sync(repoPath)
   this.repos = getRepositories(repoDB)
 
-  if (args.length < 3) {
-    msg = 'Username, password and repoLocation are necessary'
+  if (arguments.length < 2) {
+    msg = 'Username and password are necessary'
     console.log(msg)
     return msg
   }
 
   var user = {username: username, password: password}
-  /* if ((user.username == null) || (user.password == null)) {
-    msg = 'Username and password are necessary'
-    console.log(msg)
-    return msg
-  } */
+
   var index = getUserIndex(user.username, repoDB)
   if (index !== -1) {
     this.repos.users.splice(index, 1)
@@ -111,18 +127,31 @@ function deleteUser (username, password, repoLocation) {
   }
 }
 
-var createRepo = function (repoName, anonRead, userName, password, R, W, repoLocation) {
-  var repoDB = repoLocation + '.db'
-  this.repos = getRepositories(repoDB)
+var createRepo = function (repoObject, repoLocation) {
+  var repoPath
   var permissions
   var users = true
   var pass = true
-
   var msg
-  var args = []
-  for (var i = 0; i < arguments.length; i++) {
-    args.push(arguments[i])
+
+  var repoName = repoObject.repoName
+  var anonRead = repoObject.anonRead
+  var userName = repoObject.userName
+  var password = repoObject.password
+  var R = repoObject.R
+  var W = repoObject.W
+
+  // If there is not specified repoLocation, it uses default repoLocation
+  if (typeof repoLocation !== 'string') {
+    repoPath = path.join(getUserHomeDir(), './git-server/repos')
+    msg = 'Using default repoLocation...' + repoPath
+    console.log(msg)
+  }else {
+    repoPath = repoLocation
   }
+  var repoDB = repoPath + '.db'
+  mkdirp.sync(repoPath)
+  this.repos = getRepositories(repoDB)
 
   if (R === true) {
     if (W === true) {
@@ -183,7 +212,7 @@ var createRepo = function (repoName, anonRead, userName, password, R, W, repoLoc
 
     fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
 
-    this.git = pushover(repoLocation, {
+    this.git = pushover(repoPath, {
       autoCreate: false
     })
     this.git.create(repo.name)
@@ -210,13 +239,24 @@ var deleteRepo = function (repoName, repoLocation) {
   }
 
   var msg
-  var repoDB = repoLocation + '.db'
-  this.repos = getRepositories(repoDB)
-  if (arguments.length < 2) {
+  var repoPath
+
+  if (typeof repoName !== 'string') {
     msg = 'Not enough details, need atleast .name'
     console.log(msg)
     return msg
   }
+
+  if (typeof repoLocation !== 'string') {
+    repoPath = path.join(getUserHomeDir(), './git-server/repos')
+    msg = 'Using default repoLocation...' + repoPath
+    console.log(msg)
+  }else {
+    repoPath = repoLocation
+  }
+  var repoDB = repoPath + '.db'
+  mkdirp.sync(repoPath)
+  this.repos = getRepositories(repoDB)
 
   var index = getRepoIndex(repoName, repoDB)
   if (index !== -1) {
@@ -235,18 +275,7 @@ var deleteRepo = function (repoName, repoLocation) {
 }
 /* ********************************************* LISTEN **********************************************************************/
 var listen = function (repos, logging, repoLocation, port, certs, enable_http_api, callback) {
-  var getUserHomeDir
   var repositories
-
-  getUserHomeDir = function () {
-    var dir
-    if (process.platform === 'win32') {
-      dir = 'USERPROFILE'
-    } else {
-      dir = 'HOME'
-    }
-    return process.env[dir]
-  }
 
   var repoPath = repoLocation || path.join(getUserHomeDir(), './git-server/repos')
   var repoDB = repoPath + '.db'
