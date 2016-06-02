@@ -1,5 +1,4 @@
 var gitServer = require('./git-server.js')
-var _git
 var port = 8000
 var logging = true
 var directory
@@ -10,18 +9,31 @@ var certs = {
 var enable_http_api = true
 var repos = {repos: []}
 
-_git = gitServer.listen(repos, logging, directory, port, certs, enable_http_api, function (error, repoLocation) {
+var repoObject1 = {
+  repoName: 'repo',
+  anonRead: true,
+  userName: 'test',
+  password: 'test',
+  R: true,
+  W: true
+}
+
+var repoObject2 = {
+  repoName: 'repo',
+  anonRead: true,
+  userName: 'test',
+  password: 'test',
+  R: true,
+  W: true
+}
+
+gitServer.listen(repos, logging, directory, port, certs, enable_http_api, function (error, repoLocation) {
   console.log(repoLocation)
   if (error === null) {
-    gitServer.createRepo('repotest', true, 'test', 'test', true, true, repoLocation, function () {})
-    gitServer.createUser('test', 'test', repoLocation, function () {})
-    gitServer.createRepo('repotest', true, 'test', 'test', true, true, repoLocation, function () {})
+    gitServer.createRepo(repoObject1, repoLocation)
+    gitServer.createUser('test', 'test', repoLocation)
+    gitServer.createRepo(repoObject2, repoLocation)
   }else {
     console.log(error)
   }
 })
-
-// gitServer.createUser('demo1', 'demo1', repoLocation)
-// gitServer.deleteUser('demo1', 'demo1', repoLocation)
-// gitServer.createRepo('repo1', false, 'demo1', 'demo1', true, true, repoLocation)
-// gitServer.deleteRepo('repo1', repoLocation)
