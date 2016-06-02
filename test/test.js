@@ -11,10 +11,12 @@ var user = {
   username: helper.random(),
   password: helper.random()
 }
+
 var user2 = {
   username: helper.random(),
   password: helper.random()
 }
+
 var user3 = {
   username: helper.random(),
   password: helper.random()
@@ -30,16 +32,19 @@ var repo = {
   anonRead: true,
   users: [{user: user, permissions: ['R', 'W']}]
 }
+
 var repo2 = {
   name: helper.random(),
   anonRead: false,
   users: [{user: user, permissions: ['R', 'W']}, {user: user2, permissions: ['W']}, {user: user3, permissions: ['R']}]
 }
+
 var repo3 = {
   name: helper.random(),
   anonRead: false,
   users: [{user: user, permissions: ['R', 'W']}]
 }
+
 var opts = {
   repos: [repo, repo2],
   logging: false,
@@ -278,6 +283,7 @@ describe('behaviour', function () {
         })
       })
     })
+
 describe('Passive events', function () {
   describe('Post-receive', function () {
     it('Should emit post-receive event', function (done) {
@@ -524,20 +530,14 @@ describe('gitServer new functions', function () {
     })
   })
     describe('#gitServer.deleteRepo()', function () {
-      it('Should be a function', function () {
-        expect(gitServer.deleteRepo).to.be.a('function')
-      })
       it('Should delete a repo', function () {
-        var deleteRepo1 = gitServer.deleteRepo('repotest', opts.repoLocation)
-        expect(deleteRepo1).to.equal('Deleting repo')
+        gitServer.deleteRepo('repotest', opts.repoLocation, (err) => throw err)
       })
       it('Should not delete a repo, because there are no parameters', function () {
-        var deleteRepo2 = gitServer.deleteRepo()
-        expect(deleteRepo2).to.equal('Not enough details, need atleast .name')
+        gitServer.deleteRepo(function (err){ if (err) throw err })
       })
       it('Should not delete a repo, because this repo shouldn\'t exist', function () {
-        var deleteRepo4 = gitServer.deleteRepo('repotest', opts.repoLocation)
-        expect(deleteRepo4).to.equal('This repo doesn\'t exists')
+        gitServer.deleteRepo('repotest', opts.repoLocation, done)
       })
     })
 })

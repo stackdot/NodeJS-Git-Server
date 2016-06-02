@@ -73,21 +73,14 @@ var createUser = function (username, password, repoLocation) {
 
   var user = {username: username, password: password}
   if (arguments.length < 2) {
-    msg = 'Username and password are necessary'
-    console.log(msg)
-    return msg
+    return callback(new Error('Username and password are necessary'))
   }
 
   if (getUserIndex(user.username, repoDB) === -1) {
     this.repos.users.push(user)
-    fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    msg = 'Creating user'
-    console.log(msg)
-    return msg
+    fs.writeJson(repoDB, {repos: this.repos.repos, users: this.repos.users}, callback)
   } else {
-    msg = 'This user already exists'
-    console.log(msg)
-    return msg
+    callback()
   }
 }
 
@@ -96,19 +89,17 @@ function deleteUser (username, password, repoLocation) {
   var repoPath
   if (typeof repoLocation !== 'string') {
     repoPath = path.join(getUserHomeDir(), './git-server/repos')
-    msg = 'Using default repoLocation...' + repoPath
     console.log(msg)
-  }else {
+  } else {
     repoPath = repoLocation
   }
+
   var repoDB = repoPath + '.db'
   mkdirp.sync(repoPath)
   this.repos = getRepositories(repoDB)
 
   if (arguments.length < 2) {
-    msg = 'Username and password are necessary'
-    console.log(msg)
-    return msg
+    return callback(new Error('Username and password are necessary'))
   }
 
   var user = {username: username, password: password}
@@ -116,14 +107,9 @@ function deleteUser (username, password, repoLocation) {
   var index = getUserIndex(user.username, repoDB)
   if (index !== -1) {
     this.repos.users.splice(index, 1)
-    fs.writeJsonSync(repoDB, {repos: this.repos.repos, users: this.repos.users})
-    msg = 'Deleting user'
-    console.log(msg)
-    return msg
+    fs.writeJson(repoDB, {repos: this.repos.repos, users: this.repos.users}, callback)
   } else {
-    msg = 'This user doesn\'t exist'
-    console.log(msg)
-    return msg
+    callback()
   }
 }
 

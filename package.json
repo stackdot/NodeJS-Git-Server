@@ -1,11 +1,11 @@
 {
-  "name": "git-server",
-  "version": "0.2.1",
-  "description": "A simple, multi-tenant git server written in NodeJS",
-  "author": "Quinton Pike <@quinton.pike>",
+  "name": "gitbox",
+  "version": "0.0.1",
+  "description": "A lightweight git server written in Node.js",
+  "author": "Netbeast Community <staff@netbeast.co>",
   "contributors": [
-    "Quinton Pike <qrpike@gmail.com>",
-    "Justas Brazauskas <brazauskasjustas@gmail.con>"
+    "loulirsal <lirosalinas@gmail.com>",
+    "jsdario <jesus@netbeast.co>"
   ],
   "dependencies": {
     "async": "*",
@@ -42,16 +42,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/qrpike/NodeJS-Git-Server"
+    "url": "https://github.com/jsdario/gitbox"
   },
-  "homepage": "http://qrpike.github.io/NodeJS-Git-Server/host.coffee.html",
+  "homepage": "https://netbeast.co",
   "main": "main.js",
-  "bin": {
-    "git-server": "cli.js",
-    "gitserver": "cli.js"
-  },
   "engines": {
-    "node": ">=0.3.7"
+    "node": ">=0.12.0"
   },
   "preferGlobal": true
 }
