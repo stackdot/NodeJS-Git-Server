@@ -8,7 +8,7 @@
     "Justas Brazauskas <brazauskasjustas@gmail.con>"
   ],
   "dependencies": {
-    "async": "*",
+    "async": "^2.0.0",
     "mkdirp": "*",
     "cli-table": "*",
     "pushover": "*",
