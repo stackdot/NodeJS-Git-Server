@@ -1,6 +1,6 @@
-var assert = require('assert');
 var exec = require('child_process').exec;
-var expect = require('expect.js');
+var assert = require('chai').assert;
+var expect = require('chai').expect;
 var helper = require('./helper');
 var git_server = require('../main');
 
@@ -38,7 +38,7 @@ var opts = {
 	repos: [repo, repo2],
 	logging: false,
 	repoLocation: '/tmp/'+helper.random(),
-	port: 8000,
+	port: 9000,
 	httpApi: true
 };
 
@@ -81,14 +81,14 @@ describe('git_server', function() {
 		describe('#getRepo()', function() {
 			it('Should be a function and return repo object', function() {
 				expect(server.getRepo).to.be.a('function');
-				expect(server.getRepo(repo.name+".git")).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+				expect(server.getRepo(repo.name+".git")).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
 			});
 		});
 		describe('#getUser()', function() {
 			it('Should be a function and return user object', function() {
 				expect(server.getUser).to.be.a('function');
-				expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.keys(['user']);
-				expect(server.getUser(user.username, user.password, repo).user).to.be.an('object').and.to.have.keys(['username', 'password']);
+				expect(server.getUser(user.username, user.password, repo)).to.be.an('object').and.to.have.any.keys('user');
+				expect(server.getUser(user.username, user.password, repo).user).to.be.an('object').and.to.have.any.keys('username', 'password')
 			});
 		});
 		describe('#checkTriggers()', function() {
@@ -154,20 +154,21 @@ describe('git_server', function() {
 				repo4 = repo3;
 				delete repo4.anonRead;
 				server.createRepo(repo4, function(err, success) {
-					expect(err).not.to.be("");
+					expect(err).to.not.equal("");
 					done();
 				});
 			});
 			it('Should not create a repo, because this repo should exist', function(done) {
 				server.createRepo(repo, function(err, success) {
-					expect(err).not.to.be("");
+					expect(err).to.not.equal("");
 					done();
 				});
 			});
 		});
 		describe('#git', function() {
 			it('Should be an object', function() {
-				expect(server.git).to.be.an('object').and.to.have.keys(['dirMap', 'autoCreate', 'checkout']);
+				expect(server.git).to.be.an('object');
+				expect(server.git).to.have.any.keys('dirMap', 'autoCreate', 'checkout');
 			});
 		});
 		describe('#permMap', function() {
@@ -185,9 +186,9 @@ describe('git_server', function() {
 describe('behaviour', function() {
 	describe('Clone a Spoon-Knife repo', function() {
 		it('Should clone a repo', function(done) {
-			exec('git clone https://github.com/octocat/Spoon-Knife.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
+			exec('git clone --progress https://github.com/octocat/Spoon-Knife.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.to.be.equal('');
+				expect(stderr).to.be.a('string').and.to.contain('Checking connectivity... done.');
 				done(error);
 			});
 		});
@@ -197,8 +198,8 @@ describe('behaviour', function() {
 			describe('Fetch', function() {
 				it('Should emit fetch event', function(done) {
 					server.once('fetch', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
+						expect(update).to.be.an('object').and.to.have.any.keys('canAbort');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
@@ -214,7 +215,7 @@ describe('behaviour', function() {
 			describe('Pre-receive', function() {
 				it('Should emit pre-receive event', function(done) {
 					server.once('pre-receive', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
 						expect(update).to.be.an('object');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
@@ -231,7 +232,7 @@ describe('behaviour', function() {
 			describe('Update', function() {
 				it('Should emit update event', function(done) {
 					server.once('update', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
+						expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
 						expect(update).to.be.an('object');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
@@ -248,8 +249,8 @@ describe('behaviour', function() {
 			describe('Push', function() {
 				it('Should emit push event', function(done) {
 					server.once('push', function(update, repo) {
-						expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-						expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+						expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
+						expect(update).to.be.an('object').and.to.have.any.keys('canAbort');
 						expect(update.accept).to.be.a('function');
 						expect(update.reject).to.be.a('function');
 						expect(update.canAbort).to.be.a('boolean').and.to.be.equal(true);
@@ -267,8 +268,8 @@ describe('Passive events', function() {
 	describe('Post-receive', function() {
 		it('Should emit post-receive event', function(done) {
 			server.once('post-receive', function(update, repo) {
-				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-				expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+				expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');
+				expect(update).to.be.an('object').and.to.have.any.keys('canAbort')
 				expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
 				done();
 			});
@@ -281,8 +282,8 @@ describe('Passive events', function() {
 	describe('Post-update', function() {
 		it('Should emit post-update event', function(done) {
 			server.once('post-update', function(update, repo) {
-				expect(repo).to.be.an('object').and.to.have.keys(['name', 'anonRead', 'users', ]);
-				expect(update).to.be.an('object').and.to.have.keys(['canAbort']);
+				expect(repo).to.be.an('object').and.to.have.any.keys('name', 'anonRead', 'users');;
+				expect(update).to.be.an('object').and.to.have.any.keys('canAbort');
 				expect(update.canAbort).to.be.a('boolean').and.to.be.equal(false);
 				done();
 			});
@@ -309,7 +310,7 @@ describe('Push', function() {
 			exec('cd /tmp/'+test_octocat_name+' && git push http://localhost:'+server.port+'/'+repo2.name+'.git master', function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
+				expect(error).to.not.be.null;
 				done();
 			});
 		});
@@ -337,7 +338,7 @@ describe('Fetch', function() {
 			exec('cd /tmp/'+test_octocat_name+' && git fetch http://localhost:'+server.port+'/'+repo2.name+'.git', function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
+				expect(error).to.not.be.null;
 				done();
 			});
 		});
@@ -347,7 +348,7 @@ describe('Fetch', function() {
 			exec('git fetch http://localhost:'+server.port+'/'+helper.random()+'.git /tmp/'+test_octocat_name, function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
+				expect(error).to.not.be.null;
 				done();
 			});
 		});
@@ -356,28 +357,27 @@ describe('Fetch', function() {
 describe('Clone', function() {
 	describe('Anonymously', function() {
 		it('Should clone a local repo anonymously', function(done) {
-			exec('git clone http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+			exec('git clone --progress http://localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.to.be.equal('');
+				expect(stderr).to.be.a('string').and.to.contain('Checking connectivity... done.');
 				done(error);
 			});
 		});
 	});
 	describe('Authenticated', function() {
 		it('Should clone a local repo with autentication', function(done) {
-			exec('git clone http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+			exec('git clone --progress http://'+user.username+':'+user.password+'@localhost:'+server.port+'/'+repo.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.to.be.equal('');
+				expect(stderr).to.be.a('string').and.to.contain('Checking connectivity... done.');
 				done(error);
 			});
 		});
 	});
 	describe('Wrong credentials', function() {
 		it('Should try clone a local repo with wrong credentials', function(done) {
-			exec('git clone http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
+			exec('git clone --progress http://'+helper.random()+':'+helper.random()+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
-				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
+				expect(stderr).to.be.a('string').and.to.contain('fatal: unable to access');
 				done();
 			});
 		});
@@ -387,7 +387,7 @@ describe('Clone', function() {
 			exec('git clone http://'+user2.password+':'+user2.username+'@localhost:'+server.port+'/'+repo2.name+'.git /tmp/'+helper.random(), function (error, stdout, stderr) {
 				expect(stdout).to.be.a('string');
 				expect(stderr).to.be.a('string').and.not.to.be.equal('');
-				expect(error).not.to.be.equal(null);
+				expect(error).to.not.be.null;
 				done();
 			});
 		});
