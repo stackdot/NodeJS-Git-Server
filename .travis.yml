@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-- '7.0'
-- '6.3.1'
+- '6'
 - '4'
+- '12'
 after_script: make test-cov
 env:
   matrix:
