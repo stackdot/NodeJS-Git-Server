@@ -1,7 +1,7 @@
-#NodeJS Git Server
+# NodeJS Git Server
 
 ![image](https://raw.github.com/qrpike/NodeJS-Git-Server/master/header.png)
-[![Build Status](https://travis-ci.org/stackdot/NodeJS-Git-Server.png?branch=master)](https://travis-ci.org/stackdot/NodeJS-Git-Server) [![Coverage Status](https://coveralls.io/repos/qrpike/NodeJS-Git-Server/badge.png)](https://coveralls.io/r/qrpike/NodeJS-Git-Server)
+[![Build Status](https://travis-ci.org/stackdot/NodeJS-Git-Server.svg?branch=master)](https://travis-ci.org/stackdot/NodeJS-Git-Server) [![Coverage Status](https://coveralls.io/repos/github/qrpike/NodeJS-Git-Server/badge.svg?branch=master)](https://coveralls.io/github/qrpike/NodeJS-Git-Server?branch=master)
 
 A multi-tenant git server using NodeJS.
 
@@ -27,6 +27,7 @@ To run tests
 
 The GitServer is a very easy to get up and running git server. It uses the [Pushover](https://github.com/substack/pushover) and [git-emit](https://github.com/substack/node-git-emit) modules for listening to git events, and its own layer to do the security for each repo & user.
 
+```javascript
 	var GitServer = require('git-server');
 	var newUser = {
 		username:'demo',
@@ -40,6 +41,7 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 		]
 	}
 	server = new GitServer([ newRepo ]);
+```
 
 # Events:
 
@@ -73,7 +75,7 @@ These events can be aborted or accepted. If there will be no listeners for any o
 * update
 * pre-auto-gc
 
-```
+```javascript
 	var GitServer = require('git-server');
 	var newUser = {
 		username:'demo',
@@ -95,9 +97,12 @@ These events can be aborted or accepted. If there will be no listeners for any o
 		//do some deploy stuff
 	});
 ```
+
 When we start the git server, it will default to port 7000. We can test this using git on this (or another ) machine.
 
+```
 	git clone http://localhost:7000/myrepo.git
+```
 
 Since this repo does *NOT* allow anonymous reading, it will prompt us for a user/pass
 
@@ -105,19 +110,19 @@ To make this faster, we can use the basic auth structure:
 
 	git clone http://demo:demo@localhost:7000/myrepo.git
 
-This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again. 
+This should not prompt you for any user/pass. Also in the future when you push changes, or pull, it will not ask you for this info again.
 
 ## Repo object
 
 Repo object is the object passed to start the server plus some additional methods and properties.
 
-```
-{ 
+```javascript
+{
   name: 'stackdot',
   anonRead: false,
   users: [ { user: {username: "demo", password: "demo"}, permissions: ["R", "W"] } ],
   path: '/tmp/repos/stackdot.git',
-  last_commit: { 
+  last_commit: {
   	status: 'pending',
   	repo: 'anon.git',
   	service: 'receive-pack',
@@ -125,7 +130,7 @@ Repo object is the object passed to start the server plus some additional method
   	last: '00960000000000000000000000000000000000000000',
   	commit: '67359bb4a6cddd97b59507413542e0b08ef078b0',
   	evName: 'push',
-  	branch: 'master' 
+  	branch: 'master'
   }
 }
 ```
@@ -134,7 +139,7 @@ Repo object is the object passed to start the server plus some additional method
 
 `update` is an http duplex object (see below) with these extra properties:
 
-```
+```javascript
 {
   cwd: '/tmp/repos/stackdot.git', // Current repo dir
   repo: 'stackdot.git', // Repo name
@@ -152,12 +157,14 @@ The ability to use HTTPS is now implemented for the module and the cli. This is 
 
 To enable HTTPS in the module, use the 'cert' param:
 
+```javascript
 	var fs = require('fs');
 	var certs = {
 		key		: fs.readFileSync('../certs/privatekey.pem')
 		cert	: fs.readFileSync('../certs/certificate.pem')
 	};
 	_g = new GitServer([ newRepo ], undefined, undefined, undefined, certs);
+```
 
 To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cert' options:
 
@@ -165,8 +172,8 @@ To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cer
 
 To create these certs you can run:
 
-	openssl genrsa -out privatekey.pem 1024 
-	openssl req -new -key privatekey.pem -out certrequest.csr 
+	openssl genrsa -out privatekey.pem 1024
+	openssl req -new -key privatekey.pem -out certrequest.csr
 	openssl x509 -req -in certrequest.csr -signkey privatekey.pem -out certificate.pem
 
 Also, be aware that when using HTTPS for the git server, when you try to clone,etc. It will give you an SSL error because git (which uses CURL) cannot verify the SSL Cert. To correct this, install a actual, verified SSL Cert ( Free ones here: [StartCom](http://www.startssl.com/?app=1) )
@@ -182,9 +189,11 @@ And you are good to go!
 
 When you install this package globally using
 
+```
 	sudo npm install -g git-server
+```
 
-You will now have a CLI interface you can run and interact with. 
+You will now have a CLI interface you can run and interact with.
 
 Get started by typing `git-server` or `gitserver` into your terminal.
 
@@ -207,7 +216,7 @@ please contribute
 
 (The MIT License)
 
-Copyright (c) 2010 [Quinton Pike](https://twitter.com/QuintonPike)
+Copyright (c) 2016 [Quinton Pike](https://twitter.com/QuintonPike)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
