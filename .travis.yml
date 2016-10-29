@@ -2,7 +2,6 @@ language: node_js
 node_js:
 - '6'
 - '4'
-- '12'
 after_script: make test-cov
 env:
   matrix:

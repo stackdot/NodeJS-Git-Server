@@ -50,7 +50,7 @@
     "gitserver": "cli.js"
   },
   "engines": {
-    "node": ">=0.3.7"
+    "node": ">=4"
   },
   "preferGlobal": true
 }
