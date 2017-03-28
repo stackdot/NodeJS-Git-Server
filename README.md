@@ -40,7 +40,7 @@ The GitServer is a very easy to get up and running git server. It uses the [Push
 			{ user:newUser, permissions:['R','W'] }
 		]
 	}
-	server = new GitServer([ newRepo ]);
+	server = new GitServer({repos: [ newRepo ]});
 ```
 
 # Events:
@@ -88,7 +88,7 @@ These events can be aborted or accepted. If there will be no listeners for any o
 			{ user:newUser, permissions:['R','W'] }
 		]
 	}
-	server = new GitServer([ newRepo ]);
+	server = new GitServer({repos: [ newRepo ]});
 	server.on('commit', function(update, repo) {
 		// do some logging or other stuff
 		update.accept() //accept the update.
@@ -163,7 +163,7 @@ To enable HTTPS in the module, use the 'cert' param:
 		key		: fs.readFileSync('../certs/privatekey.pem')
 		cert	: fs.readFileSync('../certs/certificate.pem')
 	};
-	_g = new GitServer([ newRepo ], undefined, undefined, undefined, certs);
+	_g = new GitServer({repos: [ newRepo ]}, undefined, undefined, undefined, certs);
 ```
 
 To enable HTTPS in the cli, use the '--ssl' option along with '--key' and '--cert' options:
